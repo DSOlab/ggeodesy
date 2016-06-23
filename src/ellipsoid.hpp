@@ -1,0 +1,135 @@
+#ifndef __REFERENCE_ELLIPSOID__
+#define __REFERENCE_ELLIPSOID__
+
+#include <cmath>
+
+namespace ngpt
+{
+
+/// \brief A list of well-known reference ellipsoids.
+///
+/// For each of these reference ellipsoids, a series of traits (i.e. geometric
+/// characteristics) will be specialized later on, using the template class
+/// ngpt::ellipsoid_traits.
+///
+enum class ellipsoid : char
+{
+    grs80,
+    wgs84,
+    pz90
+};
+
+/// \brief A class to hold ellipsoid traits (generic case).
+///
+/// A (template class) to hold specialized geometric quantities for each
+/// of the eumerated elements (i.e. reference ellipsoids) in the 
+/// ngpt::ellipsoid enum.
+/// I.e., to make any element of ngpt::ellipsoid usable, specialize this
+/// (trait) class.
+///
+/// \tparam E  The reference ellipsoid to be specialized (i.e. one of 
+///            ngpt::ellipsoid).
+template<ellipsoid E> struct ellipsoid_traits { };
+
+/// \brief A class to hold traits for the GRS-80 (i.e. ngpt::ellispoid::grs80)
+/// reference ellipsoid.
+///
+/// \see https://en.wikipedia.org/wiki/GRS_80
+template<>
+    struct ellipsoid_traits<ellipsoid::grs80>
+{
+    /// Semi-major axis (m).
+    static constexpr double a      { 6378137.0e0 };
+    /// Flattening.
+    static constexpr double f      { 1.0e00/298.257222101e0 };
+    /// Reference ellipsoid name.
+    static constexpr const char* n { "GRS80" };
+};
+
+/// \brief A class to hold traits for the WGS-84 (i.e. ngpt::ellispoid::wgs84)
+/// reference ellipsoid.
+///
+/// \see https://en.wikipedia.org/wiki/World_Geodetic_System
+template<>
+    struct ellipsoid_traits<ellipsoid::wgs84>
+{
+    static constexpr double a      { 6378137.0e0 };
+    static constexpr double f      { 1.0e00/298.257223563e0 };
+    static constexpr const char* n { "WGS84" };
+};
+
+/// \brief A class to hold traits for the PZ-90 (i.e. ngpt::ellispoid::pz90)
+/// reference ellipsoid.
+///
+/// \see http://www.navipedia.net/index.php/Reference_Frames_in_GNSS#GLONASS_reference_frame_PZ-90
+template<>
+    struct ellipsoid_traits<ellipsoid::pz90>
+{
+    static constexpr double a      { 6378135.0e0 };
+    static constexpr double f      { 1.0e00/298.257839303e0 };
+    static constexpr const char* n { "PZ90" };
+};
+
+/// \brief Compute the squared eccentricity.
+///
+/// For any reference ellipsoid (i.e. ngpt::ellipsoid) compute the squared 
+/// (first) eccentricity (i.e. e^2).
+///
+/// \tparam E  The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// \return    Eccentricity squared.
+/// \throw     Does not throw.
+///
+/// \see https://en.wikipedia.org/wiki/Geodetic_datum
+template<ellipsoid E>
+    constexpr double eccentricity_squared() noexcept
+{
+    constexpr double f { ellipsoid_traits<E>::f };
+    return ( 2.0e0 - f ) * f;
+}
+
+/// \brief Compute the semi-minor axis.
+///
+/// For any reference ellipsoid (i.e. ngpt::ellipsoid) compute the semi-minor
+/// axis 'b' in meters.
+///
+/// \tparam E The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// \return   Semi-minor axis of the reference ellipsoid in meters.
+/// \throw    Does not throw.
+///
+/// \see https://en.wikipedia.org/wiki/Geodetic_datum
+template<ellipsoid E>
+    constexpr double semi_minor() noexcept
+{
+  constexpr double a { ellipsoid_traits<E>::a };
+  constexpr double f { ellipsoid_traits<E>::f };
+  return a * ( 1.0e0 - f );
+}
+
+/// \brief Compute the normal radious of curvature at a given latitude (on a 
+///        reference ellipsoid).
+///
+/// \param[in] lat The latitude in radians.
+/// \tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// \return        The normal radius of curvature in meters.
+/// \throw         Does not throw (see notes).
+///
+/// \note If the denominator (den) is zero then funny things could happen; this
+///       however should **never** occur for any reference ellipsoid.
+///
+/// \see "Physical Geodesy", pg. 194
+template<ellipsoid E>
+    double N (double lat) noexcept
+{
+    constexpr double a { ellipsoid_traits<E>::a };
+    double cosf  { std::cos(lat) };
+    double sinf  { std::sin(lat) };
+    double acosf { a * cosf };
+    double bsinf { semi_minor<E>() * sinf };
+    double den   { std::sqrt(acosf*acosf + bsinf*bsinf) };
+
+    return (a * a) / den;
+}
+
+} // end namespace ngpt
+
+#endif
