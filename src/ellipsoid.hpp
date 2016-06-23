@@ -1,3 +1,23 @@
+///
+/// \file ellipsoid.hpp
+///
+/// \brief Definition and basic setup of an ellipsoid (kinda) class.
+///
+/// This file defines a list of frequently used (referennce) Ellipsoids in
+/// geodesy. Each ellipsoid comes with a list of fundamental geometric
+/// characteristics (semi-major axis, flattening, name).
+///
+/// The ellipsoids are not a class; rather an enumeration (ngpt::ellipsoid).
+/// A (per-ellipsoid) specialized traits class (i.e. ngpt::ellipsoid_traits)
+/// is used to implement the basic properties of each ellipsoid.
+///
+/// To add a new ellipsoid, add a new item in the ngpt::ellipsoid enum, and
+/// provide its characteristics via a specialization of the ngpt::ellipsoid_traits
+/// class
+///
+/// \example test_geodesy.cpp
+///
+
 #ifndef __REFERENCE_ELLIPSOID__
 #define __REFERENCE_ELLIPSOID__
 
@@ -29,7 +49,7 @@ enum class ellipsoid : char
 ///
 /// \tparam E  The reference ellipsoid to be specialized (i.e. one of 
 ///            ngpt::ellipsoid).
-template<ellipsoid E> struct ellipsoid_traits { };
+template<ellipsoid E> struct ellipsoid_traits {};
 
 /// \brief A class to hold traits for the GRS-80 (i.e. ngpt::ellispoid::grs80)
 /// reference ellipsoid.
