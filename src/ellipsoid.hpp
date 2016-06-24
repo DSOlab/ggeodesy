@@ -22,6 +22,9 @@
 #define __REFERENCE_ELLIPSOID__
 
 #include <cmath>
+#ifdef DEBUG
+#include <iostream>
+#endif
 
 namespace ngpt
 {
@@ -107,7 +110,7 @@ template<ellipsoid E>
     return ( 2.0e0 - f ) * f;
 }
 
-/// \brief Compute the semi-minor axis.
+/// \brief Compute the semi-minor axis (b).
 ///
 /// For any reference ellipsoid (i.e. ngpt::ellipsoid) compute the semi-minor
 /// axis 'b' in meters.
@@ -125,7 +128,7 @@ template<ellipsoid E>
   return a * ( 1.0e0 - f );
 }
 
-/// \brief Compute the normal radious of curvature at a given latitude (on a 
+/// \brief Compute the normal radius of curvature at a given latitude (on a 
 ///        reference ellipsoid).
 ///
 /// \param[in] lat The latitude in radians.
@@ -137,8 +140,10 @@ template<ellipsoid E>
 ///       however should **never** occur for any reference ellipsoid.
 ///
 /// \see "Physical Geodesy", pg. 194
+/// \see https://en.wikipedia.org/wiki/Earth_radius
+///
 template<ellipsoid E>
-    double N (double lat) noexcept
+    double N(double lat) noexcept
 {
     constexpr double a { ellipsoid_traits<E>::a };
     double cosf  { std::cos(lat) };
@@ -146,8 +151,41 @@ template<ellipsoid E>
     double acosf { a * cosf };
     double bsinf { semi_minor<E>() * sinf };
     double den   { std::sqrt(acosf*acosf + bsinf*bsinf) };
+#ifdef DEBUG
+    double answer = (a*a)/den;
+    double alternative = a/(std::sqrt(1.0-eccentricity_squared<E>()*sinf*sinf));
+    if ( std::abs(answer-alternative) > 1e-8 ) {
+        std::cerr<<"\n[ERROR] Too big a difference between normal radius of "
+        << "curvature computation\nSee template<ellipsoid E> double N(double lat)"
+        << "in file: ellipsoid.hpp\n";
+        assert( false );
+    }
+#endif
 
     return (a * a) / den;
+}
+
+/// \brief Compute the meridional radii of curvature at a given latitude (on a 
+///        reference ellipsoid).
+///
+/// \param[in] lat The latitude in radians.
+/// \tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// \return        The meridional radius of curvature in meters.
+/// \throw         Does not throw (see notes).
+///
+/// \see https://en.wikipedia.org/wiki/Earth_radius
+///
+template<ellipsoid E>
+    double M(double lat) noexcept
+{
+    constexpr double a { ellipsoid_traits<E>::a };
+    constexpr double b { semi_minor<E>() };
+    double cosf  { std::cos(lat) };
+    double sinf  { std::sin(lat) };
+    double acosf { a * cosf };
+    double bsinf { b * sinf };
+    double tmpd  { acosf*acosf + bsinf*bsinf };
+    return ( (a*b)/tmpd ) * ( (a*b)/std::sqrt(tmpd) );
 }
 
 } // end namespace ngpt
