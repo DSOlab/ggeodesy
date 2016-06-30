@@ -33,7 +33,8 @@ pkginclude_HEADERS = \
         geodesy.hpp \
         car2ell.hpp \
         car2top.hpp \
-        ell2car.hpp
+        ell2car.hpp \
+	vincenty.hpp
 
 ##
 ##  Source files (distributed).
