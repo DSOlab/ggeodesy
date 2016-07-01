@@ -8,7 +8,7 @@ lib_LTLIBRARIES = libggeodesy.la
 ##  Only use the following flags for debuging purposes.
 ## ----------------------------------------------------
 ##
-libggdatetime_la_CXXFLAGS = \
+libggeodesy_la_CXXFLAGS = \
 	-std=c++14 \
 	-g \
 	-pg \

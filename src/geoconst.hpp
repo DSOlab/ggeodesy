@@ -10,10 +10,10 @@
 namespace ngpt
 {
     /// The value of pi.
-    constexpr double DPI = 3.141592653589793238463;
+    constexpr double DPI  { 3.141592653589793238463 };
     
     /// The value of 2 * pi.
-    constexpr double D2PI = 2 * DPI;
+    constexpr double D2PI { 2 * DPI };
 
 } // namespace ngpt
 

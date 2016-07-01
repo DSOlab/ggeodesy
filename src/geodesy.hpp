@@ -8,6 +8,7 @@
 #define __GEODESY__
 
 #include "geoconst.hpp"
+#include <type_traits>
 
 namespace ngpt
 {
@@ -31,6 +32,15 @@ namespace ngpt
 void
 top2daz(double north, double east, double up, double& distance,
     double& azimouth, double& zenith);
+
+/// \brief Decimal to hexicondal degrees.
+template<typename T,
+        std::enable_if<
+            std::is_floating_point<T>::value,
+            true
+            >
+        >
+    decd2hexd(
 
 } // end namespace geodesy
 

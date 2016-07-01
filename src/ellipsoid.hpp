@@ -158,7 +158,6 @@ template<ellipsoid E>
         std::cerr<<"\n[ERROR] Too big a difference between normal radius of "
         << "curvature computation\nSee template<ellipsoid E> double N(double lat)"
         << "in file: ellipsoid.hpp\n";
-        assert( false );
     }
 #endif
 
