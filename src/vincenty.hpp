@@ -121,7 +121,7 @@ template<ellipsoid E = ellipsoid::wgs84>
                     (-1.0+2.0*cos2SigmaM*cos2SigmaM)));
     } while ( std::abs(lambda-lambdaP) > convergence_limit );
 #ifdef DEBUG
-    std::cout<<"\tVincenty Inverse converged after "<<iteration<<" iterations\n";
+    std::cout<<"\t[DEBUG]Vincenty Inverse converged after "<<iteration<<" iterations\n";
 #endif
 
     double uSq { cosSqAlpha*(a*a-b*b)/(b*b) };
@@ -133,8 +133,14 @@ template<ellipsoid E = ellipsoid::wgs84>
             (-3.0+4.0*sinSigma*sinSigma)*(-3.0+4.0*cos2SigmaM*cos2SigmaM))) };
     double distance { b*A*(sigma-deltaSigma) };
     
+    // forward azimouth
     a12 = std::atan2(cosU2*sinLambda, cosU1*sinU2-sinU1*cosU2*cosLambda);
+    if (a12 < 0) a12 += D2PI;
+
+    // backward azimouth
     a21 = std::atan2(cosU1*sinLambda, -sinU1*cosU2+cosU1*sinU2*cosLambda);
+    a21 += DPI;
+    
     return distance;
 }
 
@@ -147,7 +153,7 @@ template<ellipsoid E = ellipsoid::wgs84>
 /// \warning 
 ///
 /// \see https://en.wikipedia.org/wiki/Vincenty%27s_formulae
-template<ellipsoid E>
+template<ellipsoid E = ellipsoid::wgs84>
     double direct_vincenty(double lat1, double lon1, double a1, double s, 
         double& lat2, double& lon2, double convergence_limit = 1e-10)
 {
@@ -186,7 +192,7 @@ template<ellipsoid E>
         sigma = s/b*A + deltaSigma;
     } while ( std::abs(sigma-sigmaP) > convergence_limit );
 #ifdef DEBUG
-    std::cout<<"\tDirect Vincenty converged after "<<iteration<<" iterations\n";
+    std::cout<<"\t[DEBUG]Direct Vincenty converged after "<<iteration<<" iterations\n";
 #endif
 
     double sinU1 { std::sin(U1) };
@@ -203,13 +209,13 @@ template<ellipsoid E>
     nom      = sinSigma*sina1;
     denom    = cosU1*cosSigma-sinU1*sinSigma*cosa1;
     double lambda { std::atan2(nom, denom) };
-    double C { (f/16.0)*cosaSq(4+f*(4-3*cosaSq)) };
+    double C { (f/16.0)*cosaSq*(4+f*(4-3*cosaSq)) };
     double L { lambda + (1.0-C)*f*sina*(sigma+C*sinSigma*(cosSigmaM2+C*cosSigma*
-                (-1.0+2.0*cos2SigmaM*cos2SigmaM))) };
+                (-1.0+2.0*cosSigmaM2*cosSigmaM2))) };
     lon2     = L + lon1;
     
     // compute azimouth
-    return std::atan2(sina, -sinU1*sinSigma+cosU1*cosSigma*cosa1);
+    return std::atan2(sina, -sinU1*sinSigma+cosU1*cosSigma*cosa1) + DPI;
 }
 
 } // end namespace ngpt

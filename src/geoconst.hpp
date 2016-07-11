@@ -15,6 +15,12 @@ namespace ngpt
     /// The value of 2 * pi.
     constexpr double D2PI { 2 * DPI };
 
+    /// Degrees to Radians coefficient.
+    constexpr double DEG2RAD { DPI / 180.0e0 };
+    
+    /// Radians to Degrees coefficient.
+    constexpr double RAD2DEG { 180.0e0 / DPI };
+
 } // namespace ngpt
 
 #endif
