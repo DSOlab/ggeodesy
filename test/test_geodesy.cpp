@@ -39,7 +39,8 @@ int main ()
     // --------------------------------------------------------------------- //
     //                     TEST INVERSE VINCENTY ALGORITHM
     // --------------------------------------------------------------------- //
-
+    printf("> TEST INVERSE VINCENTY ALGORITHM\n");
+    printf("------------------------------------\n");
     double S, a_for, a_bac, a_sec;
     int a_deg, a_min;
     // try the (inverse) vincenty algorithm; test data/output is taken from
@@ -64,20 +65,24 @@ int main ()
     
     printf("Distance of the ellipsoidal: %+15.5f m\n", S);
     rad2hexd(a_for, a_deg, a_min, a_sec);
-    printf("Forward Azimouth           : %+3d %2d %8.5f (or %15.10f rad)\n", a_deg, a_min, a_sec, a_for);
+    printf("Forward Azimouth           : %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
     rad2hexd(a_bac, a_deg, a_min, a_sec);
-    printf("Backward Azimouth          : %+3d %2d %8.5f (or %15.10f rad)\n", a_deg, a_min, a_sec, a_bac);
+    printf("Backward Azimouth          : %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
+
+    printf("> Everything looks OK!\n");
     
     // --------------------------------------------------------------------- //
     //                     TEST VINCENTY ALGORITHM
     // --------------------------------------------------------------------- //
     // Do the inverse from above (so results should be the same, going back
     // to p2)
+    printf("> TEST DIRECT VINCENTY ALGORITHM\n");
+    printf("------------------------------------\n");
     double new_lon, new_lat, new_az;
     new_az = direct_vincenty(p1.x, p1.y, a_for, S, new_lat, new_lon, 1e-12);
-    //assert(std::abs(new_lon-p2.x) < 3*1e-7 ); // .001 sec accuracy
-    //assert(std::abs(new_lat-p2.y) < 3*1e-7 ); // .001 sec accuracy
-    //assert(std::abs(new_az-a_bac) < 3*1e-7 ); // .001 sec accuracy
+    assert(std::abs(new_lat-p2.x) < 3*1e-7 ); // .001 sec accuracy
+    assert(std::abs(new_lon-p2.y) < 3*1e-7 ); // .001 sec accuracy
+    assert(std::abs(new_az-a_bac) < 3*1e-7 ); // .001 sec accuracy
 
     rad2hexd(new_lon, a_deg, a_min, a_sec);
     printf("Longtitude:  %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
@@ -85,6 +90,13 @@ int main ()
     printf("Latitude  :  %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
     rad2hexd(new_az, a_deg, a_min, a_sec);
     printf("Azimouth  :  %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
+
+    printf("Going back the geodetic to point 2, yields differences: (i.e. in point 2)\n");
+    printf("\tLatitude   : %+15.5f sec.\n", rad2deg(std::abs(new_lat-p2.x))*3600.0);
+    printf("\tLongtitude : %+15.5f sec.\n", rad2deg(std::abs(new_lon-p2.y))*3600.0);
+    printf("\tAzimouth   : %+15.5f sec.\n", rad2deg(std::abs(new_az-a_bac))*3600.0);
+
+    printf("> Everything looks OK!\n");
 
     return 0;
 }

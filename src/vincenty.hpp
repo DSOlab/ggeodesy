@@ -125,9 +125,9 @@ template<ellipsoid E = ellipsoid::wgs84>
 #endif
 
     double uSq { cosSqAlpha*(a*a-b*b)/(b*b) };
-    double k1 { (std::sqrt(1.0+uSq)-1.0)/(std::sqrt(1.0+uSq)+1.0) };
-    double A  { (1+0.25*k1*k1)/(1.0-k1) };
-    double B  { k1*(1.0-(3.0/8.0)*k1*k1) };
+    double k1  { (std::sqrt(1.0+uSq)-1.0)/(std::sqrt(1.0+uSq)+1.0) };
+    double A   { (1+0.25*k1*k1)/(1.0-k1) };
+    double B   { k1*(1.0-(3.0/8.0)*k1*k1) };
     double deltaSigma { B*sinSigma*(cos2SigmaM+B/4.0*(cosSigma*
             (-1.0+2.0*cos2SigmaM*cos2SigmaM)-B/6.0*cos2SigmaM*
             (-3.0+4.0*sinSigma*sinSigma)*(-3.0+4.0*cos2SigmaM*cos2SigmaM))) };
@@ -164,16 +164,16 @@ template<ellipsoid E = ellipsoid::wgs84>
     double f = ellipsoid_traits<E>::f;
     double b = semi_minor<E>();
     
-    double cosa1 { std::cos(a1) };
-    double sina1 { std::sin(a1) };
-    double U1 { std::atan((1-f)*std::tan(lat1)) };
-    double sigma1 { std::atan(std::tan(U1)/cosa1) };
-    double sina { std::cos(U1) * sina1 };
-    double cosaSq {1-sina*sina};
-    double uSq { cosaSq*(a*a-b*b)/(b*b) };
-    double k1 { (std::sqrt(1.0+uSq)-1.0)/(std::sqrt(1.0+uSq)+1.0) };
-    double A  { (1+0.25*k1*k1)/(1.0-k1) };
-    double B  { k1*(1.0-(3.0/8.0)*k1*k1) };
+    double cosa1  { std::cos(a1) };
+    double sina1  { std::sin(a1) };
+    double U1     { std::atan((1-f)*std::tan(lat1)) };
+    double sigma1 { std::atan2(std::tan(U1), cosa1) };
+    double sina   { std::cos(U1) * sina1 };
+    double cosaSq {1.0e0-sina*sina};
+    double uSq    { cosaSq*(a*a-b*b)/(b*b) };
+    double k1     { (std::sqrt(1.0+uSq)-1.0)/(std::sqrt(1.0+uSq)+1.0) };
+    double A      { (1.0+0.25*k1*k1)/(1.0-k1) };
+    double B      { k1*(1.0-(3.0/8.0)*k1*k1) };
 
     double sigma { s/b*A }; // initial guess
     double sigmaP, sigmaM2, cosSigmaM2, deltaSigma, sinSigma;
@@ -182,37 +182,37 @@ template<ellipsoid E = ellipsoid::wgs84>
         if (++iteration > MAX_ITERATIONS) {
             throw std::out_of_range("Direct Vincenty cannot converge after 100 iterations!");
         }
-        sigmaM2 = 2*sigma1 + sigma;
+        sigmaM2    = 2.0*sigma1 + sigma;
         cosSigmaM2 = std::cos(sigmaM2);
-        sinSigma = std::sin(sigma);
+        sinSigma   = std::sin(sigma);
         deltaSigma = B*sinSigma*(cosSigmaM2 
             + (1/4.0)*B*(std::cos(sigma)*(-1+2*cosSigmaM2*cosSigmaM2)
             - (1/6.0)*B*cosSigmaM2*(-3+4*sinSigma*sinSigma)*(-3+4*cosSigmaM2*cosSigmaM2)));
         sigmaP = sigma;
-        sigma = s/b*A + deltaSigma;
+        sigma = s/(b*A) + deltaSigma;
     } while ( std::abs(sigma-sigmaP) > convergence_limit );
 #ifdef DEBUG
     std::cout<<"\t[DEBUG]Direct Vincenty converged after "<<iteration<<" iterations\n";
 #endif
 
-    double sinU1 { std::sin(U1) };
-    double cosU1 { std::cos(U1) };
+    double sinU1    { std::sin(U1) };
+    double cosU1    { std::cos(U1) };
     double cosSigma { std::cos(sigma) };
 
     // compute latitude
-    double nom { sinU1*cosSigma+cosU1*sinSigma*cosa1 };
-    double denom { sina*sina+std::pow(sinU1*sinSigma-cosU1*cosU1*cosSigma*cosa1, 2.0) };
-    denom = std::sqrt(denom)*(1.0-f);
-    lat2 = std::atan2(nom, denom);
+    double nom   { sinU1*cosSigma+cosU1*sinSigma*cosa1 };
+    double denom { sina*sina+std::pow(sinU1*sinSigma-cosU1*cosSigma*cosa1, 2.0) };
+    denom        = std::sqrt(denom)*(1.0-f);
+    lat2         = std::atan2(nom, denom);
 
     // compute longtitude
-    nom      = sinSigma*sina1;
-    denom    = cosU1*cosSigma-sinU1*sinSigma*cosa1;
+    nom           = sinSigma*sina1;
+    denom         = cosU1*cosSigma - sinU1*sinSigma*cosa1;
     double lambda { std::atan2(nom, denom) };
-    double C { (f/16.0)*cosaSq*(4+f*(4-3*cosaSq)) };
-    double L { lambda + (1.0-C)*f*sina*(sigma+C*sinSigma*(cosSigmaM2+C*cosSigma*
-                (-1.0+2.0*cosSigmaM2*cosSigmaM2))) };
-    lon2     = L + lon1;
+    double C      { (f/16.0)*cosaSq*(4.0+f*(4.0-3.0*cosaSq)) };
+    double L      { lambda - (1.0-C)*f*sina*(sigma+C*sinSigma*(cosSigmaM2+C*cosSigma*
+                    (-1.0+2.0*cosSigmaM2*cosSigmaM2))) };
+    lon2          = L + lon1;
     
     // compute azimouth
     return std::atan2(sina, -sinU1*sinSigma+cosU1*cosSigma*cosa1) + DPI;
