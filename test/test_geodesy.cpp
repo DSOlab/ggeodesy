@@ -18,9 +18,16 @@ int main ()
     /// a (reference) point on ellipsoid.
     Point p1 {4595220.02261, 2039434.13622, 3912625.96044};
     Point p2, p3;
+    
+    // --------------------------------------------------------------------- //
+    //                     TEST COORDINATE TRANSFORMATIONS
+    // --------------------------------------------------------------------- //
+    printf("\n> TEST COORDINATE TRANSFORMATIONS\n");
+    printf("------------------------------------\n");
 
     /// cartesian to ellipsoidal; p2 holds the ellipsoidal coordinates of p1.
     car2ell<ellipsoid::grs80>(p1.x,p1.y,p1.z,p2.x,p2.y,p2.z);
+
     /// ellipsoidal to cartesian; p3 hold the cartesian coordinates of p2 (i.e.
     /// p3 should be the same as p1).
     ell2car<ellipsoid::grs80>(p2.x,p2.y,p2.z,p3.x,p3.y,p3.z);
@@ -29,17 +36,24 @@ int main ()
     printf ("To ellipsoidal and back (i.e. everything should be zero!):");
     printf ("\ndx=%8.5f dy=%8.5F dz=%8.5f\n",
             std::abs(p1.x-p3.x),std::abs(p1.y-p3.y),std::abs(p1.z-p3.z));
+    assert( (std::abs(p1.x-p3.x) < 1e-7)
+        &&  (std::abs(p1.y-p3.y) < 1e-7)
+        &&  (std::abs(p1.z-p3.z) < 1e-7) );
 
     /// compute the topocentric vector between p1 and p3 ...
     car2top<ellipsoid::grs80>(p1.x,p1.y,p1.z,p3.x,p3.y,p3.z,p2.x,p2.y,p2.z);
     /// ... and print the components (should be zero)
     printf ("Topocentric vector (should be zero!)");
     printf ("\ndn=%8.5f de=%8.5f du=%8.5f\n",p2.x,p2.y,p2.z);
+    assert( (std::abs(p2.x) < 1e-7)
+        &&  (std::abs(p2.y) < 1e-7)
+        &&  (std::abs(p2.z) < 1e-7) );
+    printf("> Everything looks OK!\n");
 
     // --------------------------------------------------------------------- //
     //                     TEST INVERSE VINCENTY ALGORITHM
     // --------------------------------------------------------------------- //
-    printf("> TEST INVERSE VINCENTY ALGORITHM\n");
+    printf("\n> TEST INVERSE VINCENTY ALGORITHM\n");
     printf("------------------------------------\n");
     double S, a_for, a_bac, a_sec;
     int a_deg, a_min;
@@ -76,7 +90,7 @@ int main ()
     // --------------------------------------------------------------------- //
     // Do the inverse from above (so results should be the same, going back
     // to p2)
-    printf("> TEST DIRECT VINCENTY ALGORITHM\n");
+    printf("\n> TEST DIRECT VINCENTY ALGORITHM\n");
     printf("------------------------------------\n");
     double new_lon, new_lat, new_az;
     new_az = direct_vincenty(p1.x, p1.y, a_for, S, new_lat, new_lon, 1e-12);
@@ -97,6 +111,37 @@ int main ()
     printf("\tAzimouth   : %+15.5f sec.\n", rad2deg(std::abs(new_az-a_bac))*3600.0);
 
     printf("> Everything looks OK!\n");
+    
+    // --------------------------------------------------------------------- //
+    //                TEST GREAT CIRCLE ALGORITHM (HAVERSINE)
+    // --------------------------------------------------------------------- //
+    // Let's see the difference between the Vincenty and Haversine algorithms
+    // great circle distance
+    printf("\n> TEST HAVERSINE ALGORITHM\n");
+    printf("------------------------------------\n");
+    double S_haver = haversine(p1.x, p1.y, p2.x, p2.y);
+    printf("Difference in distance between Vincenty and Haversine algorithms:\n");
+    printf("\tdS = %10.5fm or %5.1f%%\n", std::abs(S_haver-S), std::abs(S_haver-S)*100.0/S);
+    // according to Wikipedia "the haversine formula and law of cosines can't
+    // be guaranteed correct to better than 0.5%"
+    // see https://en.wikipedia.org/wiki/Haversine_formula
+    assert( std::abs(S_haver-S)*100.0/S <= .5 );
+    
+    printf("> Everything looks OK!\n");
+    
+    // --------------------------------------------------------------------- //
+    //                TEST BEARING COMPUTATION
+    // --------------------------------------------------------------------- //
+    // Let's see the difference between the Vincenty and simple bearing angle
+    // computation
+    printf("\n> TEST BEARING ALGORITHM\n");
+    printf("------------------------------------\n");
+    double fr_bearing = bearing(p1.x, p1.y, p2.x, p2.y);
+    printf("Difference in bearing between Vincenty and simple (ngpt::bearing) algorithms:\n");
+    rad2hexd(fr_bearing, a_deg, a_min, a_sec);
+    printf("\tBearing: %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
+    printf("\tdAz = %15.7f sec or %6.2f%%\n", rad2deg(std::abs(a_for-fr_bearing))*3600.0,
+        std::abs(a_for-fr_bearing)*100.0/D2PI);
 
     return 0;
 }

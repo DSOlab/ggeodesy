@@ -53,7 +53,7 @@ double haversine(double angle) noexcept
 ///
 /// \see https://en.wikipedia.org/wiki/Haversine_formula
 ///
-template<ellipsoid E>
+template<ellipsoid E = ellipsoid::wgs84>
     double haversine(double lat1, double lon1, double lat2, double lon2)
 {
     double h  { haversine(lat2-lat1) + std::cos(lat1) * std::cos(lat2) * 
@@ -135,11 +135,13 @@ template<ellipsoid E = ellipsoid::wgs84>
     
     // forward azimouth
     a12 = std::atan2(cosU2*sinLambda, cosU1*sinU2-sinU1*cosU2*cosLambda);
-    if (a12 < 0) a12 += D2PI;
+    // normalize
+    a12 = std::fmod(a12+D2PI, D2PI);
 
     // backward azimouth
     a21 = std::atan2(cosU1*sinLambda, -sinU1*cosU2+cosU1*sinU2*cosLambda);
-    a21 += DPI;
+    // normalize
+    a21 = std::fmod(a21+DPI, D2PI);
     
     return distance;
 }

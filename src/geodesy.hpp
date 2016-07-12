@@ -3,6 +3,7 @@
 ///
 /// \brief A list of frequently used geodetic functions.
 ///
+/// \see http://www.movable-type.co.uk/scripts/latlong.html
 
 #ifndef __GEODESY__
 #define __GEODESY__
@@ -139,6 +140,41 @@ template<typename T,
     >
     void rad2hexd(T radians, int& deg, int& min, T& sec) noexcept
 { return decd2hexd(rad2deg(radians), deg, min, sec); }
+
+/// \brief Bearing (i.e. forward azimouth) of great circle between two points
+/// on the sphere.
+///
+/// This formula is for the initial bearing (sometimes referred to as forward
+/// azimuth) which if followed in a straight line along a great-circle arc will
+/// take you from the start point to the end point.
+///
+/// \tparam     T     Any floating point type for input and results.
+/// \param[in]  lat1  Latitude of starting point in radians.
+/// \param[in]  lon1  Longtitude of starting point in radians.
+/// \param[in]  lat2  Latitude of ending point in radians.
+/// \param[in]  lon2  Longtitude of ending point in radians.
+/// \throw            Does not throw
+///
+/// \bug This give way too big a difference from Vincenty.
+template<typename T,
+    typename = std::enable_if_t<
+        std::is_floating_point<T>::value
+        >
+    >
+    T bearing(T lat1, T lon1, T lat2, T lon2) noexcept
+{
+    using std::sin;
+    using std::cos;
+
+    double DeltaLambda = lon2 - lon1;
+    double cosLat2     = cos(lat2);
+    double nom         = sin(DeltaLambda) * cosLat2;
+    double denom       = cos(lat1)*sin(lat2) -
+                         sin(lat1)*cosLat2*cos(DeltaLambda);
+    double angle       = std::atan2(nom, denom);
+    // normalize to [0-2pi)
+    return std::fmod(angle+D2PI, D2PI);
+}
 
 } // end namespace geodesy
 
