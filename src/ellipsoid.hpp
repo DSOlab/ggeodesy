@@ -35,12 +35,7 @@ namespace ngpt
 /// characteristics) will be specialized later on, using the template class
 /// ngpt::ellipsoid_traits.
 ///
-enum class ellipsoid : char
-{
-    grs80,
-    wgs84,
-    pz90
-};
+enum class ellipsoid : char { grs80, wgs84, pz90 };
 
 /// \brief A class to hold ellipsoid traits (generic case).
 ///

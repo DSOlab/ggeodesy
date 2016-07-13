@@ -34,11 +34,13 @@ pkginclude_HEADERS = \
         car2ell.hpp \
         car2top.hpp \
         ell2car.hpp \
-	vincenty.hpp
+	vincenty.hpp \
+	trnsfdtls.hpp
 
 ##
 ##  Source files (distributed).
 ## ----------------------------
 ##
 dist_libggeodesy_la_SOURCES = \
-	top2daz.cpp
+	top2daz.cpp \
+	trnsfdtls.cpp
