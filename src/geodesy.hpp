@@ -5,8 +5,8 @@
 ///
 /// \see http://www.movable-type.co.uk/scripts/latlong.html
 
-#ifndef __GEODESY__
-#define __GEODESY__
+#ifndef __NGPT_GEODESY_HPP__
+#define __NGPT_GEODESY_HPP__
 
 #include "geoconst.hpp"
 #include <type_traits>

@@ -9,8 +9,8 @@
 ///       - Implement the direct/inverse algorithms from GographicLib, see
 ///         http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html
 
-#ifndef __NGPT_VINCENTY__HPP
-#define __NGPT_VINCENTY_HPP
+#ifndef __NGPT_VINCENTY_HPP__
+#define __NGPT_VINCENTY_HPP__
 
 #include <cmath>
 #include <stdexcept>
@@ -120,9 +120,9 @@ template<ellipsoid E = ellipsoid::wgs84>
                     (sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*
                     (-1.0+2.0*cos2SigmaM*cos2SigmaM)));
     } while ( std::abs(lambda-lambdaP) > convergence_limit );
-#ifdef DEBUG
-    std::cout<<"\t[DEBUG]Vincenty Inverse converged after "<<iteration<<" iterations\n";
-#endif
+//#ifdef DEBUG
+//    std::cout<<"\t[DEBUG]Vincenty Inverse converged after "<<iteration<<" iterations\n";
+//#endif
 
     double uSq { cosSqAlpha*(a*a-b*b)/(b*b) };
     double k1  { (std::sqrt(1.0+uSq)-1.0)/(std::sqrt(1.0+uSq)+1.0) };

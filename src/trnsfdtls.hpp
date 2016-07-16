@@ -4,8 +4,8 @@
 /// \brief Computational details for coordinate transformations.
 ///
 
-#ifndef __NGPT_GEO_DETAILS__
-#define __NGPT_GEO_DETAILS__
+#ifndef __NGPT_TRNSFDTLS_HPP__
+#define __NGPT_TRNSFDTLS_HPP__
 
 namespace ngpt
 {
