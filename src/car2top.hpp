@@ -8,6 +8,7 @@
 #define _CARTESIAN_TO_TOPOCENTRIC_
 
 #include <cmath>
+
 #include "car2ell.hpp"
 
 namespace ngpt

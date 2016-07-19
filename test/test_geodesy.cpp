@@ -4,6 +4,7 @@
 #include "car2top.hpp"
 #include "vincenty.hpp"
 #include "geodesy.hpp"
+#include "trnsfdtls.hpp"
 
 #include <stdio.h>
 #include <cmath>
@@ -48,6 +49,25 @@ int main ()
     assert( (std::abs(p2.x) < 1e-7)
         &&  (std::abs(p2.y) < 1e-7)
         &&  (std::abs(p2.z) < 1e-7) );
+    double n = p2.x, e = p2.y, u = p2.z;
+    
+    /// this could also be computed as:
+    car2ell<ellipsoid::grs80>(p1.x,p1.y,p1.z,p2.x,p2.y,p2.z);
+    double rotation_mat[9];
+    detail::car2top_matrix(std::sin(p2.x), std::sin(p2.y), std::cos(p2.x),
+        std::cos(p2.y), rotation_mat);
+    double dx = p1.x - p3.x,
+           dy = p1.y - p3.y,
+           dz = p1.z - p3.z;
+    p3.x = rotation_mat[0]*dx + rotation_mat[1]*dy + rotation_mat[2]*dz;
+    p3.y = rotation_mat[3]*dx + rotation_mat[4]*dy + rotation_mat[5]*dz;
+    p3.z = rotation_mat[6]*dx + rotation_mat[7]*dy + rotation_mat[8]*dz;
+    printf("Topocentric vector (alternative computation)");
+    printf("\ndn=%8.5f de=%8.5f du=%8.5f\n",p3.x,p3.y,p3.z);
+    printf("Differences from previous method:");
+    printf("\nddn=%15.10f dde=%15.10f ddu=%15.10f\n",
+        std::abs(p3.x-n), std::abs(p3.y-e), std::abs(p3.z-u));
+
     printf("> Everything looks OK!\n");
 
     // --------------------------------------------------------------------- //
