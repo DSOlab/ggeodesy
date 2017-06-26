@@ -8,8 +8,9 @@
 #ifndef __NGPT_GEODESY_HPP__
 #define __NGPT_GEODESY_HPP__
 
-#include "geoconst.hpp"
 #include <type_traits>
+#include "geoconst.hpp"
+#include <cmath>
 
 namespace ngpt
 {
@@ -33,11 +34,14 @@ namespace ngpt
 void
 top2daz(double north, double east, double up, double& distance,
     double& azimouth, double& zenith);
+void
+top2car(double north, double east, double up, double lat, double lon,
+    double& x, double& y, double& z) noexcept;
 
 /// \brief Convert degrees to radians.
 template<typename T> T deg2rad(T degrees) noexcept { return degrees * DEG2RAD; }
 
-/// \brief Convert degrees to radians.
+/// \brief Convert radians to degrees.
 template<typename T> T rad2deg(T radians) noexcept { return radians * RAD2DEG; }
 
 /// \brief Decimal to hexicondal degrees.

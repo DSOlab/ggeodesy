@@ -9,7 +9,7 @@ lib_LTLIBRARIES = libggeodesy.la
 ## ----------------------------------------------------
 ##
 libggeodesy_la_CXXFLAGS = \
-	-std=c++14 \
+	-std=c++17 \
 	-g \
 	-pg \
 	-Wall \
@@ -43,4 +43,5 @@ pkginclude_HEADERS = \
 ##
 dist_libggeodesy_la_SOURCES = \
 	top2daz.cpp \
+	top2car.cpp \
 	trnsfdtls.cpp

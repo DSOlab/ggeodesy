@@ -8,7 +8,6 @@
 #define _CARTESIAN_TO_TOPOCENTRIC_
 
 #include <cmath>
-
 #include "car2ell.hpp"
 
 namespace ngpt
@@ -39,8 +38,10 @@ namespace ngpt
 /// \see "Physical Geodesy", pg. 209
 ///
 template<ellipsoid E>
-    void car2top(double xi, double yi, double zi, double xj, double yj, double zj, 
-        double& north, double& east, double& up) noexcept
+    void
+    car2top(double xi, double yi, double zi, double xj, double yj, double zj, 
+        double& north, double& east, double& up)
+    noexcept
 {
 
     // Ellipsoidal coordinates of reference point.
