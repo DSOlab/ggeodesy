@@ -31,7 +31,9 @@ int main ()
 {
     /// a (reference) point on ellipsoid.
     Point p1 {4595220.02261, 2039434.13622, 3912625.96044};
-    Point p2 {4595220.02261+5e0, 2039434.13622+5e0, 3912625.96044+5e0};
+    Point p2 {4595220.02261+5.12345,
+              2039434.13622+5.12345,
+              3912625.96044+5.12345};
     
     // --------------------------------------------------------------------- //
     //                     TEST COORDINATE TRANSFORMATIONS
@@ -68,6 +70,7 @@ int main ()
     printf("\ndistance   = %15.7f (m)", dist);
     printf("\nazimouth   = %15.10f deg.", rad2deg(azi) );
     printf("\nzenith ang.= %15.10f deg.", rad2deg(zen) );
+    assert( std::abs(dist-d1) < prec );
 
     printf("\n\nFrom the topocentric vector we can go back to cartesian, if we");
     printf("\nknow the coordinates (actually latitude and longtitude of the");
@@ -75,12 +78,17 @@ int main ()
     printf("\nof the second, ending point");
     Point p5, // ellipsoidal coordinates of p1
           p6; // cartesian coordinates of p2
-    car2ell<ellipsoid::grs80>(p2.x, p2.y, p2.z, p5.x, p5.y, p5.z);
+    car2ell<ellipsoid::grs80>(p1.x, p1.y, p1.z, p5.x, p5.y, p5.z);
     top2car(p4.x, p4.y, p4.z, p5.x, p5.y, p6.x, p6.y, p6.z);
     printf("\n| φ |   |%+15.10f| | δx |    |%+15.5f|", rad2deg(p5.x), p6.x);
     printf("\n| λ | = |%+15.10f| | δy | =  |%+15.5f|", rad2deg(p5.y), p6.y);
     printf("\n| h |A  |%+14.5f | | δz |AB  |%+15.5f|", p5.z, p6.z);
-
+    printf("%15.10f",std::abs(p6.x+p3.x));
+    printf("%15.10f",std::abs(p6.y+p3.y));
+    printf("%15.10f",std::abs(p6.z+p3.z));
+    assert(  std::abs(p6.x+p3.x) < prec
+          && std::abs(p6.y+p3.y) < prec
+          && std::abs(p6.z+p3.z) < prec );
 
     printf("\n");
     return 0;

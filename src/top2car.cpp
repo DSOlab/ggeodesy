@@ -16,7 +16,7 @@ noexcept
     const double clat = std::cos(lat);
 
     dx = -slon*east -clon*slat*north + clon*clat*up;
-    dy =  clat*east -slon*slat*north + slon*clat*up;
+    dy =  clon*east -slon*slat*north + slon*clat*up;
     dz =             clat*north      + slat*up;
 
     return;
