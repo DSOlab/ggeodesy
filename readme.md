@@ -20,3 +20,13 @@ geometric characteristics like
     // meridional radii of curvature at a given latitude
     double m  = M<ellipsoid::pz90>(/*latitude in radians*/);
 ```
+
+## Coordinate Transformations
+
+The following coordinate transformations are provided (for points on some reference ellipsoid):
+* Cartesian to Ellipsoidal (aka [x, y, z] to [φ, λ, height])
+* Ellipsoidal to Cartesian (aka [φ, λ, height] to [x, y, z])
+* Cartesian to Topocentric (aka [δx, δy, δz] to [north, east, up])
+* Topocentric to Cartesian (aka  [north, east, up] to [δx, δy, δz])
+
+## Other thing ... (todo)
