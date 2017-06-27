@@ -3,14 +3,16 @@
 ///
 /// \brief Compute azimouth, zenith and distance from a topocentric vector.
 ///
+/// see http://www.navipedia.net/index.php/Transformations_between_ECEF_and_ENU_coordinates
+/// 
 
 #include <cmath>
 #include <stdexcept>
 #include "geodesy.hpp"
 
 void 
-ngpt::top2daz(double north, double east, double up, double& distance, 
-    double& azimouth, double& zenith)
+ngpt::top2daz(double north, double east, double up,
+    double& distance, double& azimouth, double& zenith)
 {
 
   // spatial distance of vector
@@ -26,7 +28,7 @@ ngpt::top2daz(double north, double east, double up, double& distance,
 
   // normalize to range [0-2pi)
   azimouth  = std::fmod(a, ngpt::D2PI);
-  while (azimouth < .0) azimouth += ngpt::D2PI;
+  if (azimouth < 0e0) azimouth += ngpt::D2PI;
 
   // zenith angle [0-pi)
   zenith = std::acos(up / distance);

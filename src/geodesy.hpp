@@ -142,8 +142,11 @@ template<typename T,
         std::is_floating_point<T>::value
         >
     >
-    void rad2hexd(T radians, int& deg, int& min, T& sec) noexcept
-{ return decd2hexd(rad2deg(radians), deg, min, sec); }
+    void
+    rad2hexd(T radians, int& deg, int& min, T& sec) noexcept
+{ 
+    return decd2hexd(rad2deg(radians), deg, min, sec);
+}
 
 /// \brief Bearing (i.e. forward azimouth) of great circle between two points
 /// on the sphere.
