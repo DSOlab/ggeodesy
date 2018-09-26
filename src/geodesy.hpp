@@ -9,8 +9,9 @@
 #define __NGPT_GEODESY_HPP__
 
 #include <type_traits>
-#include "geoconst.hpp"
 #include <cmath>
+#include <stdexcept>
+#include "geoconst.hpp"
 
 namespace ngpt
 {
@@ -43,6 +44,43 @@ template<typename T> T deg2rad(T degrees) noexcept { return degrees * DEG2RAD; }
 
 /// \brief Convert radians to degrees.
 template<typename T> T rad2deg(T radians) noexcept { return radians * RAD2DEG; }
+
+/// \brief Normalize angle.
+///
+/// Normalize an angle in the interval [lower, upper). 
+///
+/// \tparam    T      Any floating point type for input and results.
+/// \param[in] angle  The angle to normalize (note that the unit should be the
+///                   same as in lower and upper parameters).
+/// \param[in] lower  lower bound (inclusive). Default value is 0
+/// \param[in] upper  upper bound (exclusive). Default is 2*π
+///
+/// \note  It is not always needed to use this function to normalize an angle.
+///        If i.e. the angle is a result of a function that returns values in
+///        the range (-π , +π] radians, and we need to normalize in the range
+///        [0, 2π), then we can use: angle = std::fmod(angle+2π, 2π).
+template<typename T,
+    typename = std::enable_if_t<
+        std::is_floating_point<T>::value
+        >
+    >
+    T
+    normalize_angle(T angle, T lower=0e0, T upper=D2PI)
+{
+    if (lower >= upper)
+        throw std::invalid_argument("normalize_angle(): Invalid lower/upper bounds");
+
+    double res {angle};
+    if (angle>upper || angle==lower)
+        angle = lower +
+            std::fmod(std::abs(angle+upper), std::abs(lower)+std::abs(upper));
+    if (angle<lower || angle==upper)
+        angle = upper -
+            std::fmod(std::abs(angle-lower), std::abs(lower)+std::abs(upper));
+
+    res = (res==upper)?(lower):(angle);
+    return res;
+}
 
 /// \brief Decimal to hexicondal degrees.
 ///

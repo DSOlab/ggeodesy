@@ -6,20 +6,21 @@
 
 #ifndef __NGPT_GEOCONST_HPP__
 #define __NGPT_GEOCONST_HPP__
+#include <cmath>
 
 namespace ngpt
 {
     /// The value of pi.
-    constexpr double DPI  { 3.141592653589793238463 };
+    constexpr double DPI  { std::atan(1e00)*4e0 };
     
     /// The value of 2 * pi.
-    constexpr double D2PI { 2 * DPI };
+    constexpr double D2PI { 2e0 * DPI };
 
     /// Degrees to Radians coefficient.
-    constexpr double DEG2RAD { DPI / 180.0e0 };
+    constexpr double DEG2RAD { DPI / 180e0 };
     
     /// Radians to Degrees coefficient.
-    constexpr double RAD2DEG { 180.0e0 / DPI };
+    constexpr double RAD2DEG { 180e0 / DPI };
 
 } // namespace ngpt
 

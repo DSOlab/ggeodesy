@@ -162,6 +162,18 @@ int main ()
     printf("\tBearing: %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
     printf("\tdAz = %15.7f sec or %6.2f%%\n", rad2deg(std::abs(a_for-fr_bearing))*3600.0,
         std::abs(a_for-fr_bearing)*100.0/D2PI);
-
+    
+    // --------------------------------------------------------------------- //
+    //                TEST ANGLE NORMALIZATION
+    // --------------------------------------------------------------------- //
+    double a;
+    double angle = -DPI;
+    double b;
+    while (angle <= DPI) {
+        a = normalize_angle(angle, 0e0, D2PI);
+        b = std::fmod(angle+D2PI, D2PI);
+        assert (std::abs(a-b)>1e-10);
+        angle += 1e-3;
+    }
     return 0;
 }

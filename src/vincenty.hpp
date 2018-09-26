@@ -141,7 +141,7 @@ template<ellipsoid E = ellipsoid::wgs84>
     // backward azimouth
     a21 = std::atan2(cosU1*sinLambda, -sinU1*cosU2+cosU1*sinU2*cosLambda);
     // normalize
-    a21 = std::fmod(a21+DPI, D2PI);
+    a21 = std::fmod(a21+D2PI, D2PI);
     
     return distance;
 }
