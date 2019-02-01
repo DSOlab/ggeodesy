@@ -22,6 +22,20 @@
 
 namespace ngpt {
 
+/*
+double
+__angle_wrap__(double angle) noexcept
+{
+    double rem = angle;
+    if (!(angle>=0e0 and angle <D2PI)) {
+        rem = std::fmod(angle, D2PI);
+        if (rem < 0e0) rem += D2PI;
+        if (rem > D2PI) rem -= D2PI;
+    }
+    return rem;
+}
+*/
+
 /// \brief Compute the haversine function.
 ///
 /// This function is used within the haversine formula to compute great-circle
@@ -29,7 +43,8 @@ namespace ngpt {
 /// latitudes.
 ///
 /// \see https://en.wikipedia.org/wiki/Haversine_formula
-double haversine(double angle) noexcept
+double
+haversine(double angle) noexcept
 {
     double sinHalfTheta { std::sin(angle/2.0) };
     return sinHalfTheta * sinHalfTheta;
@@ -61,10 +76,23 @@ template<ellipsoid E = ellipsoid::wgs84>
     // according to wikipedia, The International Union of Geodesy and Geophysics
     // (IUGG) defines the mean radius (denoted R_1) to be
     // 2a+b/3
-    double EarthRadius { (2*ellipsoid_traits<E>::a + semi_minor<E>())/3 };
-    return 2 * EarthRadius * std::asin(std::sqrt(h));
+    double EarthRadius { (2e0*ellipsoid_traits<E>::a + semi_minor<E>())/3e0 };
+    return 2e0 * EarthRadius * std::asin(std::sqrt(h));
 }
-
+double
+haversine(double lat1, double lon1, double lat2, double lon2,
+    const Ellipsoid& e)
+{
+    double h  { haversine(lat2-lat1) + std::cos(lat1) * std::cos(lat2) * 
+        haversine(lon2-lon1) };
+    // according to wikipedia, The International Union of Geodesy and Geophysics
+    // (IUGG) defines the mean radius (denoted R_1) to be
+    // 2a+b/3
+    double semi_major = e.semi_major();
+    double semi_minor = e.semi_minor();
+    double EarthRadius { (2e0*semi_major + semi_minor)/3e0 };
+    return 2e0 * EarthRadius * std::asin(std::sqrt(h));
+}
 
 /// \brief Compute the inverse Vincenty formula.
 ///

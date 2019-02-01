@@ -14,38 +14,39 @@
 namespace ngpt
 {
 
-/// \brief Cartesian to ellipsoidal.
+namespace core
+{
+/// @brief Cartesian to ellipsoidal.
 ///
 /// Transform cartesian, geocentric coordinates (x, y, z) to ellipsoidal (i.e.
-/// latitude, longtitude, ellispoidal height). This is a template function, 
-/// depending on the ellipsoid parameters. All units are meters and radians.
+/// latitude, longtitude, ellispoidal height). All units are meters and 
+/// radians.
 ///
-/// \tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
-/// \param[in]  x      Cartesian x-component, meters.
-/// \param[in]  y      Cartesian y-component, meters.
-/// \param[in]  z      Cartesian z-component, meters.
-/// \param[out] phi    Ellipsoidal latitude, radians.
-/// \param[out] lambda Ellipsoidal longtitude, radians.
-/// \param[out] h      Ellipsoidal height, meters.
-/// \throw             Does not throw.
+/// @param[in]  x      Cartesian x-component, meters.
+/// @param[in]  y      Cartesian y-component, meters.
+/// @param[in]  z      Cartesian z-component, meters.
+/// @param[in]  a      Semi-major axis of the (reference) ellipsoid (meters)
+/// @param[in]  f      Flattening of the (reference) ellipsoid
+/// @param[out] phi    Ellipsoidal latitude, radians.
+/// @param[out] lambda Ellipsoidal longtitude, radians.
+/// @param[out] h      Ellipsoidal height, meters.
+/// @throw             Does not throw.
 ///
-/// \see Fukushima, T., "Transformation from Cartesian to geodetic coordinates
+/// @see Fukushima, T., "Transformation from Cartesian to geodetic coordinates
 ///      accelerated by Halley's method", J. Geodesy (2006), 79(12): 689-693
 ///
-template<ellipsoid E>
-    void car2ell(double x, double y, double z, double& phi, double& lambda,
-        double& h) noexcept
+void
+car2ell(double x, double y, double z, double semi_major, double flattening,
+    double& phi, double& lambda, double& h)
+noexcept
 {
-    constexpr double a { ellipsoid_traits<E>::a };
-    constexpr double f { ellipsoid_traits<E>::f };
-    
     // Functions of ellipsoid parameters.
-    constexpr double aeps2 { a*a*1e-32 };
-    constexpr double e2    { (2.0e0-f)*f };
-    constexpr double e4t   { e2*e2*1.5e0 };
-    constexpr double ep2   { 1.0e0-e2 };
-    constexpr double ep    { std::sqrt(ep2) };
-    constexpr double aep   { a*ep };
+    const double aeps2 { semi_major*semi_major*1e-32 };
+    const double e2    { (2.0e0-flattening)*flattening };
+    const double e4t   { e2*e2*1.5e0 };
+    const double ep2   { 1.0e0-e2 };
+    const double ep    { std::sqrt(ep2) };
+    const double aep   { semi_major*ep };
 
     // Compute Coefficients of (Modified) Quartic Equation
     // Remark: Coefficients are rescaled by dividing by 'a'
@@ -68,8 +69,8 @@ template<ellipsoid E>
         // Compute distance from polar axis.
         double p { std::sqrt(p2) };
         // Normalize.
-        double s0  { absz/a };
-        double pn  { p/a };
+        double s0  { absz/semi_major };
+        double pn  { p/semi_major };
         double zp  { ep*s0 };
         // Prepare Newton correction factors.
         double c0  { ep*pn };
@@ -90,7 +91,7 @@ template<ellipsoid E>
         phi = ::atan(s1/cp);
         double s12 { s1*s1 };
         double cp2 { cp*cp };
-        h = (p*cp+absz*s1-a*std::sqrt(ep2*s12+cp2))
+        h = (p*cp+absz*s1-semi_major*std::sqrt(ep2*s12+cp2))
             /std::sqrt(s12+cp2);
 
       } else { // Special case: pole.
@@ -105,6 +106,96 @@ template<ellipsoid E>
     // Finished.
     return;
 }
+
+}// namespace core
+
+/// @brief Cartesian to ellipsoidal.
+///
+/// Transform cartesian, geocentric coordinates (x, y, z) to ellipsoidal (i.e.
+/// latitude, longtitude, ellispoidal height). This is a template function, 
+/// depending on the ellipsoid parameters. All units are meters and radians.
+///
+/// @tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @param[in]  x      Cartesian x-component, meters.
+/// @param[in]  y      Cartesian y-component, meters.
+/// @param[in]  z      Cartesian z-component, meters.
+/// @param[out] phi    Ellipsoidal latitude, radians.
+/// @param[out] lambda Ellipsoidal longtitude, radians.
+/// @param[out] h      Ellipsoidal height, meters.
+/// @throw             Does not throw.
+///
+/// @see Fukushima, T., "Transformation from Cartesian to geodetic coordinates
+///      accelerated by Halley's method", J. Geodesy (2006), 79(12): 689-693
+///
+template<ellipsoid E>
+    void car2ell(double x, double y, double z, double& phi, double& lambda,
+        double& h) 
+    noexcept
+{
+    constexpr double semi_major { ellipsoid_traits<E>::a };
+    constexpr double flattening { ellipsoid_traits<E>::f };
+    
+    core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
+
+    // Finished.
+    return;
+}
+
+/// @brief Cartesian to ellipsoidal.
+///
+/// Transform cartesian, geocentric coordinates (x, y, z) to ellipsoidal (i.e.
+/// latitude, longtitude, ellispoidal height). All units are meters and 
+/// radians.
+///
+/// @param[in]  e      An Ellipsoid instance
+/// @param[in]  x      Cartesian x-component, meters.
+/// @param[in]  y      Cartesian y-component, meters.
+/// @param[in]  z      Cartesian z-component, meters.
+/// @param[out] phi    Ellipsoidal latitude, radians.
+/// @param[out] lambda Ellipsoidal longtitude, radians.
+/// @param[out] h      Ellipsoidal height, meters.
+/// @throw             Does not throw.
+///
+/// @see Fukushima, T., "Transformation from Cartesian to geodetic coordinates
+///      accelerated by Halley's method", J. Geodesy (2006), 79(12): 689-693
+///
+void
+car2ell(double x, double y, double z, double& phi, double& lambda,
+        double& h, const Ellipsoid& e)
+noexcept
+{
+    double semi_major { e.semi_major() };
+    double flattening { e.flattening() };
+    
+    core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
+
+    // Finished.
+    return;
+}
+
+/// @brief Cartesian to ellipsoidal.
+///
+/// Transform cartesian, geocentric coordinates (x, y, z) to ellipsoidal (i.e.
+/// latitude, longtitude, ellispoidal height). All units are meters and 
+/// radians.
+///
+/// @param[in]  e      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @param[in]  x      Cartesian x-component, meters.
+/// @param[in]  y      Cartesian y-component, meters.
+/// @param[in]  z      Cartesian z-component, meters.
+/// @param[out] phi    Ellipsoidal latitude, radians.
+/// @param[out] lambda Ellipsoidal longtitude, radians.
+/// @param[out] h      Ellipsoidal height, meters.
+/// @throw             Does not throw.
+///
+/// @see Fukushima, T., "Transformation from Cartesian to geodetic coordinates
+///      accelerated by Halley's method", J. Geodesy (2006), 79(12): 689-693
+///
+void
+car2ell(double x, double y, double z, double& phi, double& lambda,
+        double& h, ellipsoid e)
+noexcept
+{ car2ell(x, y, z, phi, lambda, h, Ellipsoid(e)); }
 
 } // end namespace
 

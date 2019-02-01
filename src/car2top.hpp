@@ -13,7 +13,10 @@
 namespace ngpt
 {
 
-/// \brief Cartesian to topocentric (vector).
+namespace core
+{
+
+/// @brief Cartesian to topocentric (vector).
 ///
 /// Transform a vector expressed in cartesian, geocentric coordinates to the 
 /// topocentric, local system around point i. This is a template function, 
@@ -22,29 +25,29 @@ namespace ngpt
 /// \f$\vec{\Delta X}\f$ to the local topocentric reference
 /// frame around point \f$\vec{X}_i\f$.
 ///
-/// \tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
-/// \param[in]  xi     Cartesian x-component of point i, meters.
-/// \param[in]  yi     Cartesian y-component of point i, meters.
-/// \param[in]  zi     Cartesian z-component of point i, meters.
-/// \param[in]  dx     x-component of ΔX vector, meters.
-/// \param[in]  dy     y-component of ΔX vector, meters.
-/// \param[in]  dz     z-component of ΔX vector, meters.
-/// \param[out] north  Vector north component, meters.
-/// \param[out] east   Vector east component, meters.
-/// \param[out] up     Vector up component, meters.
-/// \throw             Does not throw.
+/// @param[in]  xi     Cartesian x-component of point i, meters.
+/// @param[in]  yi     Cartesian y-component of point i, meters.
+/// @param[in]  zi     Cartesian z-component of point i, meters.
+/// @param[in]  dx     x-component of ΔX vector, meters.
+/// @param[in]  dy     y-component of ΔX vector, meters.
+/// @param[in]  dz     z-component of ΔX vector, meters.
+/// @param[in]  semi_major  The semi-major axis of the ref. ellipsoid
+/// @param[in]  flattening  The flattening of the ref. ellipsoid
+/// @param[out] north  Vector north component, meters.
+/// @param[out] east   Vector east component, meters.
+/// @param[out] up     Vector up component, meters.
+/// @throw             Does not throw.
 ///
-/// \note The ellispoid is needed to transform the cartesian coordinates of
+/// @note The ellispoid is needed to transform the cartesian coordinates of
 ///       the (reference) point i to ellispoidal coordinates.
 ///
-/// \see "Physical Geodesy", pg. 209
+/// @see "Physical Geodesy", pg. 209
 ///
-template<ellipsoid E>
-    void
-    dcar2top(double xi, double yi, double zi,
-             double dx, double dy, double dz, 
-             double& north, double& east, double& up)
-    noexcept
+void
+dcar2top(double xi, double yi, double zi, double dx, double dy, double dz, 
+    double semi_major, double flattening,
+    double& north, double& east, double& up)
+noexcept
 {
 
     // Ellipsoidal coordinates of reference point.
@@ -53,7 +56,7 @@ template<ellipsoid E>
            h_i;
 
     // Cartesian to ellipsoidal for reference point.
-    ngpt::car2ell<E>(xi, yi, zi, phi_i, lambda_i, h_i);
+    core::car2ell(xi, yi, zi, semi_major, flattening, phi_i, lambda_i, h_i);
 
     // Trigonometric numbers.
     double cosf { std::cos(phi_i) };
@@ -70,7 +73,9 @@ template<ellipsoid E>
     return;
 }
 
-/// \brief Cartesian to topocentric (vector).
+}// namespace core
+
+/// @brief Cartesian to topocentric (vector).
 ///
 /// Transform a vector expressed in cartesian, geocentric coordinates to the 
 /// topocentric, local system around point i. This is a template function, 
@@ -79,22 +84,22 @@ template<ellipsoid E>
 /// \f$\vec{\Delta X} = \vec{X}_j - \vec{X}_i\f$ to the local topocentric reference
 /// frame around point \f$\vec{X}_i\f$.
 ///
-/// \tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
-/// \param[in]  xi     Cartesian x-component of point i, meters.
-/// \param[in]  yi     Cartesian y-component of point i, meters.
-/// \param[in]  zi     Cartesian z-component of point i, meters.
-/// \param[in]  xj     Cartesian x-component of point j, meters.
-/// \param[in]  yj     Cartesian y-component of point j, meters.
-/// \param[in]  zj     Cartesian z-component of point j, meters.
-/// \param[out] north  Vector north component, meters.
-/// \param[out] east   Vector east component, meters.
-/// \param[out] up     Vector up component, meters.
-/// \throw             Does not throw.
+/// @tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @param[in]  xi     Cartesian x-component of point i, meters.
+/// @param[in]  yi     Cartesian y-component of point i, meters.
+/// @param[in]  zi     Cartesian z-component of point i, meters.
+/// @param[in]  xj     Cartesian x-component of point j, meters.
+/// @param[in]  yj     Cartesian y-component of point j, meters.
+/// @param[in]  zj     Cartesian z-component of point j, meters.
+/// @param[out] north  Vector north component, meters.
+/// @param[out] east   Vector east component, meters.
+/// @param[out] up     Vector up component, meters.
+/// @throw             Does not throw.
 ///
-/// \note The ellispoid is needed to transform the cartesian coordinates of
+/// @note The ellispoid is needed to transform the cartesian coordinates of
 ///       the (reference) point i to ellispoidal coordinates.
 ///
-/// \see "Physical Geodesy", pg. 209
+/// @see "Physical Geodesy", pg. 209
 ///
 template<ellipsoid E>
     void
@@ -103,16 +108,63 @@ template<ellipsoid E>
             double& north, double& east, double& up)
     noexcept
 {
+    constexpr double semi_major { ellipsoid_traits<E>::a };                     
+    constexpr double flattening { ellipsoid_traits<E>::f };
+    
     // Catresian vector.
     double dx { xj - xi };
     double dy { yj - yi };
     double dz { zj - zi };
 
     // transform to topocentric
-    dcar2top<E>(xi, yi, zi, dx, dy, dz, north, east, up);
+    core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, 
+        north, east, up);
 
     // Finished.
     return;
+}
+
+template<ellipsoid E>
+    void
+    dcar2top(double xi, double yi, double zi, double dx, double dy, double dz, 
+        double& north, double& east, double& up)
+    noexcept
+{
+    constexpr double semi_major { ellipsoid_traits<E>::a };                     
+    constexpr double flattening { ellipsoid_traits<E>::f };
+    core::dcar2top(xi,yi,zi,dx,dy,dz,semi_major,flattening,north,east,up);
+}
+
+void
+car2top(double xi, double yi, double zi,
+    double xj, double yj, double zj, const Ellipsoid& e,
+    double& north, double& east, double& up)
+noexcept
+{
+    const double semi_major { e.semi_major() };                     
+    const double flattening { e.flattening() };
+    
+    // Catresian vector.
+    double dx { xj - xi };
+    double dy { yj - yi };
+    double dz { zj - zi };
+
+    // transform to topocentric
+    core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, 
+        north, east, up);
+
+    // Finished.
+    return;
+}
+
+void
+dcar2top(double xi, double yi, double zi, double dx, double dy, double dz, 
+    const Ellipsoid& e, double& north, double& east, double& up)
+noexcept
+{
+    const double semi_major { e.semi_major() };                     
+    const double flattening { e.flattening() };
+    core::dcar2top(xi,yi,zi,dx,dy,dz,semi_major,flattening,north,east,up);
 }
 
 } // end namespace
