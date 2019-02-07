@@ -41,7 +41,7 @@ namespace core
     /// @brief Compute the squared eccentricity.
     ///
     /// Compute the squared (first) eccentricity (i.e. e^2) given the
-    /// flattening
+    /// flattening of an ellipsoid, aka \f$ e^2 = (2-f)*f \f$
     /// @param[in] f flattening
     /// @return      squared eccentricity
     constexpr double
@@ -52,7 +52,7 @@ namespace core
     /// @brief Compute the semi-minor axis (aka b)
     ///
     /// Compute the semi-minor axis of an ellipsoid(i.e. e^2), given the
-    /// flattening and the semi-major axis
+    /// flattening and the semi-major axis, aka \f$ \beta = \alpha * (1-f) \f$
     /// @param[in] f flattening
     /// @param[in] a semi-major axis (meters)
     /// @return      semi-minor axis (meters)
@@ -64,14 +64,14 @@ namespace core
     /// @brief Compute the normal radius of curvature at a given latitude (on 
     ///        a reference ellipsoid).
     ///
-    /// @param[in] lat The latitude in radians.
+    /// @param[in] lat The latitude (radians)
     /// @param[in] a   The ellipsoid's semi-major axis (meters)
     /// @param[in] b   The ellipsoid's semi-minor axis (meters)
-    /// @return        The normal radius of curvature in meters.
-    /// @throw         Does not throw (see notes).
+    /// @return        The normal radius of curvature (meters)
+    /// @throw         Does not throw (see notes)
     ///
-    /// @note If the denominator (den) is zero then funny things could happen; this
-    ///       however should **never** occur for any reference ellipsoid.
+    /// @note If the denominator (den) is zero then funny things could happen;
+    ///       this however should **never** occur for any reference ellipsoid.
     ///
     /// @see "Physical Geodesy", pg. 194
     /// @see https://en.wikipedia.org/wiki/Earth_radius
@@ -98,11 +98,11 @@ namespace core
     /// @brief Compute the meridional radii of curvature at a given latitude 
     ///        on a reference ellipsoid).
     ///
-    /// @param[in] lat The latitude in radians.
+    /// @param[in] lat The latitude in (radians)
     /// @param[in] a   The ellipsoid's semi-major axis (meters)
     /// @param[in] b   The ellipsoid's semi-minor axis (meters)
-    /// @return        The meridional radius of curvature in meters.
-    /// @throw         Does not throw (see notes).
+    /// @return        The meridional radius of curvature (meters)
+    /// @throw         Does not throw (see notes)
     ///
     /// @see https://en.wikipedia.org/wiki/Earth_radius
     ///
