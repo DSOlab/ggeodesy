@@ -1,7 +1,7 @@
 ///
-/// \file ell2car.hpp
+/// @file ell2car.hpp
 ///
-/// \brief Transform ellipsoidal to cartesian coordinates.
+/// @brief Transform ellipsoidal to cartesian coordinates.
 ///
 
 #ifndef __ELLIPSOIDAL_TO_CARTESIAN__
