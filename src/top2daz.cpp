@@ -1,9 +1,9 @@
 ///
-/// \file top2daz.cpp
+/// @file top2daz.cpp
 ///
-/// \brief Compute azimouth, zenith and distance from a topocentric vector.
+/// @brief Compute azimouth, zenith and distance from a topocentric vector.
 ///
-/// see http://www.navipedia.net/index.php/Transformations_between_ECEF_and_ENU_coordinates
+/// @see http://www.navipedia.net/index.php/Transformations_between_ECEF_and_ENU_coordinates
 /// 
 
 #include <cmath>
@@ -20,7 +20,7 @@ ngpt::top2daz(double north, double east, double up,
 
   // check if zero distance or north are zero
   if ( (!distance) || (!north) ) {
-      throw std::runtime_error("geodesy::top2daz -> Zero Division !!");
+      throw std::runtime_error("[ERROR] geodesy::top2daz -> Zero Division !!");
   }
 
   // azimouth

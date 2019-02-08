@@ -160,8 +160,11 @@ template<>
 template<>
     struct ellipsoid_traits<ellipsoid::wgs84>
 {
+    /// Semi-major axis (m).
     static constexpr double a      { 6378137.0e0 };
+    /// Flattening.
     static constexpr double f      { 1.0e00/298.257223563e0 };
+    /// Reference ellipsoid name.
     static constexpr const char* n { "WGS84" };
 };
 
@@ -172,8 +175,11 @@ template<>
 template<>
     struct ellipsoid_traits<ellipsoid::pz90>
 {
+    /// Semi-major axis (m).
     static constexpr double a      { 6378135.0e0 };
+    /// Flattening.
     static constexpr double f      { 1.0e00/298.257839303e0 };
+    /// Reference ellipsoid name.
     static constexpr const char* n { "PZ90" };
 };
 
@@ -231,7 +237,7 @@ template<ellipsoid E>
 /// A class to represent a reference ellipsoid. An ellipsoid is defined by
 /// two parameters, namely:
 /// * semi-major axis, \f$ \alpha \f$ aka the equatorial radius of the ellipsoid
-/// * flattening, f aka \$ f = \frac{\alpha - \beta}{\alpha} \$f
+/// * flattening, f aka \f$ f = \frac{\alpha - \beta}{\alpha} \f$
 ///
 /// Users can construct the commonly used ellipsoids in Geodesy (grs80,
 /// wgs84 and pz90) via the ngpt::ellipsoid enums, or any other ellipsoid
@@ -240,10 +246,10 @@ class Ellipsoid
 {
 public:
 
-    // @brief  Constructor from an ngpt::ellipsoid enum
-    // @param[in] e An ngpt::ellipsoid; fundamental geometric constants are
-    //              automatically assigned via the ngpt::ellipsoid_traits
-    //              class.
+    /// @brief  Constructor from an ngpt::ellipsoid enum
+    /// @param[in] e An ngpt::ellipsoid; fundamental geometric constants are
+    ///              automatically assigned via the ngpt::ellipsoid_traits
+    ///              class.
     explicit
     Ellipsoid(ellipsoid e) noexcept
     {
@@ -263,34 +269,34 @@ public:
         }
     }
 
-    // @brief  User-defined instance.
-    // @param[in] a The semi-major axis (meters)
-    // @param[in] f The flattening
+    /// @brief  User-defined instance.
+    /// @param[in] a The semi-major axis (meters)
+    /// @param[in] f The flattening
     Ellipsoid(double a, double f) noexcept
     : __a(a), __f(f) {};
 
-    // @brief  Get the semi-major axis \f$ \alpha \f$
-    // @return The semi-major axis (meters)
+    /// @brief  Get the semi-major axis \f$ \alpha \f$
+    /// @return The semi-major axis (meters)
     double
     semi_major() const noexcept
     { return __a; }
 
-    // @brief  Get the flattening
-    // @return The flattening
+    /// @brief  Get the flattening
+    /// @return The flattening
     double
     flattening() const noexcept
     { return __f; }
 
-    // @brief  Get the squared eccentricity \f$ e^2 \f$
-    // @return Eccentricity aquared
-    // @see ngpt::core::eccentricity_squared
+    /// @brief  Get the squared eccentricity \f$ e^2 \f$
+    /// @return Eccentricity aquared
+    /// @see ngpt::core::eccentricity_squared
     double
     eccentricity_squared() const noexcept
     { return core::eccentricity_squared(__f); }
 
-    // @brief  Get the semi-minor axis \f$ \beta \f$
-    // @return Semi-minor axis (meters)
-    // @see ngpt::core::semi_minor
+    /// @brief  Get the semi-minor axis \f$ \beta \f$
+    /// @return Semi-minor axis (meters)
+    /// @see ngpt::core::semi_minor
     double
     semi_minor() const noexcept
     { return core::semi_minor(__a, __f); }

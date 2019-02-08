@@ -18,13 +18,13 @@ namespace ngpt
 /// Transform (geocentric) cartesian coordinates (on the ellipsoid) to
 /// ellipsoidal coordinates. Units are meters and radians.
 ///
-/// @tparam     E       The reference ellipsoid (i.e. one of ngpt::ellipsoid).
-/// @param[in]   phi    Ellipsoidal latitude, radians.
-/// @param[in]   lambda Ellipsoidal longtitude, radians.
-/// @param[in]   h      Ellipsoidal height, meters.
-/// @param[out]  x      Cartesian x-component, meters.
-/// @param[out]  y      Cartesian y-component, meters.
-/// @param[out]  z      Cartesian z-component, meters.
+/// @tparam      E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @param[in]   phi    Ellipsoidal latitude (radians)
+/// @param[in]   lambda Ellipsoidal longtitude (radians)
+/// @param[in]   h      Ellipsoidal height (meters)
+/// @param[out]  x      Cartesian x-component (meters)
+/// @param[out]  y      Cartesian y-component (meters)
+/// @param[out]  z      Cartesian z-component (meters)
 /// @throw              Does not throw.
 ///
 template<ellipsoid E>
@@ -52,9 +52,22 @@ template<ellipsoid E>
     return;
 }
 
+/// @brief Ellipsoidal to cartesian coordinates.
+///
+/// Transform (geocentric) cartesian coordinates (on the ellipsoid) to
+/// ellipsoidal coordinates. Units are meters and radians.
+///
+/// @param[in]   phi    Ellipsoidal latitude (radians)
+/// @param[in]   lambda Ellipsoidal longtitude (radians)
+/// @param[in]   h      Ellipsoidal height (meters)
+/// @param[in]   e      The reference ellipsoid (ngpt::Ellipsoid)
+/// @param[out]  x      Cartesian x-component (meters)
+/// @param[out]  y      Cartesian y-component (meters)
+/// @param[out]  z      Cartesian z-component (meters)
+/// @throw              Does not throw.
 void
-ell2car(double phi, double lambda, double h, double& x, double& y, double& z, 
-    const Ellipsoid& e)
+ell2car(double phi, double lambda, double h, const Ellipsoid& e, 
+    double& x, double& y, double& z)
 noexcept
 {
     // Eccentricity squared.
