@@ -253,7 +253,7 @@ public:
     explicit
     Ellipsoid(ellipsoid e) noexcept
     {
-        switch (__ell) {
+        switch (e) {
             case ellipsoid::grs80:
                 __a = ellipsoid_traits<ellipsoid::grs80>::a;
                 __f = ellipsoid_traits<ellipsoid::grs80>::f;

@@ -191,9 +191,7 @@ template<typename T,
     >
     T
     hexd2rad(int deg, int min, T sec) noexcept
-{
-    return deg2rad( hexd2decd(deg, min, sec) );
-}
+{return deg2rad( hexd2decd(deg, min, sec) );}
 
 
 /// @brief Radians to hexicondal degrees.
@@ -215,9 +213,7 @@ template<typename T,
     >
     void
     rad2hexd(T radians, int& deg, int& min, T& sec) noexcept
-{ 
-    return decd2hexd(rad2deg(radians), deg, min, sec);
-}
+{return decd2hexd(rad2deg(radians), deg, min, sec);}
 
 /// @brief Bearing (i.e. forward azimouth) of great circle between two points
 /// on the sphere.

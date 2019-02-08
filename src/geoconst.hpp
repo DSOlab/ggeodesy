@@ -1,7 +1,7 @@
 ///
-/// \file geoconst.hpp
+/// @file geoconst.hpp
 ///
-/// \brief Fundamental constants frequently used within geodetic calculations.
+/// @brief Fundamental constants frequently used within geodetic calculations.
 ///
 
 #ifndef __NGPT_GEOCONST_HPP__
@@ -11,7 +11,7 @@
 namespace ngpt
 {
     /// The value of pi.
-    constexpr double DPI  { std::atan(1e00)*4e0 };
+    constexpr double DPI  { std::atan(1e0)*4e0 };
     
     /// The value of 2 * pi.
     constexpr double D2PI { 2e0 * DPI };

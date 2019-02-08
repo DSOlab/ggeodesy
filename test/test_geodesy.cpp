@@ -75,7 +75,7 @@ int main ()
     // --------------------------------------------------------------------- //
     printf("\n> TEST INVERSE VINCENTY ALGORITHM\n");
     printf("------------------------------------\n");
-    double S, a_for, a_bac, a_sec;
+    double S, a_for(0e0), a_bac(0e0), a_sec(0e0);
     int a_deg, a_min;
     // try the (inverse) vincenty algorithm; test data/output is taken from
     // http://www.ga.gov.au/geodesy/datums/vincenty_inverse.jsp

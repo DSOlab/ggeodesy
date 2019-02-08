@@ -144,7 +144,7 @@ template<ellipsoid E>
 ///
 /// @see  ngpt::core::car2ell
 void
-car2ell(double x, double y, double z, , const Ellipsoid& e, 
+car2ell(double x, double y, double z, const Ellipsoid& e, 
     double& phi, double& lambda, double& h)
 noexcept
 {
@@ -169,7 +169,7 @@ void
 car2ell(double x, double y, double z, ellipsoid e, 
     double& phi, double& lambda, double& h)
 noexcept
-{ car2ell(x, y, z, phi, lambda, h, Ellipsoid(e)); }
+{ car2ell(x, y, z, Ellipsoid(e), phi, lambda, h); }
 
 } // end namespace
 
