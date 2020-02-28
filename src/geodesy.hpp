@@ -34,7 +34,7 @@ namespace ngpt
 ///
 void
 top2daz(double north, double east, double up, double& distance,
-    double& azimouth, double& zenith);
+  double& azimouth, double& zenith);
 
 /// @brief Topocentric vector to a geocentric, cartesian vector
 ///
@@ -55,25 +55,25 @@ top2daz(double north, double east, double up, double& distance,
 ///
 void
 top2car(double north, double east, double up, double lat, double lon,
-    double& dx, double& dy, double& dz) noexcept;
+  double& dx, double& dy, double& dz) noexcept;
 
 /// @brief Convert degrees to radians.
 /// @tparam    T       Any floating type
 /// @param[in] degrees Angle in decimal degrees
 /// @return            The (input) angle in radians
 template<typename T>
-    T
-    deg2rad(T degrees) noexcept
-    { return degrees * DEG2RAD; }
+  T
+  deg2rad(T degrees) noexcept
+{ return degrees * DEG2RAD; }
 
 /// @brief Convert radians to degrees.
 /// @tparam    T       Any floating type
 /// @param[in] radians Angle in radians
 /// @return            The (input) angle in decimal degrees
 template<typename T>
-    T
-    rad2deg(T radians) noexcept
-    { return radians * RAD2DEG; }
+  T
+  rad2deg(T radians) noexcept
+{ return radians * RAD2DEG; }
 
 /// @brief Normalize angle.
 ///
@@ -90,26 +90,26 @@ template<typename T>
 ///        the range (-π , +π] radians, and we need to normalize in the range
 ///        [0, 2π), then we can use: angle = std::fmod(angle+2π, 2π).
 template<typename T,
-    typename = std::enable_if_t<
-        std::is_floating_point<T>::value
-        >
+  typename = std::enable_if_t<
+    std::is_floating_point<T>::value
     >
-    T
-    normalize_angle(T angle, T lower=0e0, T upper=D2PI)
+  >
+  T
+  normalize_angle(T angle, T lower=0e0, T upper=D2PI)
 {
-    if (lower >= upper)
-        throw std::invalid_argument("[ERROR] normalize_angle(): Invalid lower/upper bounds");
+  if (lower >= upper)
+    throw std::invalid_argument("[ERROR] normalize_angle(): Invalid lower/upper bounds");
 
-    double res {angle};
-    if (angle>upper || angle==lower)
-        angle = lower +
-            std::fmod(std::abs(angle+upper), std::abs(lower)+std::abs(upper));
-    if (angle<lower || angle==upper)
-        angle = upper -
-            std::fmod(std::abs(angle-lower), std::abs(lower)+std::abs(upper));
+  double res {angle};
+  if (angle>upper || angle==lower)
+    angle = lower +
+      std::fmod(std::abs(angle+upper), std::abs(lower)+std::abs(upper));
+  if (angle<lower || angle==upper)
+    angle = upper -
+      std::fmod(std::abs(angle-lower), std::abs(lower)+std::abs(upper));
 
-    res = (res==upper)?(lower):(angle);
-    return res;
+  res = (res==upper)?(lower):(angle);
+  return res;
 }
 
 /// @brief Decimal to hexicondal degrees.
@@ -125,23 +125,23 @@ template<typename T,
 ///       going to be negative.
 ///
 template<typename T,
-    typename = std::enable_if_t<
-        std::is_floating_point<T>::value
-        >
-    >
-    void
-    decd2hexd(T decimal_deg, int& deg, int& min, T& sec) noexcept
+  typename = std::enable_if_t<
+      std::is_floating_point<T>::value
+      >
+  >
+  void
+  decd2hexd(T decimal_deg, int& deg, int& min, T& sec) noexcept
 {
-    T decdeg { std::abs(decimal_deg) };
+  T decdeg { std::abs(decimal_deg) };
 
-    deg = static_cast<int>(decdeg);
-    min = static_cast<int>( (decdeg - static_cast<T>(deg)) *
+  deg = static_cast<int>(decdeg);
+  min = static_cast<int>( (decdeg - static_cast<T>(deg)) *
         static_cast<T>(60.0e0) );
-    sec = decdeg - (static_cast<T>(deg) + static_cast<T>(min)/60.0e0);
-    sec *= 3600.0e0;
+  sec = decdeg - (static_cast<T>(deg) + static_cast<T>(min)/60.0e0);
+  sec *= 3600.0e0;
 
-    if (decimal_deg < T{0}) deg *= -1;
-    return;
+  if (decimal_deg < T{0}) deg *= -1;
+  return;
 }
 
 /// @brief Hexicondal degrees to decimal degrees.
@@ -158,17 +158,17 @@ template<typename T,
 ///       parameters are not checked for their sign, they should *ALWAYS* be
 ///       positive.
 template<typename T,
-    typename = std::enable_if_t<
-        std::is_floating_point<T>::value
-        >
-    >
-    T
-    hexd2decd(int deg, int min, T sec) noexcept
+  typename = std::enable_if_t<
+      std::is_floating_point<T>::value
+      >
+  >
+  T
+  hexd2decd(int deg, int min, T sec) noexcept
 {
-    T angle { static_cast<T>(std::abs(deg)) +
-        (static_cast<T>(min) + sec / 60.0e0) / 60.0e0 };
+  T angle { static_cast<T>(std::abs(deg)) +
+    (static_cast<T>(min) + sec / 60.0e0) / 60.0e0 };
 
-    return std::copysign(angle, (T)deg);
+  return std::copysign(angle, (T)deg);
 }
 
 /// @brief Hexicondal degrees to radians.
@@ -185,12 +185,12 @@ template<typename T,
 ///       parameters are not checked for their sign, they should *ALWAYS* be
 ///       positive.
 template<typename T,
-    typename = std::enable_if_t<
-        std::is_floating_point<T>::value
-        >
-    >
-    T
-    hexd2rad(int deg, int min, T sec) noexcept
+  typename = std::enable_if_t<
+      std::is_floating_point<T>::value
+      >
+  >
+  T
+  hexd2rad(int deg, int min, T sec) noexcept
 {return deg2rad( hexd2decd(deg, min, sec) );}
 
 
@@ -207,12 +207,12 @@ template<typename T,
 ///       going to be negative.
 ///
 template<typename T,
-    typename = std::enable_if_t<
-        std::is_floating_point<T>::value
-        >
-    >
-    void
-    rad2hexd(T radians, int& deg, int& min, T& sec) noexcept
+  typename = std::enable_if_t<
+      std::is_floating_point<T>::value
+      >
+  >
+  void
+  rad2hexd(T radians, int& deg, int& min, T& sec) noexcept
 {return decd2hexd(rad2deg(radians), deg, min, sec);}
 
 /// @brief Bearing (i.e. forward azimouth) of great circle between two points
@@ -231,25 +231,44 @@ template<typename T,
 ///
 /// @bug This give way too big a difference from Vincenty.
 template<typename T,
-    typename = std::enable_if_t<
-        std::is_floating_point<T>::value
-        >
-    >
-    T
-    bearing(T lat1, T lon1, T lat2, T lon2) noexcept
+  typename = std::enable_if_t<
+      std::is_floating_point<T>::value
+      >
+  >
+  T
+  bearing(T lat1, T lon1, T lat2, T lon2) noexcept
 {
-    using std::sin;
-    using std::cos;
+  using std::sin;
+  using std::cos;
 
-    double DeltaLambda = lon2 - lon1;
-    double cosLat2     = cos(lat2);
-    double nom         = sin(DeltaLambda) * cosLat2;
-    double denom       = cos(lat1)*sin(lat2) -
-                         sin(lat1)*cosLat2*cos(DeltaLambda);
-    double angle       = std::atan2(nom, denom);
-    // normalize to [0-2pi)
-    return std::fmod(angle+D2PI, D2PI);
+  double DeltaLambda = lon2 - lon1;
+  double cosLat2     = cos(lat2);
+  double nom         = sin(DeltaLambda) * cosLat2;
+  double denom       = cos(lat1)*sin(lat2) -
+                       sin(lat1)*cosLat2*cos(DeltaLambda);
+  double angle       = std::atan2(nom, denom);
+  // normalize to [0-2pi)
+  return std::fmod(angle+D2PI, D2PI);
 }
+
+constexpr struct {
+  double tx, ty, tz, // meters
+         r1, r2, r3, // rad
+         d;          // ppb
+} wgs2pz_parameters[] = {
+  {   7e-2,   0e0,   -77e-2, -19e-9, -4e-9, 353e-9,   -3e0},
+  {   0e0,  250e-2,    0e0,    0e0,   0e0,  392e-9,    0e0},
+  {   0e0,    0e0,     0e0,    0e0,   0e0,  330e-9,    0e0},
+  { -47e-2, -51e-2, -200e-2,   2e-9,  1e-9, 356e-9,   22e0},
+  {-110e-2, -30e-2,  -90e-2,   0e0,   0e0,  169e-9, -120e0},
+  {   0e0,    0e0,  -110e-2, -16e-9, -4e-9, 357e-9,    9e0},
+  {  -3e-2,  -2e-2,  -45e-2, -37e-9, 10e-9, 350e-9,   13e0},
+  {  30e-2, -10e-2,  -90e-2, -3e-9, -13e-9, 355e-9,    0e0},
+  {  24e-2, -15e-2,  -77e-2, -3e-9, -19e-9, 353e-9,  -31e0}
+};
+
+void
+wgs84_to_pz90(const double *xwgs, double *xpz, int selection=0);
 
 } // end namespace geodesy
 

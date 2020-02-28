@@ -44,4 +44,5 @@ pkginclude_HEADERS = \
 dist_libggeodesy_la_SOURCES = \
 	top2daz.cpp \
 	top2car.cpp \
-	trnsfdtls.cpp
+	trnsfdtls.cpp \
+	wgs84_to_pz90.cpp
