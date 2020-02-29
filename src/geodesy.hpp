@@ -136,9 +136,9 @@ template<typename T,
 
   deg = static_cast<int>(decdeg);
   min = static_cast<int>( (decdeg - static_cast<T>(deg)) *
-        static_cast<T>(60.0e0) );
-  sec = decdeg - (static_cast<T>(deg) + static_cast<T>(min)/60.0e0);
-  sec *= 3600.0e0;
+        static_cast<T>(60e0) );
+  sec = decdeg - (static_cast<T>(deg) + static_cast<T>(min)/60e0);
+  sec *= 3600e0;
 
   if (decimal_deg < T{0}) deg *= -1;
   return;
@@ -166,7 +166,7 @@ template<typename T,
   hexd2decd(int deg, int min, T sec) noexcept
 {
   T angle { static_cast<T>(std::abs(deg)) +
-    (static_cast<T>(min) + sec / 60.0e0) / 60.0e0 };
+    (static_cast<T>(min) + sec / 60e0) / 60e0 };
 
   return std::copysign(angle, (T)deg);
 }
@@ -191,7 +191,7 @@ template<typename T,
   >
   T
   hexd2rad(int deg, int min, T sec) noexcept
-{return deg2rad( hexd2decd(deg, min, sec) );}
+{return deg2rad(hexd2decd(deg, min, sec));}
 
 
 /// @brief Radians to hexicondal degrees.
@@ -251,6 +251,26 @@ template<typename T,
   return std::fmod(angle+D2PI, D2PI);
 }
 
+/// @brief Transformation parameters for PZ-90 to WGS84 reference frames
+///
+/// This struct holds transformation parameters for a 7-parameter conversion
+/// between PZ90 and WGS84 reference frames. Various parameters sets can be
+/// used, and most are discussed here:
+/// ITRS, PZ-90 and WGS 84: current realizationsand the related transformation
+/// parameters, C. Boucher, Z. Altamimi, Journal of Geodesy, November 2001
+///
+/// The general transformation of the Cartesian coordinates (X) of any point 
+/// close to the Earth from any one TRS to any other one will be givenby a 
+/// tri-dimensional similarity transformation (T is a translation vector, λ a 
+/// scale factor and R a rotation matrix) as follows:
+/// X_trs1 = T + λ * R * X_trs2
+/// The parameters for transforming an X system into an XS system are denoted 
+/// T1,T2,T3,D,R1,R2, and R3:
+///
+/// | Xs |   | X |   | T1 |   | D   -R3  R2 | | X |
+/// | Ys | = | Y | + | T2 | + | R3   D  -R1 |*| Y |
+/// | Zs |   | Z |   | T3 |   |-R2   R1  D  | | Z |
+/// 
 constexpr struct {
   double tx, ty, tz, // meters
          r1, r2, r3, // rad
@@ -267,8 +287,21 @@ constexpr struct {
   {  24e-2, -15e-2,  -77e-2, -3e-9, -19e-9, 353e-9,  -31e0}
 };
 
+/// @brief Transform WGS84 to PZ90 coordinates
+/// @param[in] xwgs A set of 3-dimensional coordinates in WGS84 rf in meters.
+///                 The size of this array should be 3*pts, aka more than one
+///                 points can be passed in the following order:
+///                 [x1,y1,z1, z2,y2,z2, ... ,xpts,ypts,zpts]
+/// @param[out] xpz The resulting input coordinates in the PZ90 rf. The size of
+///                 this array should be the same as xwgs (aka 3*pts) and the
+///                 order will be the same as in the input array. All units are
+///                 meters
+/// @param[in] pts  Number of points in the input array
+/// @param[in] selection The selection of transformation parameters; the
+///                 parameters chosen by this function are : 
+///                 wgs2pz_parameters[selection]
 void
-wgs84_to_pz90(const double *xwgs, double *xpz, int selection=0);
+wgs84_to_pz90(const double *xwgs, double *xpz, int pts=1, int selection=0);
 
 } // end namespace geodesy
 

@@ -28,28 +28,29 @@ namespace ngpt
 /// @throw              Does not throw.
 ///
 template<ellipsoid E>
-    void ell2car(double phi, double lambda, double h, double& x, double& y,
-        double& z) noexcept
+  void ell2car(double phi, double lambda, double h, double& x, double& y,
+      double& z)
+  noexcept
 {
-    // Eccentricity squared.
-    constexpr double e2 { ngpt::eccentricity_squared<E>() };
-    
-    // Radius of curvature in the prime vertical.
-    double N { ngpt::N<E>(phi) };
+  // Eccentricity squared.
+  constexpr double e2 { ngpt::eccentricity_squared<E>() };
 
-    // Trigonometric numbers.
-    double sinf { std::sin(phi) };
-    double cosf { std::cos(phi) };
-    double sinl { std::sin(lambda) };
-    double cosl { std::cos(lambda) };
+  // Radius of curvature in the prime vertical.
+  double N { ngpt::N<E>(phi) };
 
-    // Compute geocentric rectangular coordinates.
-    x = (N+h) * cosf * cosl;
-    y = (N+h) * cosf * sinl;
-    z = ((1.0e0-e2) * N + h) * sinf;
+  // Trigonometric numbers.
+  double sinf { std::sin(phi) };
+  double cosf { std::cos(phi) };
+  double sinl { std::sin(lambda) };
+  double cosl { std::cos(lambda) };
 
-    // Finished.
-    return;
+  // Compute geocentric rectangular coordinates.
+  x = (N+h) * cosf * cosl;
+  y = (N+h) * cosf * sinl;
+  z = ((1e0-e2) * N + h) * sinf;
+
+  // Finished.
+  return;
 }
 
 /// @brief Ellipsoidal to cartesian coordinates.
@@ -67,28 +68,28 @@ template<ellipsoid E>
 /// @throw              Does not throw.
 void
 ell2car(double phi, double lambda, double h, const Ellipsoid& e, 
-    double& x, double& y, double& z)
+  double& x, double& y, double& z)
 noexcept
 {
-    // Eccentricity squared.
-    double e2 { e.eccentricity_squared() };
+  // Eccentricity squared.
+  double e2 { e.eccentricity_squared() };
 
-    // Radius of curvature in the prime vertical.
-    double N { e.N(phi) };
+  // Radius of curvature in the prime vertical.
+  double N { e.N(phi) };
 
-    // Trigonometric numbers.
-    double sinf { std::sin(phi) };
-    double cosf { std::cos(phi) };
-    double sinl { std::sin(lambda) };
-    double cosl { std::cos(lambda) };
+  // Trigonometric numbers.
+  double sinf { std::sin(phi) };
+  double cosf { std::cos(phi) };
+  double sinl { std::sin(lambda) };
+  double cosl { std::cos(lambda) };
 
-    // Compute geocentric rectangular coordinates.
-    x = (N+h) * cosf * cosl;
-    y = (N+h) * cosf * sinl;
-    z = ((1.0e0-e2) * N + h) * sinf;
+  // Compute geocentric rectangular coordinates.
+  x = (N+h) * cosf * cosl;
+  y = (N+h) * cosf * sinl;
+  z = ((1.0e0-e2) * N + h) * sinf;
 
-    // Finished.
-    return;
+  // Finished.
+  return;
 }
 
 } // end namespace

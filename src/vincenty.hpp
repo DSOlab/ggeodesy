@@ -42,8 +42,8 @@ namespace core {
 double
 haversine_angle(double angle) noexcept
 {
-    double sinHalfTheta { std::sin(angle/2e0) };
-    return sinHalfTheta * sinHalfTheta;
+  double sinHalfTheta {std::sin(angle/2e0)};
+  return sinHalfTheta * sinHalfTheta;
 }
 
 /// @brief Compute the great circle distance between two points using the
@@ -74,15 +74,15 @@ haversine_angle(double angle) noexcept
 ///
 double
 haversine(double lat1, double lon1, double lat2, double lon2,
-    double a, double b)
+  double a, double b)
 {
-    double h  { haversine_angle(lat2-lat1) +
-                std::cos(lat1) * std::cos(lat2) * haversine_angle(lon2-lon1) };
-    // according to wikipedia, The International Union of Geodesy and Geophysics
-    // (IUGG) defines the mean radius (denoted R_1) to be
-    // 2a+b/3
-    double EarthRadius { (2e0*a + b)/3e0 };
-    return 2e0 * EarthRadius * std::asin(std::sqrt(h));
+  double h  { haversine_angle(lat2-lat1) +
+              std::cos(lat1) * std::cos(lat2) * haversine_angle(lon2-lon1) };
+  // according to wikipedia, The International Union of Geodesy and Geophysics
+  // (IUGG) defines the mean radius (denoted R_1) to be
+  // 2a+b/3
+  double EarthRadius { (2e0*a + b)/3e0 };
+  return 2e0 * EarthRadius * std::asin(std::sqrt(h));
 }
 
 /// @brief Compute the inverse Vincenty formula.
@@ -115,68 +115,68 @@ haversine(double lat1, double lon1, double lat2, double lon2,
 ///
 double
 inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
-        double semi_major, double flattening, double semi_minor,
-        double& a12, double& a21, double convergence_limit = 1e-10)
+      double semi_major, double flattening, double semi_minor,
+      double& a12, double& a21, double convergence_limit = 1e-10)
 {
-    const int MAX_ITERATIONS = 100;
-    int iteration = 0;
+  const int MAX_ITERATIONS = 100;
+  int iteration = 0;
 
-    double a = semi_major;
-    double f = flattening;
-    double b = semi_minor;
+  double a = semi_major;
+  double f = flattening;
+  double b = semi_minor;
 
-    double U1     { std::atan((1-f)*std::tan(lat1)) };
-    double U2     { std::atan((1-f)*std::tan(lat2)) };
-    double L      { lon2 -lon1 };
-    double sinU1  { std::sin(U1) };
-    double sinU2  { std::sin(U2) };
-    double cosU1  { std::cos(U1) };
-    double cosU2  { std::cos(U2) };
-    double lambda {L};
-    double sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, C, cos2SigmaM,
-           lambdaP, sinLambda, cosLambda;
+  double U1     { std::atan((1e0-f)*std::tan(lat1)) };
+  double U2     { std::atan((1e0-f)*std::tan(lat2)) };
+  double L      { lon2 -lon1 };
+  double sinU1  { std::sin(U1) };
+  double sinU2  { std::sin(U2) };
+  double cosU1  { std::cos(U1) };
+  double cosU2  { std::cos(U2) };
+  double lambda {L};
+  double sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, C, cos2SigmaM,
+         lambdaP, sinLambda, cosLambda;
 
-    do {
-        if (++iteration > MAX_ITERATIONS) {
-            throw std::out_of_range("[ERROR] Inverse Vincenty cannot converge after 100 iterations!");
-        }
-        sinLambda  = std::sin(lambda);
-        cosLambda  = std::cos(lambda);
-        sinSigma   = std::sqrt( (cosU2*sinLambda) * (cosU2*sinLambda) +
-                (cosU1*sinU2-sinU1*cosU2*cosLambda) *
-                (cosU1*sinU2-sinU1*cosU2*cosLambda) );
-        cosSigma   = sinU1*sinU2 + cosU1*cosU2*cosLambda;
-        sigma      = atan2(sinSigma, cosSigma);
-        sinAlpha   = cosU1*cosU2*sinLambda / sinSigma;
-        cosSqAlpha = 1e0 - sinAlpha*sinAlpha;
-        cos2SigmaM = cosSigma - 2e0*sinU1*sinU2/cosSqAlpha;
-        C          = (f/16e0)*cosSqAlpha*(4e0+f*(4e0-3e0*cosSqAlpha));
-        lambdaP    = lambda;
-        lambda     = L + (1e0-C)*f*sinAlpha*
-                    (sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*
-                    (-1e0+2e0*cos2SigmaM*cos2SigmaM)));
-    } while ( std::abs(lambda-lambdaP) > convergence_limit );
+  do {
+    if (++iteration > MAX_ITERATIONS) {
+        throw std::out_of_range("[ERROR] Inverse Vincenty cannot converge after 100 iterations!");
+    }
+    sinLambda  = std::sin(lambda);
+    cosLambda  = std::cos(lambda);
+    sinSigma   = std::sqrt( (cosU2*sinLambda) * (cosU2*sinLambda) +
+            (cosU1*sinU2-sinU1*cosU2*cosLambda) *
+            (cosU1*sinU2-sinU1*cosU2*cosLambda) );
+    cosSigma   = sinU1*sinU2 + cosU1*cosU2*cosLambda;
+    sigma      = atan2(sinSigma, cosSigma);
+    sinAlpha   = cosU1*cosU2*sinLambda / sinSigma;
+    cosSqAlpha = 1e0 - sinAlpha*sinAlpha;
+    cos2SigmaM = cosSigma - 2e0*sinU1*sinU2/cosSqAlpha;
+    C          = (f/16e0)*cosSqAlpha*(4e0+f*(4e0-3e0*cosSqAlpha));
+    lambdaP    = lambda;
+    lambda     = L + (1e0-C)*f*sinAlpha*
+                (sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*
+                (-1e0+2e0*cos2SigmaM*cos2SigmaM)));
+  } while (std::abs(lambda-lambdaP) > convergence_limit);
 
-    double uSq { cosSqAlpha*(a*a-b*b)/(b*b) };
-    double k1  { (std::sqrt(1e0+uSq)-1e0)/(std::sqrt(1e0+uSq)+1e0) };
-    double A   { (1e0+0.25e0*k1*k1)/(1e0-k1) };
-    double B   { k1*(1e0-(3e0/8e0)*k1*k1) };
-    double deltaSigma { B*sinSigma*(cos2SigmaM+B/4e0*(cosSigma*
-            (-1e0+2e0*cos2SigmaM*cos2SigmaM)-B/6e0*cos2SigmaM*
-            (-3e0+4e0*sinSigma*sinSigma)*(-3e0+4e0*cos2SigmaM*cos2SigmaM))) };
-    double distance { b*A*(sigma-deltaSigma) };
+  double uSq { cosSqAlpha*(a*a-b*b)/(b*b) };
+  double k1  { (std::sqrt(1e0+uSq)-1e0)/(std::sqrt(1e0+uSq)+1e0) };
+  double A   { (1e0+0.25e0*k1*k1)/(1e0-k1) };
+  double B   { k1*(1e0-(3e0/8e0)*k1*k1) };
+  double deltaSigma { B*sinSigma*(cos2SigmaM+B/4e0*(cosSigma*
+          (-1e0+2e0*cos2SigmaM*cos2SigmaM)-B/6e0*cos2SigmaM*
+          (-3e0+4e0*sinSigma*sinSigma)*(-3e0+4e0*cos2SigmaM*cos2SigmaM))) };
+  double distance { b*A*(sigma-deltaSigma) };
     
-    // forward azimouth
-    a12 = std::atan2(cosU2*sinLambda, cosU1*sinU2-sinU1*cosU2*cosLambda);
-    // normalize
-    a12 = std::fmod(a12+D2PI, D2PI);
+  // forward azimouth
+  a12 = std::atan2(cosU2*sinLambda, cosU1*sinU2-sinU1*cosU2*cosLambda);
+  // normalize
+  a12 = std::fmod(a12+D2PI, D2PI);
 
-    // backward azimouth
-    a21 = std::atan2(cosU1*sinLambda, -sinU1*cosU2+cosU1*sinU2*cosLambda);
-    // normalize
-    a21 = std::fmod(a21+D2PI, D2PI);
-    
-    return distance;
+  // backward azimouth
+  a21 = std::atan2(cosU1*sinLambda, -sinU1*cosU2+cosU1*sinU2*cosLambda);
+  // normalize
+  a21 = std::fmod(a21+D2PI, D2PI);
+  
+  return distance;
 }
 
 /// @brief Direct Vincenty formula.
@@ -202,66 +202,66 @@ inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 /// @see https://en.wikipedia.org/wiki/Vincenty%27s_formulae
 double
 direct_vincenty(double lat1, double lon1, double a1, double s, 
-        double semi_major, double flattening, double semi_minor,
-        double& lat2, double& lon2, double convergence_limit = 1e-10)
+    double semi_major, double flattening, double semi_minor,
+    double& lat2, double& lon2, double convergence_limit = 1e-10)
 {
-    const int MAX_ITERATIONS = 100;
-    int iteration = 0;
+  const int MAX_ITERATIONS = 100;
+  int iteration = 0;
 
-    double a = semi_major;
-    double f = flattening;
-    double b = semi_minor;
-    
-    double cosa1  { std::cos(a1) };
-    double sina1  { std::sin(a1) };
-    double U1     { std::atan((1e0-f)*std::tan(lat1)) };
-    double sigma1 { std::atan2(std::tan(U1), cosa1) };
-    double sina   { std::cos(U1) * sina1 };
-    double cosaSq {1e0-sina*sina};
-    double uSq    { cosaSq*(a*a-b*b)/(b*b) };
-    double k1     { (std::sqrt(1e0+uSq)-1e0)/(std::sqrt(1e0+uSq)+1e0) };
-    double A      { (1e0+0.25e0*k1*k1)/(1e0-k1) };
-    double B      { k1*(1e0-(3e0/8e0)*k1*k1) };
+  double a = semi_major;
+  double f = flattening;
+  double b = semi_minor;
+  
+  double cosa1  { std::cos(a1) };
+  double sina1  { std::sin(a1) };
+  double U1     { std::atan((1e0-f)*std::tan(lat1)) };
+  double sigma1 { std::atan2(std::tan(U1), cosa1) };
+  double sina   { std::cos(U1) * sina1 };
+  double cosaSq {1e0-sina*sina};
+  double uSq    { cosaSq*(a*a-b*b)/(b*b) };
+  double k1     { (std::sqrt(1e0+uSq)-1e0)/(std::sqrt(1e0+uSq)+1e0) };
+  double A      { (1e0+0.25e0*k1*k1)/(1e0-k1) };
+  double B      { k1*(1e0-(3e0/8e0)*k1*k1) };
 
-    double sigma { s/b*A }; // initial guess
-    double sigmaP, sigmaM2, cosSigmaM2, deltaSigma, sinSigma;
+  double sigma { s/b*A }; // initial guess
+  double sigmaP, sigmaM2, cosSigmaM2, deltaSigma, sinSigma;
 
-    do {
-        if (++iteration > MAX_ITERATIONS) {
-            throw std::out_of_range("[ERROR] Direct Vincenty cannot converge after 100 iterations!");
-        }
-        sigmaM2    = 2e0*sigma1 + sigma;
-        cosSigmaM2 = std::cos(sigmaM2);
-        sinSigma   = std::sin(sigma);
-        deltaSigma = B*sinSigma*(cosSigmaM2 
-            + (1e0/4e0)*B*(std::cos(sigma)*(-1e0+2e0*cosSigmaM2*cosSigmaM2)
-            - (1e0/6e0)*B*cosSigmaM2*(-3e0+4e0*sinSigma*sinSigma)*
-                (-3e0+4e0*cosSigmaM2*cosSigmaM2)));
-        sigmaP = sigma;
-        sigma = s/(b*A) + deltaSigma;
-    } while ( std::abs(sigma-sigmaP) > convergence_limit );
+  do {
+    if (++iteration > MAX_ITERATIONS) {
+        throw std::out_of_range("[ERROR] Direct Vincenty cannot converge after 100 iterations!");
+    }
+    sigmaM2    = 2e0*sigma1 + sigma;
+    cosSigmaM2 = std::cos(sigmaM2);
+    sinSigma   = std::sin(sigma);
+    deltaSigma = B*sinSigma*(cosSigmaM2 
+        + (1e0/4e0)*B*(std::cos(sigma)*(-1e0+2e0*cosSigmaM2*cosSigmaM2)
+        - (1e0/6e0)*B*cosSigmaM2*(-3e0+4e0*sinSigma*sinSigma)*
+            (-3e0+4e0*cosSigmaM2*cosSigmaM2)));
+    sigmaP = sigma;
+    sigma = s/(b*A) + deltaSigma;
+  } while ( std::abs(sigma-sigmaP) > convergence_limit );
 
-    double sinU1    { std::sin(U1) };
-    double cosU1    { std::cos(U1) };
-    double cosSigma { std::cos(sigma) };
+  double sinU1    { std::sin(U1) };
+  double cosU1    { std::cos(U1) };
+  double cosSigma { std::cos(sigma) };
 
-    // compute latitude
-    double nom   { sinU1*cosSigma+cosU1*sinSigma*cosa1 };
-    double denom {sina*sina+std::pow(sinU1*sinSigma-cosU1*cosSigma*cosa1, 2e0)};
-    denom        = std::sqrt(denom)*(1e0-f);
-    lat2         = std::atan2(nom, denom);
+  // compute latitude
+  double nom   { sinU1*cosSigma+cosU1*sinSigma*cosa1 };
+  double denom {sina*sina+std::pow(sinU1*sinSigma-cosU1*cosSigma*cosa1, 2e0)};
+  denom        = std::sqrt(denom)*(1e0-f);
+  lat2         = std::atan2(nom, denom);
 
-    // compute longtitude
-    nom           = sinSigma*sina1;
-    denom         = cosU1*cosSigma - sinU1*sinSigma*cosa1;
-    double lambda { std::atan2(nom, denom) };
-    double C      { (f/16e0)*cosaSq*(4e0+f*(4e0-3e0*cosaSq)) };
-    double L      { lambda - (1e0-C)*f*sina*(sigma+C*sinSigma*(cosSigmaM2+
-            C*cosSigma*(-1e0+2e0*cosSigmaM2*cosSigmaM2))) };
-    lon2          = L + lon1;
-    
-    // compute azimouth
-    return std::atan2(sina, -sinU1*sinSigma+cosU1*cosSigma*cosa1) + DPI;
+  // compute longtitude
+  nom           = sinSigma*sina1;
+  denom         = cosU1*cosSigma - sinU1*sinSigma*cosa1;
+  double lambda { std::atan2(nom, denom) };
+  double C      { (f/16e0)*cosaSq*(4e0+f*(4e0-3e0*cosaSq)) };
+  double L      { lambda - (1e0-C)*f*sina*(sigma+C*sinSigma*(cosSigmaM2+
+          C*cosSigma*(-1e0+2e0*cosSigmaM2*cosSigmaM2))) };
+  lon2          = L + lon1;
+  
+  // compute azimouth
+  return std::atan2(sina, -sinU1*sinSigma+cosU1*cosSigma*cosa1) + DPI;
 }
 
 } // namespace core
@@ -278,12 +278,12 @@ direct_vincenty(double lat1, double lon1, double a1, double s,
 ///
 /// @see ngpt::core::haversine
 template<ellipsoid E = ellipsoid::wgs84>
-    double
-    haversine(double lat1, double lon1, double lat2, double lon2)
+  double
+  haversine(double lat1, double lon1, double lat2, double lon2)
 {
-    double a = ellipsoid_traits<E>::a;
-    double b = semi_minor<E>();
-    return core::haversine(lat1, lon1, lat2, lon2, a, b);
+  double a = ellipsoid_traits<E>::a;
+  double b = semi_minor<E>();
+  return core::haversine(lat1, lon1, lat2, lon2, a, b);
 }
 
 /// @brief Compute the great circle distance between two points using the
@@ -299,11 +299,11 @@ template<ellipsoid E = ellipsoid::wgs84>
 /// @see ngpt::core::haversine
 double
 haversine(double lat1, double lon1, double lat2, double lon2,
-    const Ellipsoid& e)
+  const Ellipsoid& e)
 {
-    double a = e.semi_major();
-    double b = e.semi_minor();
-    return core::haversine(lat1, lon1, lat2, lon2, a, b);
+  double a = e.semi_major();
+  double b = e.semi_minor();
+  return core::haversine(lat1, lon1, lat2, lon2, a, b);
 }
 
 /// @brief Compute the inverse Vincenty formula.
@@ -322,15 +322,15 @@ haversine(double lat1, double lon1, double lat2, double lon2,
 ///
 /// @see ngpt::core::inverse_vincenty
 template<ellipsoid E = ellipsoid::wgs84>
-    double
-    inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
-        double& a12, double& a21, double convergence_limit = 1e-10)
+  double
+  inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
+      double& a12, double& a21, double convergence_limit = 1e-10)
 {
-    double a = ellipsoid_traits<E>::a;
-    double f = ellipsoid_traits<E>::f;
-    double b = semi_minor<E>();
-    return core::inverse_vincenty(lat1, lon1, lat2, lon2, a12, a21, a, f, b,
-        convergence_limit);
+  double a = ellipsoid_traits<E>::a;
+  double f = ellipsoid_traits<E>::f;
+  double b = semi_minor<E>();
+  return core::inverse_vincenty(lat1, lon1, lat2, lon2, a12, a21, a, f, b,
+      convergence_limit);
 }
 
 /// @brief Compute the inverse Vincenty formula.
@@ -350,14 +350,14 @@ template<ellipsoid E = ellipsoid::wgs84>
 /// @see ngpt::core::inverse_vincenty
 double
 inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
-        double& a12, double& a21, const Ellipsoid& e,
-        double convergence_limit = 1e-10)
+    double& a12, double& a21, const Ellipsoid& e,
+    double convergence_limit = 1e-10)
 {
-    double a = e.semi_major();
-    double f = e.flattening();
-    double b = e.semi_minor();
-    return core::inverse_vincenty(lat1, lon1, lat2, lon2, a12, a21, a, f, b,
-        convergence_limit);
+  double a = e.semi_major();
+  double f = e.flattening();
+  double b = e.semi_minor();
+  return core::inverse_vincenty(lat1, lon1, lat2, lon2, a12, a21, a, f, b,
+      convergence_limit);
 }
 
 /// @brief Direct Vincenty formula.
@@ -376,15 +376,15 @@ inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 ///
 /// @see ngpt::core::direct_vincenty
 template<ellipsoid E = ellipsoid::wgs84>
-    double
-    direct_vincenty(double lat1, double lon1, double a1, double s, 
-        double& lat2, double& lon2, double convergence_limit = 1e-10)
+  double
+  direct_vincenty(double lat1, double lon1, double a1, double s, 
+      double& lat2, double& lon2, double convergence_limit = 1e-10)
 {
-    double a = ellipsoid_traits<E>::a;
-    double f = ellipsoid_traits<E>::f;
-    double b = semi_minor<E>();
-    return core::direct_vincenty(lat1, lon1, a1, s, a, f, b, lat2, lon2,
-        convergence_limit);
+  double a = ellipsoid_traits<E>::a;
+  double f = ellipsoid_traits<E>::f;
+  double b = semi_minor<E>();
+  return core::direct_vincenty(lat1, lon1, a1, s, a, f, b, lat2, lon2,
+      convergence_limit);
 }
 /// @brief Direct Vincenty formula.
 ///
@@ -403,14 +403,14 @@ template<ellipsoid E = ellipsoid::wgs84>
 /// @see ngpt::core::direct_vincenty
 double
 direct_vincenty(double lat1, double lon1, double a1, double s, 
-        double& lat2, double& lon2, const Ellipsoid& e,
-        double convergence_limit = 1e-10)
+    double& lat2, double& lon2, const Ellipsoid& e,
+    double convergence_limit = 1e-10)
 {
-    double a = e.semi_major();
-    double f = e.flattening();
-    double b = e.semi_minor();
-    return core::direct_vincenty(lat1, lon1, a1, s, a, f, b, lat2, lon2,
-        convergence_limit);
+  double a = e.semi_major();
+  double f = e.flattening();
+  double b = e.semi_minor();
+  return core::direct_vincenty(lat1, lon1, a1, s, a, f, b, lat2, lon2,
+      convergence_limit);
 }
 
 } // end namespace ngpt

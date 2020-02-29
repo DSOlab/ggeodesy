@@ -38,84 +38,84 @@ namespace ngpt
 /// @brief core namespace holds the core of ellipsoid-related functions
 namespace core
 {
-    /// @brief Compute the squared eccentricity.
-    ///
-    /// Compute the squared (first) eccentricity (i.e. e^2) given the
-    /// flattening of an ellipsoid, aka \f$ e^2 = (2-f)*f \f$
-    /// @param[in] f flattening
-    /// @return      squared eccentricity
-    constexpr double
-    eccentricity_squared(double f)
-    noexcept
-    { return ( 2.0e0 - f ) * f; }
+  /// @brief Compute the squared eccentricity.
+  ///
+  /// Compute the squared (first) eccentricity (i.e. e^2) given the
+  /// flattening of an ellipsoid, aka \f$ e^2 = (2-f)*f \f$
+  /// @param[in] f flattening
+  /// @return      squared eccentricity
+  constexpr double
+  eccentricity_squared(double f)
+  noexcept
+  { return (2e0 - f) * f; }
     
-    /// @brief Compute the semi-minor axis (aka b)
-    ///
-    /// Compute the semi-minor axis of an ellipsoid(i.e. e^2), given the
-    /// flattening and the semi-major axis, aka \f$ \beta = \alpha * (1-f) \f$
-    /// @param[in] f flattening
-    /// @param[in] a semi-major axis (meters)
-    /// @return      semi-minor axis (meters)
-    constexpr double
-    semi_minor(double a, double f)
-    noexcept
-    { return a * ( 1.0e0 - f ); }
+  /// @brief Compute the semi-minor axis (aka b)
+  ///
+  /// Compute the semi-minor axis of an ellipsoid(i.e. e^2), given the
+  /// flattening and the semi-major axis, aka \f$ \beta = \alpha * (1-f) \f$
+  /// @param[in] f flattening
+  /// @param[in] a semi-major axis (meters)
+  /// @return      semi-minor axis (meters)
+  constexpr double
+  semi_minor(double a, double f)
+  noexcept
+  { return a * (1e0 - f); }
 
-    /// @brief Compute the normal radius of curvature at a given latitude (on 
-    ///        a reference ellipsoid).
-    ///
-    /// @param[in] lat The latitude (radians)
-    /// @param[in] a   The ellipsoid's semi-major axis (meters)
-    /// @param[in] b   The ellipsoid's semi-minor axis (meters)
-    /// @return        The normal radius of curvature (meters)
-    /// @throw         Does not throw (see notes)
-    ///
-    /// @note If the denominator (den) is zero then funny things could happen;
-    ///       this however should **never** occur for any reference ellipsoid.
-    ///
-    /// @see "Physical Geodesy", pg. 194
-    /// @see https://en.wikipedia.org/wiki/Earth_radius
-    ///
-    constexpr double
-    N(double lat, double a, double b) noexcept
-    {
-        double cosf  { std::cos(lat) };
-        double sinf  { std::sin(lat) };
-        double acosf { a * cosf };
-        double bsinf { b * sinf };
-        double den   { std::sqrt(acosf*acosf + bsinf*bsinf) };
-        /*
-        double answer = (a*a)/den;
-        double alternative = a/(std::sqrt(1.0-eccentricity_squared<E>()*sinf*sinf));
-        if ( std::abs(answer-alternative) > 1e-8 ) {
-            std::cerr<<"\n[ERROR] Too big a difference between normal radius of "
-            << "curvature computation\nSee template<ellipsoid E> double N(double lat)"
-            << "in file: ellipsoid.hpp\n";
-        }*/
-        return (a * a) / den;
-    }
+  /// @brief Compute the normal radius of curvature at a given latitude (on 
+  ///        a reference ellipsoid).
+  ///
+  /// @param[in] lat The latitude (radians)
+  /// @param[in] a   The ellipsoid's semi-major axis (meters)
+  /// @param[in] b   The ellipsoid's semi-minor axis (meters)
+  /// @return        The normal radius of curvature (meters)
+  /// @throw         Does not throw (see notes)
+  ///
+  /// @note If the denominator (den) is zero then funny things could happen;
+  ///       this however should **never** occur for any reference ellipsoid.
+  ///
+  /// @see "Physical Geodesy", pg. 194
+  /// @see https://en.wikipedia.org/wiki/Earth_radius
+  ///
+  constexpr double
+  N(double lat, double a, double b) noexcept
+  {
+    double cosf  { std::cos(lat) };
+    double sinf  { std::sin(lat) };
+    double acosf { a * cosf };
+    double bsinf { b * sinf };
+    double den   { std::sqrt(acosf*acosf + bsinf*bsinf) };
+    /*
+    double answer = (a*a)/den;
+    double alternative = a/(std::sqrt(1.0-eccentricity_squared<E>()*sinf*sinf));
+    if ( std::abs(answer-alternative) > 1e-8 ) {
+        std::cerr<<"\n[ERROR] Too big a difference between normal radius of "
+        << "curvature computation\nSee template<ellipsoid E> double N(double lat)"
+        << "in file: ellipsoid.hpp\n";
+    }*/
+    return (a * a) / den;
+  }
 
-    /// @brief Compute the meridional radii of curvature at a given latitude 
-    ///        on a reference ellipsoid.
-    ///
-    /// @param[in] lat The latitude in (radians)
-    /// @param[in] a   The ellipsoid's semi-major axis (meters)
-    /// @param[in] b   The ellipsoid's semi-minor axis (meters)
-    /// @return        The meridional radius of curvature (meters)
-    /// @throw         Does not throw (see notes)
-    ///
-    /// @see https://en.wikipedia.org/wiki/Earth_radius
-    ///
-    constexpr double
-    M(double lat, double a, double b) noexcept
-    {
-        double cosf  { std::cos(lat) };
-        double sinf  { std::sin(lat) };
-        double acosf { a * cosf };
-        double bsinf { b * sinf };
-        double tmpd  { acosf*acosf + bsinf*bsinf };
-        return ( (a*b)/tmpd ) * ( (a*b)/std::sqrt(tmpd) );
-    }
+  /// @brief Compute the meridional radii of curvature at a given latitude 
+  ///        on a reference ellipsoid.
+  ///
+  /// @param[in] lat The latitude in (radians)
+  /// @param[in] a   The ellipsoid's semi-major axis (meters)
+  /// @param[in] b   The ellipsoid's semi-minor axis (meters)
+  /// @return        The meridional radius of curvature (meters)
+  /// @throw         Does not throw (see notes)
+  ///
+  /// @see https://en.wikipedia.org/wiki/Earth_radius
+  ///
+  constexpr double
+  M(double lat, double a, double b) noexcept
+  {
+    double cosf  { std::cos(lat) };
+    double sinf  { std::sin(lat) };
+    double acosf { a * cosf };
+    double bsinf { b * sinf };
+    double tmpd  { acosf*acosf + bsinf*bsinf };
+    return ( (a*b)/tmpd ) * ( (a*b)/std::sqrt(tmpd) );
+  }
 }// namespace core
 
 /// @brief A list of well-known reference ellipsoids.
@@ -143,14 +143,14 @@ template<ellipsoid E> struct ellipsoid_traits {};
 ///
 /// @see https://en.wikipedia.org/wiki/GRS_80
 template<>
-    struct ellipsoid_traits<ellipsoid::grs80>
+  struct ellipsoid_traits<ellipsoid::grs80>
 {
-    /// Semi-major axis (m).
-    static constexpr double a      { 6378137.0e0 };
-    /// Flattening.
-    static constexpr double f      { 1.0e00/298.257222101e0 };
-    /// Reference ellipsoid name.
-    static constexpr const char* n { "GRS80" };
+  /// Semi-major axis (m).
+  static constexpr double a      { 6378137.0e0 };
+  /// Flattening.
+  static constexpr double f      { 1.0e00/298.257222101e0 };
+  /// Reference ellipsoid name.
+  static constexpr const char* n { "GRS80" };
 };
 
 /// @brief A class to hold traits for the WGS-84 (i.e. ngpt::ellispoid::wgs84)
@@ -158,14 +158,14 @@ template<>
 ///
 /// @see https://en.wikipedia.org/wiki/World_Geodetic_System
 template<>
-    struct ellipsoid_traits<ellipsoid::wgs84>
+  struct ellipsoid_traits<ellipsoid::wgs84>
 {
-    /// Semi-major axis (m).
-    static constexpr double a      { 6378137.0e0 };
-    /// Flattening.
-    static constexpr double f      { 1.0e00/298.257223563e0 };
-    /// Reference ellipsoid name.
-    static constexpr const char* n { "WGS84" };
+  /// Semi-major axis (m).
+  static constexpr double a      { 6378137.0e0 };
+  /// Flattening.
+  static constexpr double f      { 1.0e00/298.257223563e0 };
+  /// Reference ellipsoid name.
+  static constexpr const char* n { "WGS84" };
 };
 
 /// @brief A class to hold traits for the PZ-90 (i.e. ngpt::ellispoid::pz90)
@@ -173,14 +173,14 @@ template<>
 ///
 /// @see http://www.navipedia.net/index.php/Reference_Frames_in_GNSS#GLONASS_reference_frame_PZ-90
 template<>
-    struct ellipsoid_traits<ellipsoid::pz90>
+  struct ellipsoid_traits<ellipsoid::pz90>
 {
-    /// Semi-major axis (m).
-    static constexpr double a      { 6378135.0e0 };
-    /// Flattening.
-    static constexpr double f      { 1.0e00/298.257839303e0 };
-    /// Reference ellipsoid name.
-    static constexpr const char* n { "PZ90" };
+  /// Semi-major axis (m).
+  static constexpr double a      { 6378135.0e0 };
+  /// Flattening.
+  static constexpr double f      { 1.0e00/298.257839303e0 };
+  /// Reference ellipsoid name.
+  static constexpr const char* n { "PZ90" };
 };
 
 /// @brief Compute the squared eccentricity.
@@ -191,8 +191,8 @@ template<>
 ///
 /// @see ngpt::core::eccentricity_squared
 template<ellipsoid E>
-    constexpr double
-    eccentricity_squared() noexcept
+  constexpr double
+  eccentricity_squared() noexcept
 {return core::eccentricity_squared(ellipsoid_traits<E>::f);}
 
 /// @brief Compute the semi-minor axis (b).
@@ -202,8 +202,8 @@ template<ellipsoid E>
 ///
 /// @see ngpt::core::semi_minor
 template<ellipsoid E>
-    constexpr double
-    semi_minor() noexcept
+  constexpr double
+  semi_minor() noexcept
 {return core::semi_minor(ellipsoid_traits<E>::a, ellipsoid_traits<E>::f);}
 
 /// @brief Compute the normal radius of curvature at a given latitude (on a 
@@ -215,8 +215,8 @@ template<ellipsoid E>
 //
 /// @see ngpt::core::N
 template<ellipsoid E>
-    double
-    N(double lat) noexcept
+  double
+  N(double lat) noexcept
 {return core::N(lat, ellipsoid_traits<E>::a, semi_minor<E>());}
 
 /// @brief Compute the meridional radii of curvature at a given latitude (on a 
@@ -228,8 +228,8 @@ template<ellipsoid E>
 ///
 /// @see ngpt::core::M
 template<ellipsoid E>
-    double
-    M(double lat) noexcept
+  double
+  M(double lat) noexcept
 {return core::M(lat, ellipsoid_traits<E>::a, semi_minor<E>());}
 
 /// @class Ellipsoid
@@ -246,84 +246,84 @@ class Ellipsoid
 {
 public:
 
-    /// @brief  Constructor from an ngpt::ellipsoid enum
-    /// @param[in] e An ngpt::ellipsoid; fundamental geometric constants are
-    ///              automatically assigned via the ngpt::ellipsoid_traits
-    ///              class.
-    explicit
-    Ellipsoid(ellipsoid e) noexcept
-    {
-        switch (e) {
-            case ellipsoid::grs80:
-                __a = ellipsoid_traits<ellipsoid::grs80>::a;
-                __f = ellipsoid_traits<ellipsoid::grs80>::f;
-                break;
-            case ellipsoid::wgs84:
-                __a = ellipsoid_traits<ellipsoid::wgs84>::a;
-                __f = ellipsoid_traits<ellipsoid::wgs84>::f;
-                break;
-            case ellipsoid::pz90:
-                __a = ellipsoid_traits<ellipsoid::pz90>::a;
-                __f = ellipsoid_traits<ellipsoid::pz90>::f;
-                break;
-        }
+  /// @brief  Constructor from an ngpt::ellipsoid enum
+  /// @param[in] e An ngpt::ellipsoid; fundamental geometric constants are
+  ///              automatically assigned via the ngpt::ellipsoid_traits
+  ///              class.
+  explicit
+  Ellipsoid(ellipsoid e) noexcept
+  {
+    switch (e) {
+      case ellipsoid::grs80:
+        __a = ellipsoid_traits<ellipsoid::grs80>::a;
+        __f = ellipsoid_traits<ellipsoid::grs80>::f;
+        break;
+      case ellipsoid::wgs84:
+        __a = ellipsoid_traits<ellipsoid::wgs84>::a;
+        __f = ellipsoid_traits<ellipsoid::wgs84>::f;
+        break;
+      case ellipsoid::pz90:
+        __a = ellipsoid_traits<ellipsoid::pz90>::a;
+        __f = ellipsoid_traits<ellipsoid::pz90>::f;
+        break;
     }
+  }
 
-    /// @brief  User-defined instance.
-    /// @param[in] a The semi-major axis (meters)
-    /// @param[in] f The flattening
-    Ellipsoid(double a, double f) noexcept
-    : __a(a), __f(f) {};
+  /// @brief  User-defined instance.
+  /// @param[in] a The semi-major axis (meters)
+  /// @param[in] f The flattening
+  Ellipsoid(double a, double f) noexcept
+  : __a(a), __f(f) {};
 
-    /// @brief  Get the semi-major axis \f$ \alpha \f$
-    /// @return The semi-major axis (meters)
-    double
-    semi_major() const noexcept
-    { return __a; }
+  /// @brief  Get the semi-major axis \f$ \alpha \f$
+  /// @return The semi-major axis (meters)
+  double
+  semi_major() const noexcept
+  { return __a; }
 
-    /// @brief  Get the flattening
-    /// @return The flattening
-    double
-    flattening() const noexcept
-    { return __f; }
+  /// @brief  Get the flattening
+  /// @return The flattening
+  double
+  flattening() const noexcept
+  { return __f; }
 
-    /// @brief  Get the squared eccentricity \f$ e^2 \f$
-    /// @return Eccentricity aquared
-    /// @see ngpt::core::eccentricity_squared
-    double
-    eccentricity_squared() const noexcept
-    { return core::eccentricity_squared(__f); }
+  /// @brief  Get the squared eccentricity \f$ e^2 \f$
+  /// @return Eccentricity aquared
+  /// @see ngpt::core::eccentricity_squared
+  double
+  eccentricity_squared() const noexcept
+  { return core::eccentricity_squared(__f); }
 
-    /// @brief  Get the semi-minor axis \f$ \beta \f$
-    /// @return Semi-minor axis (meters)
-    /// @see ngpt::core::semi_minor
-    double
-    semi_minor() const noexcept
-    { return core::semi_minor(__a, __f); }
+  /// @brief  Get the semi-minor axis \f$ \beta \f$
+  /// @return Semi-minor axis (meters)
+  /// @see ngpt::core::semi_minor
+  double
+  semi_minor() const noexcept
+  { return core::semi_minor(__a, __f); }
 
-    /// @brief  Compute the normal radius of curvature at a given latitude
-    ///
-    /// @param[in] lat The latitude in radians.
-    /// @return        The normal radius of curvature in meters.
-    ///
-    /// @see ngpt::core::N
-    double
-    N(double lat) const noexcept
-    { return core::N(lat, __a, this->semi_minor()); }
-    
-    /// @brief  Compute the meridional radii of curvature at a given latitude
-    ///
-    /// @param[in] lat The latitude in radians.
-    /// @return        The meridional radius of curvature in meters.
-    ///
-    /// @see ngpt::core::M
-    double
-    M(double lat) const noexcept
-    { return core::M(lat, __a, this->semi_minor()); }
+  /// @brief  Compute the normal radius of curvature at a given latitude
+  ///
+  /// @param[in] lat The latitude in radians.
+  /// @return        The normal radius of curvature in meters.
+  ///
+  /// @see ngpt::core::N
+  double
+  N(double lat) const noexcept
+  { return core::N(lat, __a, this->semi_minor()); }
+  
+  /// @brief  Compute the meridional radii of curvature at a given latitude
+  ///
+  /// @param[in] lat The latitude in radians.
+  /// @return        The meridional radius of curvature in meters.
+  ///
+  /// @see ngpt::core::M
+  double
+  M(double lat) const noexcept
+  { return core::M(lat, __a, this->semi_minor()); }
 
 private:
-    double    __a,
-              __f;
+  double    __a,
+            __f;
 }; // class Ellipsoid
 
 } // end namespace ngpt
