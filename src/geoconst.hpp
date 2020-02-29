@@ -22,6 +22,9 @@ namespace ngpt
   /// Radians to Degrees coefficient.
   constexpr double RAD2DEG { 180e0 / DPI };
 
+  /// mas to radians factor
+  constexpr double MAS2RAD { 4.847309743e-9 }; // aka θrad = θmas*MAS2RAD
+
 } // namespace ngpt
 
 #endif

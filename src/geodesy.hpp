@@ -273,18 +273,18 @@ template<typename T,
 /// 
 constexpr struct {
   double tx, ty, tz, // meters
-         r1, r2, r3, // rad
+         r1, r2, r3, // mas
          d;          // ppb
-} wgs2pz_parameters[] = {
-  {   7e-2,   0e0,   -77e-2, -19e-9, -4e-9, 353e-9,   -3e0},
-  {   0e0,  250e-2,    0e0,    0e0,   0e0,  392e-9,    0e0},
-  {   0e0,    0e0,     0e0,    0e0,   0e0,  330e-9,    0e0},
-  { -47e-2, -51e-2, -200e-2,   2e-9,  1e-9, 356e-9,   22e0},
-  {-110e-2, -30e-2,  -90e-2,   0e0,   0e0,  169e-9, -120e0},
-  {   0e0,    0e0,  -110e-2, -16e-9, -4e-9, 357e-9,    9e0},
-  {  -3e-2,  -2e-2,  -45e-2, -37e-9, 10e-9, 350e-9,   13e0},
-  {  30e-2, -10e-2,  -90e-2, -3e-9, -13e-9, 355e-9,    0e0},
-  {  24e-2, -15e-2,  -77e-2, -3e-9, -19e-9, 353e-9,  -31e0}
+} pz2wgs_parameters[] = {
+  {   7e-2,   0e0,   -77e-2, -19e0,  -4e0,  353e0,   -3e0},
+  {   0e0,  250e-2,    0e0,    0e0,   0e0,  392e0,    0e0},
+  {   0e0,    0e0,     0e0,    0e0,   0e0,  330e0,    0e0},
+  { -47e-2, -51e-2, -200e-2,   2e0,   1e0,  356e0,   22e0},
+  {-110e-2, -30e-2,  -90e-2,   0e0,   0e0,  169e0, -120e0},
+  {   0e0,    0e0,  -110e-2, -16e0,  -4e0,  357e0,    9e0},
+  {  -3e-2,  -2e-2,  -45e-2, -37e0,  10e0,  350e0,   13e0},
+  {  30e-2, -10e-2,  -90e-2,  -3e0, -13e0,  355e0,    0e0},
+  {  24e-2, -15e-2,  -77e-2,  -3e0, -19e0,  353e0,  -31e0}
 };
 
 /// @brief Transform WGS84 to PZ90 coordinates
@@ -301,7 +301,7 @@ constexpr struct {
 ///                 parameters chosen by this function are : 
 ///                 wgs2pz_parameters[selection]
 void
-wgs84_to_pz90(const double *xwgs, double *xpz, int pts=1, int selection=0);
+pz90_to_wgs84(const double *xwgs, double *xpz, int pts=1, int selection=0);
 
 } // end namespace geodesy
 
