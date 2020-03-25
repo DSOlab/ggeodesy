@@ -1,0 +1,45 @@
+##
+##  The library will be called: (lib)"ggeodesy".
+## ----------------------------------------------
+##
+lib_LTLIBRARIES = libggeodesy.la
+
+##
+##  Only use the following flags for debuging purposes.
+## ----------------------------------------------------
+##
+libggeodesy_la_CXXFLAGS = \
+	-std=c++17 \
+	-Wall \
+	-Wextra \
+	-Werror \
+	-pedantic \
+	-W \
+	-Wshadow \
+	-Winline \
+	-O2 \
+	-march=native
+
+##
+##  Header files (distributed) installed in /$(includedir)/$(package name).
+## ------------------------------------------------------------------------
+##
+pkginclude_HEADERS = \
+        geoconst.hpp \
+        ellipsoid.hpp \
+        geodesy.hpp \
+        car2ell.hpp \
+        car2top.hpp \
+        ell2car.hpp \
+	vincenty.hpp \
+	trnsfdtls.hpp
+
+##
+##  Source files (distributed).
+## ----------------------------
+##
+dist_libggeodesy_la_SOURCES = \
+	top2daz.cpp \
+	top2car.cpp \
+	trnsfdtls.cpp \
+	wgs84_to_pz90.cpp
