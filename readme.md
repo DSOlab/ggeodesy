@@ -3,6 +3,27 @@
 This is a C++ library meant to provide implementations of the most commonly used
 geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
 
+# Installation
+
+* Clone the repository
+`git clone https://xanthos@bitbucket.org/xanthos/ggeodesy.git` into a local dir 
+(let's call it ggeodesy)
+
+* Setup the Makefile.am files in the src and test directories
+```
+cd ggeodesy
+mv src/Makefile.am.production src/Makefile.am
+mv test/Makefile.am.production test/Makefile.am
+```
+
+* Configure and Compile the software
+```
+autoreconf -if
+./configure
+make
+sudo make install
+```
+
 Here is a list of the provided utilities:
 
 ## Reference Ellipsoids
