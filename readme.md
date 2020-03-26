@@ -1,4 +1,5 @@
 # Introduction
+****************
 
 This is a C++ library meant to provide implementations of the most commonly used
 geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
@@ -7,7 +8,7 @@ geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
 
 * Clone the repository
 `git clone https://xanthos@bitbucket.org/xanthos/ggeodesy.git` into a local dir 
-(let's call it ggeodesy)
+(let's call it `ggeodesy`)
 
 * Setup the Makefile.am files in the src and test directories
 ```
@@ -17,12 +18,22 @@ mv test/Makefile.am.production test/Makefile.am
 ```
 
 * Configure and Compile the software
+
+At this point users have to run atotools on their own since this library is
+still in dev phase.
 ```
 autoreconf -if
 ./configure
 make
 sudo make install
 ```
+
+* Test
+In the `ggeodesy/test` folder you should be able to see a list of executables; run
+`ggeodesy/test/testGeodesy` to validate the library.
+
+# The Library
+*************
 
 Here is a list of the provided utilities:
 
