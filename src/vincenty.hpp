@@ -115,8 +115,8 @@ haversine(double lat1, double lon1, double lat2, double lon2,
 ///
 double
 inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
-      double semi_major, double flattening, double semi_minor,
-      double& a12, double& a21, double convergence_limit = 1e-10)
+    double semi_major, double flattening, double semi_minor,
+    double& a12, double& a21, double convergence_limit = 1e-12)
 {
   const int MAX_ITERATIONS = 100;
   int iteration = 0;
@@ -135,7 +135,7 @@ inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
   double lambda {L};
   double sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, C, cos2SigmaM,
          lambdaP, sinLambda, cosLambda;
-
+  
   do {
     if (++iteration > MAX_ITERATIONS) {
         throw std::out_of_range("[ERROR] Inverse Vincenty cannot converge after 100 iterations!");
@@ -203,7 +203,7 @@ inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 double
 direct_vincenty(double lat1, double lon1, double a1, double s, 
     double semi_major, double flattening, double semi_minor,
-    double& lat2, double& lon2, double convergence_limit = 1e-10)
+    double& lat2, double& lon2, double convergence_limit = 1e-12)
 {
   const int MAX_ITERATIONS = 100;
   int iteration = 0;
@@ -324,12 +324,12 @@ haversine(double lat1, double lon1, double lat2, double lon2,
 template<ellipsoid E = ellipsoid::wgs84>
   double
   inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
-      double& a12, double& a21, double convergence_limit = 1e-10)
+      double& a12, double& a21, double convergence_limit = 1e-12)
 {
   double a = ellipsoid_traits<E>::a;
   double f = ellipsoid_traits<E>::f;
   double b = semi_minor<E>();
-  return core::inverse_vincenty(lat1, lon1, lat2, lon2, a12, a21, a, f, b,
+  return core::inverse_vincenty(lat1, lon1, lat2, lon2, a, f, b, a12, a21,
       convergence_limit);
 }
 
@@ -351,12 +351,12 @@ template<ellipsoid E = ellipsoid::wgs84>
 double
 inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
     double& a12, double& a21, const Ellipsoid& e,
-    double convergence_limit = 1e-10)
+    double convergence_limit = 1e-12)
 {
   double a = e.semi_major();
   double f = e.flattening();
   double b = e.semi_minor();
-  return core::inverse_vincenty(lat1, lon1, lat2, lon2, a12, a21, a, f, b,
+  return core::inverse_vincenty(lat1, lon1, lat2, lon2, a, f, b, a12, a21,
       convergence_limit);
 }
 
@@ -378,7 +378,7 @@ inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 template<ellipsoid E = ellipsoid::wgs84>
   double
   direct_vincenty(double lat1, double lon1, double a1, double s, 
-      double& lat2, double& lon2, double convergence_limit = 1e-10)
+      double& lat2, double& lon2, double convergence_limit = 1e-12)
 {
   double a = ellipsoid_traits<E>::a;
   double f = ellipsoid_traits<E>::f;
@@ -404,7 +404,7 @@ template<ellipsoid E = ellipsoid::wgs84>
 double
 direct_vincenty(double lat1, double lon1, double a1, double s, 
     double& lat2, double& lon2, const Ellipsoid& e,
-    double convergence_limit = 1e-10)
+    double convergence_limit = 1e-12)
 {
   double a = e.semi_major();
   double f = e.flattening();
