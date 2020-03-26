@@ -7,6 +7,11 @@
 #include <cmath>
 #include <cassert>
 
+/*
+ To test (inverse & direct) VIncenty Algorithm, use:
+ https://geodesyapps.ga.gov.au/vincenty-inverse
+*/
+
 struct Point { double x,y,z; };
 
 using namespace ngpt;
