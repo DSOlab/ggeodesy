@@ -32,6 +32,11 @@ sudo make install
 In the `ggeodesy/test` folder you should be able to see a list of executables; run
 `ggeodesy/test/testGeodesy` to validate the library.
 
+* After a succesefull installation, users should have:
+1. all library header files in `/usr/local/include/ggeodesy/`
+2. the library (both a static and shared) in `/usr/local/lib/`
+Link, include and have fun!
+
 # The Library
 *************
 
