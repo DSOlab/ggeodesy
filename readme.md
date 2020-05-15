@@ -1,34 +1,36 @@
 # Introduction
-****************
 
 This is a C++ library meant to provide implementations of the most commonly used
 geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
 
-# Installation
+# Compilation / Installation
 
-* Clone the repository
-`git clone https://xanthos@bitbucket.org/xanthos/ggeodesy.git` into a local dir 
-(let's call it `ggeodesy`)
+Source code is ISO C++17. Compilation should be trivial using any gcc version 
+supporting the c++17 standard (option `-std=c++17`).
 
-* Setup the Makefile.am files in the src and test directories
+> This software is meant to be implemented on Unix-type OS's. No effort will be
+> undertaken for compatibility with other OS types.
+
+To compile the library, just follow the basic steps: (*note that the library is still at development phase so users need to configure the project before compiling*)
+
+**If you do not need the DEBUG version** (which most probably you don't), create the `Makefile.am` templates. This means that you
+should rename [Makefile.am.production](src/Makefile.am.production) and [Makefile.am.production](test/Makefile.am.production) to
+`src/Makefile.am` and `test/Makefile.am` respectively, that is:
 ```
-cd ggeodesy
 mv src/Makefile.am.production src/Makefile.am
 mv test/Makefile.am.production test/Makefile.am
 ```
 
-* Configure and Compile the software
+Then run Autotools and compile:
 
-At this point users have to run atotools on their own since this library is
-still in dev phase.
 ```
 autoreconf -if
 ./configure
 make
-sudo make install
-```
+make install
 
-* Verify & Test
+
+## Verify & Test
 
 In the `ggeodesy/test` folder you should be able to see a list of executables; run
 `ggeodesy/test/testGeodesy` to validate the library.
@@ -41,7 +43,6 @@ After a succesefull installation, users should have:
 Link, include and have fun!
 
 # The Library
-*************
 
 Here is a list of the provided utilities:
 
@@ -69,4 +70,26 @@ The following coordinate transformations are provided (for points on some refere
 * Cartesian to Topocentric (aka [δx, δy, δz] to [north, east, up])
 * Topocentric to Cartesian (aka  [north, east, up] to [δx, δy, δz])
 
-## Other thing ... (todo)
+## How to use the library (TODO)
+
+### Namespaces
+
+- namespace `iers2010`
+- namespace `iers2010::dhtide`
+- namespace `iers2010::hisp`
+- namespace `iers2010::oeop`
+
+### Linking
+
+- static
+- dynamic
+
+## Documentation & Library API (TODO)
+
+- build dox with doxygen (or link to dox)
+
+## TODO
+
+## Bugs & Maintanance
+Xanthos, xanthos@mail.ntua.gr
+Mitsos, danast@mail.ntua.gr
