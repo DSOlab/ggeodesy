@@ -33,16 +33,16 @@ template<ellipsoid E>
   noexcept
 {
   // Eccentricity squared.
-  constexpr double e2 { ngpt::eccentricity_squared<E>() };
+  constexpr double e2 {ngpt::eccentricity_squared<E>()};
 
   // Radius of curvature in the prime vertical.
-  double N { ngpt::N<E>(phi) };
+  double N {ngpt::N<E>(phi)};
 
   // Trigonometric numbers.
-  double sinf { std::sin(phi) };
-  double cosf { std::cos(phi) };
-  double sinl { std::sin(lambda) };
-  double cosl { std::cos(lambda) };
+  double sinf {std::sin(phi)};
+  double cosf {std::cos(phi)};
+  double sinl {std::sin(lambda)};
+  double cosl {std::cos(lambda)};
 
   // Compute geocentric rectangular coordinates.
   x = (N+h) * cosf * cosl;
@@ -72,16 +72,16 @@ ell2car(double phi, double lambda, double h, const Ellipsoid& e,
 noexcept
 {
   // Eccentricity squared.
-  double e2 { e.eccentricity_squared() };
+  double e2 {e.eccentricity_squared()};
 
   // Radius of curvature in the prime vertical.
-  double N { e.N(phi) };
+  double N {e.N(phi)};
 
   // Trigonometric numbers.
-  double sinf { std::sin(phi) };
-  double cosf { std::cos(phi) };
-  double sinl { std::sin(lambda) };
-  double cosl { std::cos(lambda) };
+  double sinf {std::sin(phi)};
+  double cosf {std::cos(phi)};
+  double sinl {std::sin(lambda)};
+  double cosl {std::cos(lambda)};
 
   // Compute geocentric rectangular coordinates.
   x = (N+h) * cosf * cosl;

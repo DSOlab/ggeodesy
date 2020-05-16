@@ -11,19 +11,19 @@
 namespace ngpt
 {
   /// The value of pi.
-  constexpr double DPI  { std::atan(1e0)*4e0 };
+  constexpr double DPI  {std::atan(1e0)*4e0};
   
   /// The value of 2 * pi.
-  constexpr double D2PI { 2e0 * DPI };
+  constexpr double D2PI {2e0*DPI};
 
   /// Degrees to Radians coefficient.
-  constexpr double DEG2RAD { DPI / 180e0 };
+  constexpr double DEG2RAD {DPI/180e0};
   
   /// Radians to Degrees coefficient.
-  constexpr double RAD2DEG { 180e0 / DPI };
+  constexpr double RAD2DEG {180e0/DPI};
 
-  /// mas to radians factor
-  constexpr double MAS2RAD { 4.847309743e-9 }; // aka θrad = θmas*MAS2RAD
+  /// mas to radians factor aka θrad = θmas*MAS2RAD
+  constexpr double MAS2RAD {4.847309743e-9}; 
 
 } // namespace ngpt
 

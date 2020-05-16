@@ -64,7 +64,7 @@ top2car(double north, double east, double up, double lat, double lon,
 template<typename T>
   T
   deg2rad(T degrees) noexcept
-{ return degrees * DEG2RAD; }
+{return degrees * DEG2RAD;}
 
 /// @brief Convert radians to degrees.
 /// @tparam    T       Any floating type
@@ -73,7 +73,7 @@ template<typename T>
 template<typename T>
   T
   rad2deg(T radians) noexcept
-{ return radians * RAD2DEG; }
+{return radians * RAD2DEG;}
 
 /// @brief Normalize angle.
 ///
@@ -132,7 +132,7 @@ template<typename T,
   void
   decd2hexd(T decimal_deg, int& deg, int& min, T& sec) noexcept
 {
-  T decdeg { std::abs(decimal_deg) };
+  T decdeg {std::abs(decimal_deg)};
 
   deg = static_cast<int>(decdeg);
   min = static_cast<int>( (decdeg - static_cast<T>(deg)) *
@@ -140,7 +140,7 @@ template<typename T,
   sec = decdeg - (static_cast<T>(deg) + static_cast<T>(min)/60e0);
   sec *= 3600e0;
 
-  if (decimal_deg < T{0}) deg *= -1;
+  if (decimal_deg<T{0}) deg *= -1;
   return;
 }
 
@@ -241,12 +241,12 @@ template<typename T,
   using std::sin;
   using std::cos;
 
-  double DeltaLambda = lon2 - lon1;
-  double cosLat2     = cos(lat2);
-  double nom         = sin(DeltaLambda) * cosLat2;
-  double denom       = cos(lat1)*sin(lat2) -
-                       sin(lat1)*cosLat2*cos(DeltaLambda);
-  double angle       = std::atan2(nom, denom);
+  const double DeltaLambda = lon2 - lon1;
+  const double cosLat2     = cos(lat2);
+  const double nom         = sin(DeltaLambda) * cosLat2;
+  const double denom       = cos(lat1)*sin(lat2) -
+                             sin(lat1)*cosLat2*cos(DeltaLambda);
+  const double angle       = std::atan2(nom, denom);
   // normalize to [0-2pi)
   return std::fmod(angle+D2PI, D2PI);
 }

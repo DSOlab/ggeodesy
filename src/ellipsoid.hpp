@@ -47,7 +47,7 @@ namespace core
   constexpr double
   eccentricity_squared(double f)
   noexcept
-  { return (2e0 - f) * f; }
+  {return (2e0-f)*f;}
     
   /// @brief Compute the semi-minor axis (aka b)
   ///
@@ -59,7 +59,7 @@ namespace core
   constexpr double
   semi_minor(double a, double f)
   noexcept
-  { return a * (1e0 - f); }
+  {return a*(1e0-f);}
 
   /// @brief Compute the normal radius of curvature at a given latitude (on 
   ///        a reference ellipsoid).
@@ -79,11 +79,11 @@ namespace core
   constexpr double
   N(double lat, double a, double b) noexcept
   {
-    double cosf  { std::cos(lat) };
-    double sinf  { std::sin(lat) };
-    double acosf { a * cosf };
-    double bsinf { b * sinf };
-    double den   { std::sqrt(acosf*acosf + bsinf*bsinf) };
+    const double cosf  {std::cos(lat)};
+    const double sinf  {std::sin(lat)};
+    const double acosf {a * cosf};
+    const double bsinf {b * sinf};
+    const double den   {std::sqrt(acosf*acosf + bsinf*bsinf)};
     /*
     double answer = (a*a)/den;
     double alternative = a/(std::sqrt(1.0-eccentricity_squared<E>()*sinf*sinf));
@@ -92,7 +92,7 @@ namespace core
         << "curvature computation\nSee template<ellipsoid E> double N(double lat)"
         << "in file: ellipsoid.hpp\n";
     }*/
-    return (a * a) / den;
+    return (a*a) / den;
   }
 
   /// @brief Compute the meridional radii of curvature at a given latitude 
@@ -109,12 +109,12 @@ namespace core
   constexpr double
   M(double lat, double a, double b) noexcept
   {
-    double cosf  { std::cos(lat) };
-    double sinf  { std::sin(lat) };
-    double acosf { a * cosf };
-    double bsinf { b * sinf };
-    double tmpd  { acosf*acosf + bsinf*bsinf };
-    return ( (a*b)/tmpd ) * ( (a*b)/std::sqrt(tmpd) );
+    const double cosf  {std::cos(lat)};
+    const double sinf  {std::sin(lat)};
+    const double acosf {a * cosf};
+    const double bsinf {b * sinf};
+    const double tmpd  {acosf*acosf + bsinf*bsinf};
+    return ((a*b)/tmpd) * ((a*b)/std::sqrt(tmpd));
   }
 }// namespace core
 
@@ -146,11 +146,11 @@ template<>
   struct ellipsoid_traits<ellipsoid::grs80>
 {
   /// Semi-major axis (m).
-  static constexpr double a      { 6378137.0e0 };
+  static constexpr double a      {6378137e0};
   /// Flattening.
-  static constexpr double f      { 1.0e00/298.257222101e0 };
+  static constexpr double f      {1e0/298.257222101e0};
   /// Reference ellipsoid name.
-  static constexpr const char* n { "GRS80" };
+  static constexpr const char* n {"GRS80"};
 };
 
 /// @brief A class to hold traits for the WGS-84 (i.e. ngpt::ellispoid::wgs84)
@@ -161,11 +161,11 @@ template<>
   struct ellipsoid_traits<ellipsoid::wgs84>
 {
   /// Semi-major axis (m).
-  static constexpr double a      { 6378137.0e0 };
+  static constexpr double a      {6378137e0};
   /// Flattening.
-  static constexpr double f      { 1.0e00/298.257223563e0 };
+  static constexpr double f      {1e0/298.257223563e0};
   /// Reference ellipsoid name.
-  static constexpr const char* n { "WGS84" };
+  static constexpr const char* n {"WGS84"};
 };
 
 /// @brief A class to hold traits for the PZ-90 (i.e. ngpt::ellispoid::pz90)
@@ -176,11 +176,11 @@ template<>
   struct ellipsoid_traits<ellipsoid::pz90>
 {
   /// Semi-major axis (m).
-  static constexpr double a      { 6378135.0e0 };
+  static constexpr double a      {6378135e0};
   /// Flattening.
-  static constexpr double f      { 1.0e00/298.257839303e0 };
+  static constexpr double f      {1e0/298.257839303e0};
   /// Reference ellipsoid name.
-  static constexpr const char* n { "PZ90" };
+  static constexpr const char* n {"PZ90"};
 };
 
 /// @brief Compute the squared eccentricity.
@@ -279,27 +279,27 @@ public:
   /// @return The semi-major axis (meters)
   double
   semi_major() const noexcept
-  { return __a; }
+  {return __a;}
 
   /// @brief  Get the flattening
   /// @return The flattening
   double
   flattening() const noexcept
-  { return __f; }
+  {return __f;}
 
   /// @brief  Get the squared eccentricity \f$ e^2 \f$
   /// @return Eccentricity aquared
   /// @see ngpt::core::eccentricity_squared
   double
   eccentricity_squared() const noexcept
-  { return core::eccentricity_squared(__f); }
+  {return core::eccentricity_squared(__f);}
 
   /// @brief  Get the semi-minor axis \f$ \beta \f$
   /// @return Semi-minor axis (meters)
   /// @see ngpt::core::semi_minor
   double
   semi_minor() const noexcept
-  { return core::semi_minor(__a, __f); }
+  {return core::semi_minor(__a, __f);}
 
   /// @brief  Compute the normal radius of curvature at a given latitude
   ///
@@ -309,7 +309,7 @@ public:
   /// @see ngpt::core::N
   double
   N(double lat) const noexcept
-  { return core::N(lat, __a, this->semi_minor()); }
+  {return core::N(lat, __a, this->semi_minor());}
   
   /// @brief  Compute the meridional radii of curvature at a given latitude
   ///
@@ -319,7 +319,7 @@ public:
   /// @see ngpt::core::M
   double
   M(double lat) const noexcept
-  { return core::M(lat, __a, this->semi_minor()); }
+  {return core::M(lat, __a, this->semi_minor());}
 
 private:
   double    __a,

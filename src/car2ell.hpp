@@ -42,12 +42,12 @@ car2ell(double x, double y, double z, double semi_major, double flattening,
 noexcept
 {
   // Functions of ellipsoid parameters.
-  const double aeps2 { semi_major*semi_major*1e-32 };
-  const double e2    { (2.0e0-flattening)*flattening };
-  const double e4t   { e2*e2*1.5e0 };
-  const double ep2   { 1.0e0-e2 };
-  const double ep    { std::sqrt(ep2) };
-  const double aep   { semi_major*ep };
+  const double aeps2 {semi_major*semi_major*1e-32};
+  const double e2    {(2.0e0-flattening)*flattening};
+  const double e4t   {e2*e2*1.5e0};
+  const double ep2   {1.0e0-e2};
+  const double ep    {std::sqrt(ep2)};
+  const double aep   {semi_major*ep};
 
   // Compute Coefficients of (Modified) Quartic Equation
   // Remark: Coefficients are rescaled by dividing by 'a'
@@ -65,32 +65,32 @@ noexcept
   // Ensure that Z-coordinate is unsigned.
   double absz {std::abs(z)};
 
-  if (p2 > aeps2) { // Continue unless at the poles
+  if (p2>aeps2) { // Continue unless at the poles
     // Compute distance from polar axis.
-    double p { std::sqrt(p2) };
+    double p {std::sqrt(p2)};
     // Normalize.
-    double s0  { absz/semi_major };
-    double pn  { p/semi_major };
-    double zp  { ep*s0 };
+    double s0  {absz/semi_major};
+    double pn  {p/semi_major};
+    double zp  {ep*s0};
     // Prepare Newton correction factors.
-    double c0  { ep*pn };
-    double c02 { c0*c0 };
-    double c03 { c02*c0 };
-    double s02 { s0*s0 };
-    double s03 { s02*s0 };
-    double a02 { c02+s02 };
-    double a0  { std::sqrt(a02) };
-    double a03 { a02*a0 };
-    double d0  { zp*a03 + e2*s03 };
-    double f0  { pn*a03 - e2*c03 };
+    double c0  {ep*pn};
+    double c02 {c0*c0};
+    double c03 {c02*c0};
+    double s02 {s0*s0};
+    double s03 {s02*s0};
+    double a02 {c02+s02};
+    double a0  {std::sqrt(a02)};
+    double a03 {a02*a0};
+    double d0  {zp*a03 + e2*s03};
+    double f0  {pn*a03 - e2*c03};
     // Prepare Halley correction factor.
-    double b0  { e4t*s02*c02*pn*(a0-ep) };
-    double s1  { d0*f0 - b0*s0 };
-    double cp  { ep*(f0*f0-b0*c0) };
+    double b0  {e4t*s02*c02*pn*(a0-ep)};
+    double s1  {d0*f0 - b0*s0};
+    double cp  {ep*(f0*f0-b0*c0)};
     // Evaluate latitude and height.
     phi = ::atan(s1/cp);
-    double s12 { s1*s1 };
-    double cp2 { cp*cp };
+    double s12 {s1*s1};
+    double cp2 {cp*cp};
     h = (p*cp+absz*s1-semi_major*std::sqrt(ep2*s12+cp2))
       /std::sqrt(s12+cp2);
   } else { // Special case: pole.

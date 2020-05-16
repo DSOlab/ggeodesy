@@ -19,16 +19,16 @@ ngpt::top2daz(double north, double east, double up,
   distance  = std::sqrt(north*north + east*east + up*up);
 
   // check if zero distance or north are zero
-  if ( (!distance) || (!north) ) {
+  if ((!distance) || (!north)) {
       throw std::runtime_error("[ERROR] geodesy::top2daz -> Zero Division !!");
   }
 
   // azimouth
-  double a { std::atan2(east, north) };
+  double a {std::atan2(east, north)};
 
   // normalize to range [0-2pi)
   azimouth  = std::fmod(a, ngpt::D2PI);
-  if (azimouth < 0e0) azimouth += ngpt::D2PI;
+  if (azimouth<0e0) azimouth += ngpt::D2PI;
 
   // zenith angle [0-pi)
   zenith = std::acos(up / distance);
