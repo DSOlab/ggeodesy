@@ -1,4 +1,4 @@
-hhhh//
+///
 /// @file vincenty.hpp
 ///
 /// @brief Implementation of Vincenty's formulae and other algorithms to
@@ -246,8 +246,8 @@ direct_vincenty(double lat1, double lon1, double a1, double s,
   const double cosSigma {std::cos(sigma)};
 
   // compute latitude
-  const double nom   {sinU1*cosSigma+cosU1*sinSigma*cosa1};
-  const double denom {sina*sina+std::pow(sinU1*sinSigma-cosU1*cosSigma*cosa1, 2e0)};
+  double nom   {sinU1*cosSigma+cosU1*sinSigma*cosa1};
+  double denom {sina*sina+std::pow(sinU1*sinSigma-cosU1*cosSigma*cosa1, 2e0)};
   denom        = std::sqrt(denom)*(1e0-f);
   lat2         = std::atan2(nom, denom);
 
