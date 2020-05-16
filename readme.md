@@ -1,9 +1,9 @@
-# Introduction
+## Introduction
 
 This is a C++ library meant to provide implementations of the most commonly used
 geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
 
-# Compilation / Installation
+## Compilation / Installation
 
 Source code is ISO C++17. Compilation should be trivial using any gcc version 
 supporting the c++17 standard (option `-std=c++17`).
@@ -28,6 +28,7 @@ autoreconf -if
 ./configure
 make
 make install
+```
 
 
 ## Verify & Test
@@ -42,11 +43,11 @@ After a succesefull installation, users should have:
 
 Link, include and have fun!
 
-# The Library
+## The Library
 
 Here is a list of the provided utilities:
 
-## Reference Ellipsoids
+### Reference Ellipsoids
 
 Currently there are implementations for the (reference) ellipsoids GRS80,
 WGS84 and PZ90; users can easily add more if they need to. Ellipsoid is a
@@ -62,7 +63,7 @@ geometric characteristics like
     double m  = M<ellipsoid::pz90>(/*latitude in radians*/);
 ```
 
-## Coordinate Transformations
+### Coordinate Transformations
 
 The following coordinate transformations are provided (for points on some reference ellipsoid):
 * Cartesian to Ellipsoidal (aka [x, y, z] to [φ, λ, height])
@@ -70,14 +71,11 @@ The following coordinate transformations are provided (for points on some refere
 * Cartesian to Topocentric (aka [δx, δy, δz] to [north, east, up])
 * Topocentric to Cartesian (aka  [north, east, up] to [δx, δy, δz])
 
-## How to use the library (TODO)
+### How to use the library (TODO)
 
 ### Namespaces
 
-- namespace `iers2010`
-- namespace `iers2010::dhtide`
-- namespace `iers2010::hisp`
-- namespace `iers2010::oeop`
+The whole of the library is wrapped around the `ngpt` namespace
 
 ### Linking
 
