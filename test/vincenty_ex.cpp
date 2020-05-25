@@ -1,11 +1,11 @@
-#include "geoconst.hpp"
-#include "vincenty.hpp"
-#include "geodesy.hpp"
-#include "trnsfdtls.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <cmath>
 #include <cassert>
+#include "geoconst.hpp"
+#include "vincenty.hpp"
+#include "geodesy.hpp"
+#include "trnsfdtls.hpp"
 
 /*
  To test (inverse & direct) VIncenty Algorithm, use:
@@ -69,7 +69,10 @@ int main ()
 
     //  Perform the inverse Vincenty calculation, to find forward and backward
     //+ azimouths and distance between the two points.
-    S = inverse_vincenty(p1.x, p1.y, p2.x, p2.y, a_for, a_bac, 1e-12);
+    S = inverse_vincenty<ngpt::ellipsoid::grs80>(p1.x, p1.y, 
+      p2.x, p2.y, a_for, a_bac, 1e-12);
+    // let's also see the result (for the distance) using the haversine formula
+    double S_haver = ngpt::haversine<ngpt::ellipsoid::grs80>(p1.x, p1.y,p2.x, p2.y);
 
     //  print results
     printf("\nInverse Vincenty Formula, gives:");
@@ -80,10 +83,13 @@ int main ()
     printf("\nForward Azimouth           : %+3d %2d %8.5f", a_deg, a_min, a_sec);
     rad2hexd(a_bac, a_deg, a_min, a_sec);
     printf("\nBackward Azimouth          : %+3d %2d %8.5f", a_deg, a_min, a_sec);
+    printf("\nBy the way, the Haversine formula computes the distance to be: %20.3f", S_haver);
+    printf("\nCompared to Vincenty's algorithm, the bias is %15.5f", std::abs(S-S_haver));
+    printf("\nthat is approximately %05.1f", 100e0*std::abs(S-S_haver)/S);
     std::cout<<"\nContinue testing ? (y/n)";
     std::cin>>cnt;
   } while (cnt!='n' && cnt!='N');
-    
+   
   // --------------------------------------------------------------------- //
   //                     TEST VINCENTY ALGORITHM
   // --------------------------------------------------------------------- //

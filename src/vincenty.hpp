@@ -137,13 +137,13 @@ inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
          lambdaP, sinLambda, cosLambda;
   
   do {
-    if (++iteration > MAX_ITERATIONS) {
+    if (++iteration>MAX_ITERATIONS) {
         throw std::out_of_range("[ERROR] Inverse Vincenty cannot converge after 100 iterations!");
     }
     sinLambda  = std::sin(lambda);
     cosLambda  = std::cos(lambda);
-    sinSigma   = std::sqrt( (cosU2*sinLambda) * (cosU2*sinLambda) +
-            (cosU1*sinU2-sinU1*cosU2*cosLambda) *
+    sinSigma   = std::sqrt((cosU2*sinLambda)*(cosU2*sinLambda) +
+            (cosU1*sinU2-sinU1*cosU2*cosLambda)*
             (cosU1*sinU2-sinU1*cosU2*cosLambda) );
     cosSigma   = sinU1*sinU2 + cosU1*cosU2*cosLambda;
     sigma      = atan2(sinSigma, cosSigma);
@@ -155,9 +155,9 @@ inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
     lambda     = L + (1e0-C)*f*sinAlpha*
                 (sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*
                 (-1e0+2e0*cos2SigmaM*cos2SigmaM)));
-  } while (std::abs(lambda-lambdaP) > convergence_limit);
+  } while (std::abs(lambda-lambdaP)>convergence_limit);
 
-  const double uSq {cosSqAlpha*(a*a-b*b)/(b*b)};
+  const double uSq {cosSqAlpha*((a*a-b*b)/(b*b))};
   const double k1  {(std::sqrt(1e0+uSq)-1e0)/(std::sqrt(1e0+uSq)+1e0)};
   const double A   {(1e0+0.25e0*k1*k1)/(1e0-k1)};
   const double B   {k1*(1e0-(3e0/8e0)*k1*k1)};

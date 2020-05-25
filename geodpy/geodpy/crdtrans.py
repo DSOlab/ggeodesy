@@ -1,15 +1,15 @@
-import ellipsoid.ellipsoid
+from .ellipsoid.ellipsoid import Ellipsoid
 import math
 
-def ellipsoidal2cartesian(lon, lat, hgt, ellipsoid=None):
+def ellipsoidal2cartesian(lon, lat, hgt, ellpsd=None):
     ''' Given a set of geocentric, ellipsoidal coordinates and optionaly a reference
       ellispoid, transform the set to cartesian coordinates, i.e. x, y, z.
     '''
 
-    if ellipsoid == None: ellipsoid = Ellipsoid('grs80')
+    if ellpsd == None: ellpsd = Ellipsoid('grs80')
 
     ## Eccentricity squared.
-    e2 = ellipsoid.eccentricity_squared()
+    e2 = ellpsd.eccentricity_squared()
 
     ## Trigonometric numbers.
     sinf = math.sin(lat)
@@ -18,7 +18,7 @@ def ellipsoidal2cartesian(lon, lat, hgt, ellipsoid=None):
     cosl = math.cos(lon)
 
     ## Radius of curvature in the prime vertical.
-    N = ellipsoid.N(lat)
+    N = ellpsd.N(lat)
 
     ## Compute geocentric rectangular coordinates.
     x = (N+hgt) * cosf * cosl
@@ -27,19 +27,19 @@ def ellipsoidal2cartesian(lon, lat, hgt, ellipsoid=None):
 
     return x, y, z
 
-def cartesian2ellipsoidal(x, y, z, ellipsoid=None):
+def cartesian2ellipsoidal(x, y, z, ellpsd=None):
     ''' Given a set of geocentric, cartesian coordinates and optionaly a reference
       ellispoid, transform the set to ellipsoidal coordinates, i.e. longtitude,
       latitude and (ellipsoidal) height.
     '''
 
-    if ellipsoid == None: ellipsoid = Ellipsoid('grs80')
+    if ellpsd == None: ellpsd = Ellipsoid('grs80')
 
     ## Functions of ellipsoid parameters.
-    a     = ellipsoid.a()
-    f     = ellipsoid.f()
+    a     = ellpsd.a()
+    f     = ellpsd.f()
     aeps2 = a*a*1e-32
-    e2    = ellipsoid.eccentricity_squared()
+    e2    = ellpsd.eccentricity_squared()
     e4t   = e2*e2*1.5e0
     ep2   = 1.0e0-e2
     ep    = math.sqrt(ep2)
@@ -53,7 +53,7 @@ def cartesian2ellipsoidal(x, y, z, ellipsoid=None):
     p2 = x*x + y*y
 
     ## Compute longitude lon
-    lon = math.atan2(y,x) if p2 is not 0e0 else 0e0
+    lon = math.atan2(y,x) if p2!=0e0 else 0e0
 
     ## Ensure that Z-coordinate is unsigned.
     absz = abs(z)
