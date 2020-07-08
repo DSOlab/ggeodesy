@@ -1,0 +1,8 @@
+language: c++
+dist: bionic
+compiler: gcc
+
+script:
+ - autoreconf -if
+ - ./configure
+ - make
