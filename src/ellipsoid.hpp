@@ -65,7 +65,7 @@ constexpr double semi_minor(double a, double f) noexcept {
 /// @param[in] f flattening
 /// @param[in] a semi-major axis (meters)
 /// @return      semi-minor axis (meters)
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__llvm__)
 constexpr 
 #endif
 double linear_eccentricity(double a, double f) noexcept {
@@ -87,8 +87,10 @@ double linear_eccentricity(double a, double f) noexcept {
 ///
 /// @see "Physical Geodesy", pg. 194
 /// @see https://en.wikipedia.org/wiki/Earth_radius
-///
-constexpr double N(double lat, double a, double b) noexcept {
+#if defined(__GNUC__) && !defined(__llvm__)
+constexpr
+#endif
+double N(double lat, double a, double b) noexcept {
   const double cosf{std::cos(lat)};
   const double sinf{std::sin(lat)};
   const double acosf{a * cosf};
@@ -108,7 +110,10 @@ constexpr double N(double lat, double a, double b) noexcept {
 ///
 /// @see https://en.wikipedia.org/wiki/Earth_radius
 ///
-constexpr double M(double lat, double a, double b) noexcept {
+#if defined(__GNUC__) && !defined(__llvm__)
+constexpr
+#endif
+double M(double lat, double a, double b) noexcept {
   const double cosf{std::cos(lat)};
   const double sinf{std::sin(lat)};
   const double acosf{a * cosf};
@@ -198,7 +203,7 @@ template <ellipsoid E> constexpr double eccentricity_squared() noexcept {
 /// @see ngpt::core::linear_eccentricity
 
 template <ellipsoid E>
-#ifdef __GNUC__ 
+#if defined(__GNUC__) && !defined(__llvm__)
 constexpr 
 #endif
 double linear_eccentricity() noexcept {

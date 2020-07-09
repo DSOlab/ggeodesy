@@ -28,8 +28,13 @@ int main()
   static_assert(std::abs(ngpt::semi_minor<ellipsoid::grs80>() 
                           - 6356752.3141e0)<1e-4);
   // linear eccentricity 
+#if defined(__GNUC__) && !defined(__llvm__)
   static_assert(std::abs(ngpt::linear_eccentricity<ellipsoid::grs80>() 
                           - 521854.0097e0)<1e-4);
+#else
+  assert(std::abs(ngpt::linear_eccentricity<ellipsoid::grs80>() 
+                          - 521854.0097e0)<1e-4);
+#endif
 
   return 0;
 }

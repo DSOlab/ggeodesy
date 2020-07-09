@@ -19,8 +19,8 @@ using namespace ngpt;
 int main ()
 {
   Point  p1, p2;
-  double S,a_for(0e0),a_bac(0e0),a_sec(0e0),a1_sec,a2_sec,b1_sec,b2_sec,
-         new_lon,new_lat,new_az;
+  double S,a_for(0e0),a_bac(0e0),a_sec(0e0),a1_sec,a2_sec,b1_sec,b2_sec;
+         // new_lon,new_lat,new_az;
   int    a_deg,a_min,a1_deg,a1_min,a2_deg,a2_min,b1_deg,b1_min,b2_deg,b2_min;
   char   cnt = 'y';
 

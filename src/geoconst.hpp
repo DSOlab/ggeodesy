@@ -6,12 +6,18 @@
 
 #ifndef __NGPT_GEOCONST_HPP__
 #define __NGPT_GEOCONST_HPP__
+
 #include <cmath>
 
 namespace ngpt
 {
   /// The value of pi.
+#if defined(__GNUC__) && !defined(__llvm__)
   constexpr double DPI  {std::atan(1e0)*4e0};
+#else
+  #define _USE_MATH_DEFINES
+  constexpr double DPI {M_PI};
+#endif
   
   /// The value of 2 * pi.
   constexpr double D2PI {2e0*DPI};

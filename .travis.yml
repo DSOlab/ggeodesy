@@ -1,6 +1,8 @@
 language: c++
 dist: bionic
-compiler: gcc
+compiler:
+  - gcc
+  - clang
 
 script:
  - mv src/Makefile.am.production src/Makefile.am
