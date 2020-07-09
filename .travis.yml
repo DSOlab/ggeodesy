@@ -3,6 +3,7 @@ dist: bionic
 compiler: gcc
 
 script:
+ - mv src/Makefile.am.production src/Makefile.am
  - autoreconf -if
  - ./configure
  - make
