@@ -1,3 +1,7 @@
+# C++ Geodetic Library
+
+[![Build Status](https://travis-ci.com/xanthospap/ggeodesy.svg?branch=master)](https://travis-ci.com/xanthospap/ggeodesy)
+
 ## Introduction
 
 This is a C++ library meant to provide implementations of the most commonly used

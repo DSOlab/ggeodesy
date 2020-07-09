@@ -7,3 +7,4 @@ script:
  - autoreconf -if
  - ./configure
  - make
+ - test/testEllipsoid
