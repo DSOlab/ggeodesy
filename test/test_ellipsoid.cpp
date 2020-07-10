@@ -4,6 +4,7 @@
 #include "ellipsoid.hpp"
 
 using ngpt::ellipsoid;
+using ngpt::Ellipsoid;
 
 /*
  * References:
@@ -35,6 +36,17 @@ int main()
   assert(std::abs(ngpt::linear_eccentricity<ellipsoid::grs80>() 
                           - 521854.0097e0)<1e-4);
 #endif
+  // ... and the polar radius of curvature is:
+  static_assert(std::abs(ngpt::polar_radius_of_curvature<ellipsoid::grs80>() 
+                          - 6399593.6259)<1e-4);
+
+  // declare Ellipsoid (class) instances
+  constexpr auto wgs84 = Ellipsoid(ellipsoid::wgs84);
+  constexpr auto grs80 = Ellipsoid(ngpt::ellipsoid_traits<ellipsoid::grs80>::a,
+                                   ngpt::ellipsoid_traits<ellipsoid::grs80>::f);
+
+  static_assert(wgs84.eccentricity_squared() == ngpt::eccentricity_squared<ellipsoid::wgs84>());
+  static_assert(grs80.semi_minor() == ngpt::semi_minor<ellipsoid::grs80>());
 
   return 0;
 }
