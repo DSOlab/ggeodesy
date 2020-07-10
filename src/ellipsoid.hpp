@@ -193,7 +193,7 @@ template <> struct ellipsoid_traits<ellipsoid::wgs84> {
 /// http://www.navipedia.net/index.php/Reference_Frames_in_GNSS#GLONASS_reference_frame_PZ-90
 template <> struct ellipsoid_traits<ellipsoid::pz90> {
   /// Semi-major axis (m).
-  static constexpr double a{6378135e0};
+  static constexpr double a{6378136e0};
   /// Flattening.
   static constexpr double f{1e0 / 298.257839303e0};
   /// Reference ellipsoid name.

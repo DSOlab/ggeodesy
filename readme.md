@@ -53,18 +53,47 @@ Here is a list of the provided utilities:
 
 ### Reference Ellipsoids
 
-Currently there are implementations for the (reference) ellipsoids GRS80,
-WGS84 and PZ90; users can easily add more if they need to. Ellipsoid is a
-class (i.e. ```ngpt::ellipsoid```) and provides access to the most common
-geometric characteristics like 
+Currently there are implementations for the (reference) ellipsoids:
+
+  - [GRS80](https://en.wikipedia.org/wiki/Geodetic_Reference_System_1980),
+  - [WGS84](https://en.wikipedia.org/wiki/World_Geodetic_System) and 
+  - [PZ90](https://eng.mil.ru/files/PZ-90.11_final-v8.pdf)
+
+Reference ellipsoids can be used in either on of two ways:
+ - via using the `enum` class `ngpt::ellipsoid` (e.g. `ngpt::ellipsoid::grs80`), or
+ - via the class `ngpt::Ellipsoid`
+
+Users can easily add more reference ellipsoids if they need to, via constructing 
+an `Ellipsoid` instance with the wanted parameters (aka semi-major axis and flattening), e.g.
+
 ```
     using namespace ngpt;
-    double e2 = eccentricity_squared<ellipsoid::wgs84>();
-    double b  = semi_minor<ellipsoid::grs80>();
-    // normal radius of curvature at a given latitude
-    double n  = N<ellipsoid::pz90>(/*latitude in radians*/);
-    // meridional radii of curvature at a given latitude
-    double m  = M<ellipsoid::pz90>(/*latitude in radians*/);
+    Ellipsoid myell = Ellipsoid(6378136.0e0/*semi-major axis*/, 1/298.25784/*flattening factor*/);
+    // use the created ellipsoid in some way ....
+    double semi_major = myell.semi_major();
+    double N = myell.N(some_latitude);
+    // ....
+```
+
+Users can also expand the source code to add a reference ellipsoid in the `enum` (class)
+`ellipsoid`. In this case, you will need one entry in the `ellipsoid` enum and a
+respective specialization of the `template <ellipsoid E> struct ellipsoid_traits {};` 
+class.
+
+Note that most of the constructors and function (for the `Ellipsoid` class and the 
+`ellipsoid` enum are `constexpr`. Hence, the following code is computed at compile-time:
+
+```
+  using namespace ngpt;
+  constexpr auto wgs84 = Ellipsoid(ellipsoid::wgs84);
+  constexpr auto grs80 = Ellipsoid(ellipsoid_traits<ellipsoid::grs80>::a,
+                                   ellipsoid_traits<ellipsoid::grs80>::f);
+  constexpr auto pz90  = Ellipsoid(ellipsoid::pz90);
+
+  static_assert(wgs84.eccentricity_squared() == 
+                eccentricity_squared<ellipsoid::wgs84>());
+  static_assert(grs80.semi_minor() == semi_minor<ellipsoid::grs80>());
+  static_assert(std::abs(pz90.eccentricity_squared()-0.0066943662)<1e-9);
 ```
 
 ### Coordinate Transformations
