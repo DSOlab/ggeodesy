@@ -60,6 +60,7 @@ Currently there are implementations for the (reference) ellipsoids:
   - [PZ90](https://eng.mil.ru/files/PZ-90.11_final-v8.pdf)
 
 Reference ellipsoids can be used in either on of two ways:
+
  - via using the `enum` class `ngpt::ellipsoid` (e.g. `ngpt::ellipsoid::grs80`), or
  - via the class `ngpt::Ellipsoid`
 
@@ -95,6 +96,8 @@ Note that most of the constructors and function (for the `Ellipsoid` class and t
   static_assert(grs80.semi_minor() == semi_minor<ellipsoid::grs80>());
   static_assert(std::abs(pz90.eccentricity_squared()-0.0066943662)<1e-9);
 ```
+
+For more information on how to use the reference ellipsoids, see e.g. [test_ellipsoid.hpp](test_ellipsoid.cpp).
 
 ### Coordinate Transformations
 
