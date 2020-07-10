@@ -147,7 +147,7 @@ template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
 T hexd2decd(int deg, int min, T sec) noexcept {
   T angle{static_cast<T>(std::abs(deg)) +
-          (static_cast<T>(min) + sec / 60e0) / 60e0};
+         (static_cast<T>(min) + sec / 60e0) / 60e0};
 
   return std::copysign(angle, (T)deg);
 }

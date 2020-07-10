@@ -97,7 +97,7 @@ Note that most of the constructors and function (for the `Ellipsoid` class and t
   static_assert(std::abs(pz90.eccentricity_squared()-0.0066943662)<1e-9);
 ```
 
-For more information on how to use the reference ellipsoids, see e.g. [test_ellipsoid.hpp](test_ellipsoid.cpp).
+For more information on how to use the reference ellipsoids, see e.g. [test_ellipsoid.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_ellipsoid.cpp).
 
 ### Coordinate Transformations
 
