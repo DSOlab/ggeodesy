@@ -89,7 +89,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 noinst_PROGRAMS = testGeodesy$(EXEEXT) transform$(EXEEXT) \
-	vincenty$(EXEEXT) testEllipsoid$(EXEEXT)
+	vincenty$(EXEEXT) testEllipsoid$(EXEEXT) testUnits$(EXEEXT)
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -117,6 +117,12 @@ testGeodesy_OBJECTS = $(am_testGeodesy_OBJECTS)
 testGeodesy_DEPENDENCIES = $(top_srcdir)/src/libggeodesy.la
 testGeodesy_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(testGeodesy_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_testUnits_OBJECTS = testUnits-test_units.$(OBJEXT)
+testUnits_OBJECTS = $(am_testUnits_OBJECTS)
+testUnits_DEPENDENCIES = $(top_srcdir)/src/libggeodesy.la
+testUnits_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(testUnits_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_transform_OBJECTS = transform-crd_transform_ex.$(OBJEXT)
 transform_OBJECTS = $(am_transform_OBJECTS)
@@ -147,6 +153,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/testEllipsoid-test_ellipsoid.Po \
 	./$(DEPDIR)/testGeodesy-test_geodesy.Po \
+	./$(DEPDIR)/testUnits-test_units.Po \
 	./$(DEPDIR)/transform-crd_transform_ex.Po \
 	./$(DEPDIR)/vincenty-vincenty_ex.Po
 am__mv = mv -f
@@ -169,9 +176,9 @@ am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(testEllipsoid_SOURCES) $(testGeodesy_SOURCES) \
-	$(transform_SOURCES) $(vincenty_SOURCES)
+	$(testUnits_SOURCES) $(transform_SOURCES) $(vincenty_SOURCES)
 DIST_SOURCES = $(testEllipsoid_SOURCES) $(testGeodesy_SOURCES) \
-	$(transform_SOURCES) $(vincenty_SOURCES)
+	$(testUnits_SOURCES) $(transform_SOURCES) $(vincenty_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -344,6 +351,9 @@ vincenty_LDADD = $(top_srcdir)/src/libggeodesy.la
 testEllipsoid_SOURCES = test_ellipsoid.cpp
 testEllipsoid_CXXFLAGS = $(MCXXFLAGS) -I$(top_srcdir)/src
 testEllipsoid_LDADD = $(top_srcdir)/src/libggeodesy.la
+testUnits_SOURCES = test_units.cpp
+testUnits_CXXFLAGS = $(MCXXFLAGS) -I$(top_srcdir)/src
+testUnits_LDADD = $(top_srcdir)/src/libggeodesy.la
 all: all-am
 
 .SUFFIXES:
@@ -395,6 +405,10 @@ testGeodesy$(EXEEXT): $(testGeodesy_OBJECTS) $(testGeodesy_DEPENDENCIES) $(EXTRA
 	@rm -f testGeodesy$(EXEEXT)
 	$(AM_V_CXXLD)$(testGeodesy_LINK) $(testGeodesy_OBJECTS) $(testGeodesy_LDADD) $(LIBS)
 
+testUnits$(EXEEXT): $(testUnits_OBJECTS) $(testUnits_DEPENDENCIES) $(EXTRA_testUnits_DEPENDENCIES) 
+	@rm -f testUnits$(EXEEXT)
+	$(AM_V_CXXLD)$(testUnits_LINK) $(testUnits_OBJECTS) $(testUnits_LDADD) $(LIBS)
+
 transform$(EXEEXT): $(transform_OBJECTS) $(transform_DEPENDENCIES) $(EXTRA_transform_DEPENDENCIES) 
 	@rm -f transform$(EXEEXT)
 	$(AM_V_CXXLD)$(transform_LINK) $(transform_OBJECTS) $(transform_LDADD) $(LIBS)
@@ -411,6 +425,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testEllipsoid-test_ellipsoid.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testGeodesy-test_geodesy.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testUnits-test_units.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transform-crd_transform_ex.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vincenty-vincenty_ex.Po@am__quote@ # am--include-marker
 
@@ -468,6 +483,20 @@ testGeodesy-test_geodesy.obj: test_geodesy.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test_geodesy.cpp' object='testGeodesy-test_geodesy.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testGeodesy_CXXFLAGS) $(CXXFLAGS) -c -o testGeodesy-test_geodesy.obj `if test -f 'test_geodesy.cpp'; then $(CYGPATH_W) 'test_geodesy.cpp'; else $(CYGPATH_W) '$(srcdir)/test_geodesy.cpp'; fi`
+
+testUnits-test_units.o: test_units.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testUnits_CXXFLAGS) $(CXXFLAGS) -MT testUnits-test_units.o -MD -MP -MF $(DEPDIR)/testUnits-test_units.Tpo -c -o testUnits-test_units.o `test -f 'test_units.cpp' || echo '$(srcdir)/'`test_units.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testUnits-test_units.Tpo $(DEPDIR)/testUnits-test_units.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test_units.cpp' object='testUnits-test_units.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testUnits_CXXFLAGS) $(CXXFLAGS) -c -o testUnits-test_units.o `test -f 'test_units.cpp' || echo '$(srcdir)/'`test_units.cpp
+
+testUnits-test_units.obj: test_units.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testUnits_CXXFLAGS) $(CXXFLAGS) -MT testUnits-test_units.obj -MD -MP -MF $(DEPDIR)/testUnits-test_units.Tpo -c -o testUnits-test_units.obj `if test -f 'test_units.cpp'; then $(CYGPATH_W) 'test_units.cpp'; else $(CYGPATH_W) '$(srcdir)/test_units.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testUnits-test_units.Tpo $(DEPDIR)/testUnits-test_units.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test_units.cpp' object='testUnits-test_units.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testUnits_CXXFLAGS) $(CXXFLAGS) -c -o testUnits-test_units.obj `if test -f 'test_units.cpp'; then $(CYGPATH_W) 'test_units.cpp'; else $(CYGPATH_W) '$(srcdir)/test_units.cpp'; fi`
 
 transform-crd_transform_ex.o: crd_transform_ex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(transform_CXXFLAGS) $(CXXFLAGS) -MT transform-crd_transform_ex.o -MD -MP -MF $(DEPDIR)/transform-crd_transform_ex.Tpo -c -o transform-crd_transform_ex.o `test -f 'crd_transform_ex.cpp' || echo '$(srcdir)/'`crd_transform_ex.cpp
@@ -630,6 +659,7 @@ clean-am: clean-generic clean-libtool clean-noinstPROGRAMS \
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/testEllipsoid-test_ellipsoid.Po
 	-rm -f ./$(DEPDIR)/testGeodesy-test_geodesy.Po
+	-rm -f ./$(DEPDIR)/testUnits-test_units.Po
 	-rm -f ./$(DEPDIR)/transform-crd_transform_ex.Po
 	-rm -f ./$(DEPDIR)/vincenty-vincenty_ex.Po
 	-rm -f Makefile
@@ -679,6 +709,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/testEllipsoid-test_ellipsoid.Po
 	-rm -f ./$(DEPDIR)/testGeodesy-test_geodesy.Po
+	-rm -f ./$(DEPDIR)/testUnits-test_units.Po
 	-rm -f ./$(DEPDIR)/transform-crd_transform_ex.Po
 	-rm -f ./$(DEPDIR)/vincenty-vincenty_ex.Po
 	-rm -f Makefile

@@ -1,7 +1,8 @@
 noinst_PROGRAMS = testGeodesy \
 	transform \
 	vincenty \
-        testEllipsoid
+        testEllipsoid \
+        testUnits
 
 MCXXFLAGS = \
 	-std=c++17 \
@@ -32,3 +33,7 @@ vincenty_LDADD     = $(top_srcdir)/src/libggeodesy.la
 testEllipsoid_SOURCES   = test_ellipsoid.cpp
 testEllipsoid_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
 testEllipsoid_LDADD     = $(top_srcdir)/src/libggeodesy.la
+
+testUnits_SOURCES   = test_units.cpp
+testUnits_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
+testUnits_LDADD     = $(top_srcdir)/src/libggeodesy.la
