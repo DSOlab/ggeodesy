@@ -8,10 +8,10 @@
 #ifndef __NGPT_GEODESY_HPP__
 #define __NGPT_GEODESY_HPP__
 
+#include "geoconst.hpp"
 #include <cmath>
 #include <stdexcept>
 #include <type_traits>
-#include "geoconst.hpp"
 
 namespace ngpt {
 
