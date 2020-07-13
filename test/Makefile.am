@@ -1,8 +1,14 @@
 noinst_PROGRAMS = testGeodesy \
 	transform \
-	vincenty \
-        testEllipsoid \
-        testUnits
+	vincenty
+
+TESTS = testEllipsoid \
+        testUnits \
+	testAngleNormalization
+
+check_PROGRAMS = testEllipsoid \
+        testUnits \
+	testAngleNormalization
 
 MCXXFLAGS = \
 	-std=c++17 \
@@ -37,3 +43,7 @@ testEllipsoid_LDADD     = $(top_srcdir)/src/libggeodesy.la
 testUnits_SOURCES   = test_units.cpp
 testUnits_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
 testUnits_LDADD     = $(top_srcdir)/src/libggeodesy.la
+
+testAngleNormalization_SOURCES   = test_angle_normalization.cc
+testAngleNormalization_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
+testAngleNormalization_LDADD     = $(top_srcdir)/src/libggeodesy.la

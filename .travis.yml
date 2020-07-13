@@ -9,5 +9,4 @@ script:
  - autoreconf -if
  - ./configure
  - make
- - test/testEllipsoid
- - test/testUnits
+ - make check

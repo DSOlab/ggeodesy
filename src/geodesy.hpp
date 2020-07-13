@@ -8,10 +8,11 @@
 #ifndef __NGPT_GEODESY_HPP__
 #define __NGPT_GEODESY_HPP__
 
-#include "geoconst.hpp"
 #include <cmath>
 #include <stdexcept>
 #include <type_traits>
+#include <cassert>
+#include "geoconst.hpp"
 
 namespace ngpt {
 
@@ -86,10 +87,13 @@ template <typename T> constexpr T rad2deg(T radians) noexcept {
 ///        [0, 2π), then we can use: angle = std::fmod(angle+2π, 2π).
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
-T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) {
-  if (lower >= upper)
-    throw std::invalid_argument(
-        "[ERROR] normalize_angle(): Invalid lower/upper bounds");
+T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
+  assert(lower<upper);
+
+  // std::fmod can do the job for a range with lower limit >= 0 (e.g. 0 to 2π)
+  // but will fail for e.g. -π to π
+  if (lower>=0e0)
+    return std::fmod(angle+upper, upper);
 
   double res{angle};
   if (angle > upper || angle == lower)
