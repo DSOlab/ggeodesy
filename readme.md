@@ -87,7 +87,7 @@ Reference ellipsoids can be used in either on of two ways:
 Users can easily add more reference ellipsoids if they need to, via constructing 
 an `Ellipsoid` instance with the wanted parameters (aka semi-major axis and flattening), e.g.
 
-```
+```cpp
     using namespace ngpt;
     Ellipsoid myell = Ellipsoid(6378136.0e0/*semi-major axis*/, 1/298.25784/*flattening factor*/);
     // use the created ellipsoid in some way ....
