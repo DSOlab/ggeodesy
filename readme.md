@@ -51,6 +51,26 @@ Link, include and have fun!
 
 Here is a list of the provided utilities:
 
+### Radians, Degrees and Relevant Trnasformations
+
+The library includes functions for transforming between radians, decimal degrees 
+and hexicondal degrees. Namely:
+
+  - `ngpt::deg2rad` transforms radians to decimal degrees
+  - `ngpt::decd2hexd` transforms decimal degrees to hexicondal degrees
+  - `ngpt::rad2deg` transforms decimal degrees to radians
+  - `ngpt::rad2hexd` transforms radians to hexicondal degrees
+  - `ngpt::hexd2decd` transforms hexicondal degrees to decimal degrees
+  - `ngpt::hexd2rad` transforms hexicondal degrees to radians
+
+Additionaly the function `ngpt::normalize_angle` can normalize a given angle 
+to a specified range (e.g. in range -π to π).
+
+All of the above functions are defined in the header file [geodesy.hpp](https://github.com/xanthospap/ggeodesy/blob/master/src/geodesy.hpp). For usage examples, see 
+[test_units.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_units.cpp) and [test_angle_normalization.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_angle_normalization.cc).
+
+
+
 ### Reference Ellipsoids
 
 Currently there are implementations for the (reference) ellipsoids:
