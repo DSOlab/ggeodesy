@@ -7,11 +7,10 @@
 #ifndef __ELLIPSOIDAL_TO_CARTESIAN__
 #define __ELLIPSOIDAL_TO_CARTESIAN__
 
-#include <cmath>
 #include "ellipsoid.hpp"
+#include <cmath>
 
-namespace ngpt
-{
+namespace ngpt {
 
 /// @brief Ellipsoidal to cartesian coordinates.
 ///
@@ -27,27 +26,25 @@ namespace ngpt
 /// @param[out]  z      Cartesian z-component (meters)
 /// @throw              Does not throw.
 ///
-template<ellipsoid E>
-  void ell2car(double phi, double lambda, double h, double& x, double& y,
-      double& z)
-  noexcept
-{
+template <ellipsoid E>
+void ell2car(double phi, double lambda, double h, double &x, double &y,
+             double &z) noexcept {
   // Eccentricity squared.
-  constexpr double e2 {ngpt::eccentricity_squared<E>()};
+  constexpr double e2{ngpt::eccentricity_squared<E>()};
 
   // Radius of curvature in the prime vertical.
-  double N {ngpt::N<E>(phi)};
+  double N{ngpt::N<E>(phi)};
 
   // Trigonometric numbers.
-  double sinf {std::sin(phi)};
-  double cosf {std::cos(phi)};
-  double sinl {std::sin(lambda)};
-  double cosl {std::cos(lambda)};
+  double sinf{std::sin(phi)};
+  double cosf{std::cos(phi)};
+  double sinl{std::sin(lambda)};
+  double cosl{std::cos(lambda)};
 
   // Compute geocentric rectangular coordinates.
-  x = (N+h) * cosf * cosl;
-  y = (N+h) * cosf * sinl;
-  z = ((1e0-e2) * N + h) * sinf;
+  x = (N + h) * cosf * cosl;
+  y = (N + h) * cosf * sinl;
+  z = ((1e0 - e2) * N + h) * sinf;
 
   // Finished.
   return;
@@ -66,32 +63,29 @@ template<ellipsoid E>
 /// @param[out]  y      Cartesian y-component (meters)
 /// @param[out]  z      Cartesian z-component (meters)
 /// @throw              Does not throw.
-void
-ell2car(double phi, double lambda, double h, const Ellipsoid& e, 
-  double& x, double& y, double& z)
-noexcept
-{
+void ell2car(double phi, double lambda, double h, const Ellipsoid &e, double &x,
+             double &y, double &z) noexcept {
   // Eccentricity squared.
-  double e2 {e.eccentricity_squared()};
+  double e2{e.eccentricity_squared()};
 
   // Radius of curvature in the prime vertical.
-  double N {e.N(phi)};
+  double N{e.N(phi)};
 
   // Trigonometric numbers.
-  double sinf {std::sin(phi)};
-  double cosf {std::cos(phi)};
-  double sinl {std::sin(lambda)};
-  double cosl {std::cos(lambda)};
+  double sinf{std::sin(phi)};
+  double cosf{std::cos(phi)};
+  double sinl{std::sin(lambda)};
+  double cosl{std::cos(lambda)};
 
   // Compute geocentric rectangular coordinates.
-  x = (N+h) * cosf * cosl;
-  y = (N+h) * cosf * sinl;
-  z = ((1.0e0-e2) * N + h) * sinf;
+  x = (N + h) * cosf * cosl;
+  y = (N + h) * cosf * sinl;
+  z = ((1.0e0 - e2) * N + h) * sinf;
 
   // Finished.
   return;
 }
 
-} // end namespace
+} // namespace ngpt
 
 #endif

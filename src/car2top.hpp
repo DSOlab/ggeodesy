@@ -14,21 +14,19 @@
 #ifndef _CARTESIAN_TO_TOPOCENTRIC_
 #define _CARTESIAN_TO_TOPOCENTRIC_
 
-#include <cmath>
 #include "car2ell.hpp"
+#include <cmath>
 
-namespace ngpt
-{
+namespace ngpt {
 
-namespace core
-{
+namespace core {
 
 /// @brief Cartesian to topocentric (vector).
 ///
-/// Transform a vector expressed in cartesian, geocentric coordinates to the 
-/// topocentric, local system around point i. This function depends on the 
-/// reference ellipsoid. All units in meters/radians. The function will 
-/// transform the (geocentric) vector \f$\vec{\Delta X}\f$ to the local 
+/// Transform a vector expressed in cartesian, geocentric coordinates to the
+/// topocentric, local system around point i. This function depends on the
+/// reference ellipsoid. All units in meters/radians. The function will
+/// transform the (geocentric) vector \f$\vec{\Delta X}\f$ to the local
 /// topocentric reference frame around point \f$\vec{X}_i\f$.
 ///
 /// @param[in]  xi     Cartesian x-component of point i (meters)
@@ -49,37 +47,32 @@ namespace core
 ///
 /// @see "Physical Geodesy", pg. 209
 ///
-void
-dcar2top(double xi, double yi, double zi, double dx, double dy, double dz, 
-  double semi_major, double flattening,
-  double& north, double& east, double& up)
-noexcept
-{
+void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
+              double semi_major, double flattening, double &north, double &east,
+              double &up) noexcept {
 
   // Ellipsoidal coordinates of reference point.
-  double phi_i,
-         lambda_i,
-         h_i;
+  double phi_i, lambda_i, h_i;
 
   // Cartesian to ellipsoidal for reference point.
   core::car2ell(xi, yi, zi, semi_major, flattening, phi_i, lambda_i, h_i);
 
   // Trigonometric numbers.
-  double cosf {std::cos(phi_i)};
-  double cosl {std::cos(lambda_i)};
-  double sinf {std::sin(phi_i)};
-  double sinl {std::sin(lambda_i)};
+  double cosf{std::cos(phi_i)};
+  double cosl{std::cos(lambda_i)};
+  double sinf{std::sin(phi_i)};
+  double sinl{std::sin(lambda_i)};
 
   // Topocentric vector.
-  north = - sinf * cosl * dx - sinf * sinl * dy + cosf * dz;
-  east  = - sinl * dx        + cosl * dy;
-  up    =   cosf * cosl * dx + cosf * sinl * dy + sinf * dz;
+  north = -sinf * cosl * dx - sinf * sinl * dy + cosf * dz;
+  east = -sinl * dx + cosl * dy;
+  up = cosf * cosl * dx + cosf * sinl * dy + sinf * dz;
 
   // Finished.
   return;
 }
 
-}// namespace core
+} // namespace core
 
 /// @brief Cartesian to topocentric (vector).
 ///
@@ -95,23 +88,20 @@ noexcept
 /// @param[out] up     Vector up component (meters)
 ///
 /// @see ngpt::core::dcar2top
-template<ellipsoid E>
-  void
-  car2top(double xi, double yi, double zi,
-      double xj, double yj, double zj, 
-      double& north, double& east, double& up)
-  noexcept
-{
-  constexpr double semi_major {ellipsoid_traits<E>::a};                     
-  constexpr double flattening {ellipsoid_traits<E>::f};
+template <ellipsoid E>
+void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
+             double &north, double &east, double &up) noexcept {
+  constexpr double semi_major{ellipsoid_traits<E>::a};
+  constexpr double flattening{ellipsoid_traits<E>::f};
 
   // Catresian vector.
-  double dx {xj - xi};
-  double dy {yj - yi};
-  double dz {zj - zi};
+  double dx{xj - xi};
+  double dy{yj - yi};
+  double dz{zj - zi};
 
   // transform to topocentric
-  core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east, up);
+  core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,
+                 up);
 
   // Finished.
   return;
@@ -132,15 +122,13 @@ template<ellipsoid E>
 /// @throw             Does not throw.
 ///
 /// @see ngpt::core::dcar2top
-template<ellipsoid E>
-  void
-  dcar2top(double xi, double yi, double zi, double dx, double dy, double dz, 
-    double& north, double& east, double& up)
-  noexcept
-{
-  constexpr double semi_major {ellipsoid_traits<E>::a};                     
-  constexpr double flattening {ellipsoid_traits<E>::f};
-  core::dcar2top(xi,yi,zi,dx,dy,dz,semi_major,flattening,north,east,up);
+template <ellipsoid E>
+void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
+              double &north, double &east, double &up) noexcept {
+  constexpr double semi_major{ellipsoid_traits<E>::a};
+  constexpr double flattening{ellipsoid_traits<E>::f};
+  core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,
+                 up);
 }
 
 /// @brief Cartesian to topocentric (vector).
@@ -157,22 +145,20 @@ template<ellipsoid E>
 /// @param[out] up     Vector up component (meters)
 ///
 /// @see ngpt::core::dcar2top
-void
-car2top(double xi, double yi, double zi,
-  double xj, double yj, double zj, const Ellipsoid& e,
-  double& north, double& east, double& up)
-noexcept
-{
-  const double semi_major {e.semi_major()};
-  const double flattening {e.flattening()};
+void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
+             const Ellipsoid &e, double &north, double &east,
+             double &up) noexcept {
+  const double semi_major{e.semi_major()};
+  const double flattening{e.flattening()};
 
   // Catresian vector.
-  double dx {xj - xi};
-  double dy {yj - yi};
-  double dz {zj - zi};
+  double dx{xj - xi};
+  double dy{yj - yi};
+  double dz{zj - zi};
 
   // transform to topocentric
-  core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east, up);
+  core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,
+                 up);
 
   // Finished.
   return;
@@ -192,16 +178,15 @@ noexcept
 /// @param[out] up     Vector up component (meters)
 ///
 /// @see ngpt::core::dcar2top
-void
-dcar2top(double xi, double yi, double zi, double dx, double dy, double dz, 
-  const Ellipsoid& e, double& north, double& east, double& up)
-noexcept
-{
-  const double semi_major {e.semi_major()};
-  const double flattening {e.flattening()};
-  core::dcar2top(xi,yi,zi,dx,dy,dz,semi_major,flattening,north,east,up);
+void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
+              const Ellipsoid &e, double &north, double &east,
+              double &up) noexcept {
+  const double semi_major{e.semi_major()};
+  const double flattening{e.flattening()};
+  core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,
+                 up);
 }
 
-} // end namespace
+} // namespace ngpt
 
 #endif
