@@ -27,7 +27,7 @@ mv test/Makefile.am.production test/Makefile.am
 
 Then run Autotools and compile:
 
-```
+```bash
 autoreconf -if
 ./configure
 make
@@ -37,13 +37,15 @@ make install
 
 ## Verify & Test
 
-In the `ggeodesy/test` folder you should be able to see a list of executables; run
-`ggeodesy/test/testGeodesy` to validate the library.
+~~In the `ggeodesy/test` folder you should be able to see a list of executables; run `ggeodesy/test/testGeodesy` to validate the library.~~
 
 After a succesefull installation, users should have:
 
 1. all library header files in `/usr/local/include/ggeodesy/`
 2. the library (both a static and shared) in `/usr/local/lib/`
+
+To run a validity check, just run: `make check` at the root directory. Hopefully, 
+you 'll see all checks passing!
 
 Link, include and have fun!
 
@@ -104,7 +106,7 @@ class.
 Note that most of the constructors and function (for the `Ellipsoid` class and the 
 `ellipsoid` enum are `constexpr`. Hence, the following code is computed at compile-time:
 
-```
+```cpp
   using namespace ngpt;
   constexpr auto wgs84 = Ellipsoid(ellipsoid::wgs84);
   constexpr auto grs80 = Ellipsoid(ellipsoid_traits<ellipsoid::grs80>::a,
