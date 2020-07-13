@@ -9,18 +9,23 @@ geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
 
 ## Compilation / Installation
 
-Source code is ISO C++17. Compilation should be trivial using any gcc version 
-supporting the c++17 standard (option `-std=c++17`).
+Source code is ISO C++17. Compilation should be trivial using any C++ compiler
+[supporting the c++17](https://en.wikipedia.org/wiki/C%2B%2B17#Compiler_support) 
+standard (option `-std=c++17` in gcc and clang).
 
 > This software is meant to be implemented on Unix-type OS's. No effort will be
 > undertaken for compatibility with other OS types.
 
 To compile the library, just follow the basic steps: (*note that the library is still at development phase so users need to configure the project before compiling*)
 
+For the following, `ROOTDIR` will be the root directory of this repository,
+aka the directory under which `/src`, `/test` and `/doc` folders live.
+
 **If you do not need the DEBUG version** (which most probably you don't), create the `Makefile.am` templates. This means that you
 should rename [Makefile.am.production](src/Makefile.am.production) and [Makefile.am.production](test/Makefile.am.production) to
 `src/Makefile.am` and `test/Makefile.am` respectively, that is:
-```
+
+```bash
 mv src/Makefile.am.production src/Makefile.am
 mv test/Makefile.am.production test/Makefile.am
 ```
@@ -31,9 +36,8 @@ Then run Autotools and compile:
 autoreconf -if
 ./configure
 make
-make install
+sudo make install
 ```
-
 
 ## Verify & Test
 
@@ -70,8 +74,6 @@ to a specified range (e.g. in range -π to π).
 
 All of the above functions are defined in the header file [geodesy.hpp](https://github.com/xanthospap/ggeodesy/blob/master/src/geodesy.hpp). For usage examples, see 
 [test_units.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_units.cpp) and [test_angle_normalization.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_angle_normalization.cc).
-
-
 
 ### Reference Ellipsoids
 
@@ -143,6 +145,8 @@ The whole of the library is wrapped around the `ngpt` namespace
 ## Documentation & Library API (TODO)
 
 - build dox with doxygen (or link to dox)
+
+## FAQ
 
 ## TODO
 
