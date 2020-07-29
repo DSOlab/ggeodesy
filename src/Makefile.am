@@ -45,4 +45,5 @@ dist_libggeodesy_la_SOURCES = \
 	top2daz.cpp \
 	top2car.cpp \
 	trnsfdtls.cpp \
+	meridian_arc.cpp \
 	wgs84_to_pz90.cpp

@@ -4,12 +4,14 @@ noinst_PROGRAMS = testGeodesy \
 
 TESTS = testEllipsoid \
         testUnits \
-	testAngleNormalization
+	testAngleNormalization \
+	testMeridianArc
 
 check_PROGRAMS = testEllipsoid \
         testUnits \
 	testAngleNormalization \
-        testTransformations
+        testTransformations \
+	testMeridianArc
 
 MCXXFLAGS = \
 	-std=c++17 \
@@ -53,3 +55,7 @@ testAngleNormalization_LDADD     = $(top_srcdir)/src/libggeodesy.la
 testTransformations_SOURCES   = test_transformations.cpp
 testTransformations_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
 testTransformations_LDADD     = $(top_srcdir)/src/libggeodesy.la
+
+testMeridianArc_SOURCES   = test_meridian_arc.cpp
+testMeridianArc_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
+testMeridianArc_LDADD     = $(top_srcdir)/src/libggeodesy.la
