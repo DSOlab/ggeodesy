@@ -8,7 +8,8 @@ TESTS = testEllipsoid \
 
 check_PROGRAMS = testEllipsoid \
         testUnits \
-	testAngleNormalization
+	testAngleNormalization \
+        testTransformations
 
 MCXXFLAGS = \
 	-std=c++17 \
@@ -22,10 +23,11 @@ MCXXFLAGS = \
 	-W \
 	-Wshadow \
 	-Wdisabled-optimization \
-	-DDEBUG
+	-DDEBUG \
+        -DCHECK_PRECISION
 
 testGeodesy_SOURCES   = test_geodesy.cpp
-testGeodesy_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
+testGeodesy_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src 
 testGeodesy_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 transform_SOURCES   = crd_transform_ex.cpp
@@ -41,9 +43,13 @@ testEllipsoid_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
 testEllipsoid_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 testUnits_SOURCES   = test_units.cpp
-testUnits_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
+testUnits_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
 testUnits_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 testAngleNormalization_SOURCES   = test_angle_normalization.cc
 testAngleNormalization_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
 testAngleNormalization_LDADD     = $(top_srcdir)/src/libggeodesy.la
+
+testTransformations_SOURCES   = test_transformations.cpp
+testTransformations_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
+testTransformations_LDADD     = $(top_srcdir)/src/libggeodesy.la

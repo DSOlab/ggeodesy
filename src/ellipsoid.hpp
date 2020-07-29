@@ -39,6 +39,33 @@ namespace ngpt {
 /// @brief core namespace holds the core of ellipsoid-related functions
 namespace core {
 
+// @brief Table of coefficients for meridian arc computation
+// a: semi-major
+double meridian_arc_length_impl(double a, double e2, double lat)
+{
+  const double e4(e2*e2), e6(e4*e2), e8(e6*e2), e10(e8*e2);
+  const double sinf(std::sin(lat)), sin2f(std::sin(2e0*lat)), sin4f(std::sin(4e0*lat)), sin6f(std::sin(6e0*lat)), sin8f(std::sin(8e0*lat)), sin10f(std::sin(10e0*lat));
+  const fac = a*(1e0-e2);
+  const double C1 =
+      1e0 +
+      e2 * (3e0 / 4 +
+            e2 * (45e0 / 64 + e2 * (175e0 / 256 + e2(11025e0 / 16384 +
+                                                     (43659e0 / 65536) * e2))));
+  const double C2 =
+      e2 *
+      (3e0 / 4 +
+       e2 * (15e0 / 6 + e2 * (525e0 / 512 +
+                              e2 * (2205e0 / 2048 + (72765e0 / 65536) * e2))));
+  const double C3 =
+      e4 * (15e0 / 64 +
+            e2 * (105e0 / 256 + e2 * (2205e0 / 4096 + (10395e0 / 16384) * e2)));
+  const double C4 =
+      e6 * (35e0 / 512 + e2 * (315e0 / 2048 + (31185e0 / 131072) * e2));
+  const double C5 = e8 * (315e0 / 16384 + (3465e0 / 65536) * e2);
+  const double C6 = e10 * (693e0 / 131072);
+  return fac * (C1*lat -C2*sin2f/2e0+C3*sin4f/4e0-C4*sin6f/6e0+C5*sin8f/8e0-C6*sin10f/10e0);
+}
+
 /// @brief Compute the squared eccentricity.
 ///
 /// Compute the squared (first) eccentricity (i.e. e^2) given the
@@ -272,6 +299,20 @@ template <ellipsoid E> double N(double lat) noexcept {
 /// @see ngpt::core::M
 template <ellipsoid E> double M(double lat) noexcept {
   return core::M(lat, ellipsoid_traits<E>::a, semi_minor<E>());
+}
+
+/// @brief Arc length of an infinitesimal element of the meridian
+///
+/// @param[in] lat  Latitude of the reference point in radians
+/// @param[in] dlat Lattitude difference, i.e. arc length on the meridian
+/// @return         Arc length (on meridian) in meters
+/// @warning This formula is valid for infinitesimal latitude differences
+/// @see https://en.wikipedia.org/wiki/Meridian_arc
+template <ellipsoid E, typename T,
+          typename = std::enable_if_t<std::is_floating_point<T>::value>>
+T infinitesimal_meridian_arc(T lat, T dlat) noexcept {
+  T M_ = core::M(lat, ellipsoid_traits<E>::a, semi_minor<E>());
+  return M_ * dlat;
 }
 
 /// @class Ellipsoid

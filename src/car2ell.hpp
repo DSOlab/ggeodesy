@@ -10,10 +10,52 @@
 #include "ellipsoid.hpp"
 #include "geoconst.hpp" // Needed for ngpt::DPI
 #include <cmath>
+#ifdef DEBUG
+#include <iostream>
+#endif
 
 namespace ngpt {
 
 namespace core {
+
+/* obsolete
+ * this is an iterative algorithm, it usually convergse after 5 to 6 iterations
+ * and the precision is no better than the car2ell algorithm. Marking it as
+ * obsolete
+void car2ell_iterate(
+    double x, double y, double z, double semi_major_ell, double flattening_ell,
+    double &phi, double &lambda, double &hgt,
+    double tolerance = std::numeric_limits<double>::epsilon()) noexcept {
+#ifdef DEBUG
+  int iterations = 0;
+#endif
+  const double b {core::semi_minor(semi_major_ell, flattening_ell)};
+  const double a = semi_major_ell;
+  const double e2 = core::eccentricity_squared(flattening_ell);
+  const double rho = std::sqrt(x * x + y * y);
+  const double zdivrho = z / rho;
+  double lat1 = std::atan2(zdivrho, 1e0 - e2);
+  double N, coef, lat0, diff(10e0);
+  while (diff > std::abs(lat1) * tolerance) {
+    lat0 = lat1;
+    N = core::N(lat0, a, b);
+    hgt = rho / std::cos(lat0) - N;
+    coef = 1e0 - e2 * (N / (N + hgt));
+    lat1 = std::atan2(zdivrho, coef);
+#ifdef DEBUG
+    ++iterations;
+#endif
+    diff = std::abs(lat0 - lat1);
+  }
+  phi = lat1;
+  lambda = std::atan2(y, x);
+#ifdef DEBUG
+  std::cout << "\n[DEBUG] car2ell_iterate #iterations: " << iterations;
+#endif
+  return;
+}
+*/
+
 /// @brief Cartesian to ellipsoidal.
 ///
 /// Transform cartesian, geocentric coordinates (x, y, z) to ellipsoidal (i.e.
