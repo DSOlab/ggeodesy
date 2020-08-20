@@ -131,6 +131,32 @@ The following coordinate transformations are provided (for points on some refere
 * Cartesian to Topocentric (aka [δx, δy, δz] to [north, east, up])
 * Topocentric to Cartesian (aka  [north, east, up] to [δx, δy, δz])
 
+### Meridian Arc Length
+
+As is well known in geodesy, the meridian arc length S( \phi ) on the earth ellipsoid 
+from the equator to the geographic latitude \phi includes an elliptic integral and 
+cannot be expressed explicitly using a combination of elementary functions. The library 
+provides three implementations for computing the meridian arc length using approximations.
+
+* `ngpt::core::meridian_arc_length_impl1` : implementation using a binomial series 
+with respect to e^2 obtained by truncating the expansion at order e^10
+
+* `ngpt::core::meridian_arc_length_impl2` : the Bessel’s formula implementation
+
+* `ngpt::core::meridian_arc_length_impl3` : the Helmert's formula implementation
+
+The above implementations agree within the following precision limits:
+
+* impl1 vs impl2 : 3e-5 meters
+* impl2 vs impl3 : 1e-6 meters
+* impl2 vs impl3 : 3e-5 meters
+
+Users can select one of the algorithms via the (optional) intput parameter `lag` 
+(using values in rabge [0,2]) when calling the function 
+`template<ellipsoid E> double meridian_arc_length(double lat, int alg=0)`.
+
+More information and implementation details can be found in [Kawase, 2011](#kawase).
+
 ### How to use the library (TODO)
 
 ### Namespaces
@@ -153,3 +179,8 @@ The whole of the library is wrapped around the `ngpt` namespace
 ## Bugs & Maintanance
 Xanthos, xanthos@mail.ntua.gr
 Mitsos, danast@mail.ntua.gr
+
+## References 
+
+<a id="kawase"></a> K. Kawase, A General Formula for Calculating Meridian Arc Length and its Application to Coordinate 
+Conversion in the Gauss-Krüger Projection, Bulletin of the Geospatial Information Authority of Japan, Vol.59 December, 2011
