@@ -151,11 +151,18 @@ The above implementations agree within the following precision limits:
 * impl2 vs impl3 : 1e-6 meters
 * impl2 vs impl3 : 3e-5 meters
 
-Users can select one of the algorithms via the (optional) intput parameter `lag` 
+Users can select one of the algorithms via the (optional) intput parameter `alg` 
 (using values in rabge [0,2]) when calling the function 
-`template<ellipsoid E> double meridian_arc_length(double lat, int alg=0)`.
+`template<ellipsoid E> double meridian_arc_length(double lat, int alg=0)` (aka 
+by default the function will use the 
 
-More information and implementation details can be found in [Kawase, 2011](#kawase).
+More information and implementation details can be found in [Kawase, 2011](#kawase). 
+Usage examples of the algorithm(s) can be found in the file 
+[test_meridian_arc.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_meridian_arc.cpp)
+
+Note that if we only want the __arc length of an infinitesimal element of the meridian__ the 
+computation is way more straight-forward []; for this computation users may use the 
+function (template) `infinitesimal_meridian_arc`.
 
 ### How to use the library (TODO)
 
