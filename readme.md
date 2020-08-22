@@ -161,7 +161,7 @@ Usage examples of the algorithm(s) can be found in the file
 [test_meridian_arc.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_meridian_arc.cpp)
 
 Note that if we only want the __arc length of an infinitesimal element of the meridian__ the 
-computation is way more straight-forward []; for this computation users may use the 
+computation is way more straight-forward [Meridian Arc](#meridian_arc_wiki); for this computation users may use the 
 function (template) `infinitesimal_meridian_arc`.
 
 ### How to use the library (TODO)
@@ -191,3 +191,5 @@ Mitsos, danast@mail.ntua.gr
 
 <a id="kawase"></a> K. Kawase, A General Formula for Calculating Meridian Arc Length and its Application to Coordinate 
 Conversion in the Gauss-Krüger Projection, Bulletin of the Geospatial Information Authority of Japan, Vol.59 December, 2011
+
+<a id="meridian_arc_wiki"></a> Wiki page on [Meridian Arc](https://en.wikipedia.org/wiki/Meridian_arc)
