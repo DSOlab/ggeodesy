@@ -21,7 +21,7 @@ int main ()
   Point  p1, p2;
   double S,a_for(0e0),a_bac(0e0),a_sec(0e0),a1_sec,a2_sec,b1_sec,b2_sec;
          // new_lon,new_lat,new_az;
-  int    a_deg,a_min,a1_deg,a1_min,a2_deg,a2_min,b1_deg,b1_min,b2_deg,b2_min;
+  int    a_deg,a_min,a1_deg,a1_min,a2_deg,a2_min,b1_deg,b1_min,b2_deg,b2_min,sign;
   char   cnt = 'y';
 
   printf("\n> TEST INVERSE VINCENTY ALGORITHM");
@@ -46,10 +46,10 @@ int main ()
     p2.y = deg2rad(p2.y);
 
     //  Transform decimal degrees to hexicondal degrees for nice printing
-    rad2hexd(p1.x, a1_deg, a1_min, a1_sec);
-    rad2hexd(p1.y, a2_deg, a2_min, a2_sec);
-    rad2hexd(p2.x, b1_deg, b1_min, b1_sec);
-    rad2hexd(p2.y, b2_deg, b2_min, b2_sec);
+    rad2hexd(p1.x, a1_deg, a1_min, a1_sec, sign);
+    rad2hexd(p1.y, a2_deg, a2_min, a2_sec, sign);
+    rad2hexd(p2.x, b1_deg, b1_min, b1_sec, sign);
+    rad2hexd(p2.y, b2_deg, b2_min, b2_sec, sign);
     printf("\nWe start with two points on the ellipsoid, with coordinates:");
     printf("\n |φ|    |%+04i %02i %10.7f|  |φ|    |%+04i %02i %10.7f|",
         a1_deg,a1_min,a1_sec,b1_deg,b1_min,b1_sec);
@@ -79,9 +79,9 @@ int main ()
     printf("\nS(1->2) = %20.3f", S);
     printf("\nA(1->2) = %+15.10f", rad2deg(a_for));
     printf("\nA(2->1) = %+15.10f", rad2deg(a_bac));
-    rad2hexd(a_for, a_deg, a_min, a_sec);
+    rad2hexd(a_for, a_deg, a_min, a_sec, sign);
     printf("\nForward Azimouth           : %+3d %2d %8.5f", a_deg, a_min, a_sec);
-    rad2hexd(a_bac, a_deg, a_min, a_sec);
+    rad2hexd(a_bac, a_deg, a_min, a_sec, sign);
     printf("\nBackward Azimouth          : %+3d %2d %8.5f", a_deg, a_min, a_sec);
     printf("\nBy the way, the Haversine formula computes the distance to be: %20.3f", S_haver);
     printf("\nCompared to Vincenty's algorithm, the bias is %15.5f", std::abs(S-S_haver));

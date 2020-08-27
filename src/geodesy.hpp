@@ -114,22 +114,27 @@ T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
 /// @param[out] deg         Integer degrees.
 /// @param[out] min         Integer minutes.
 /// @param[out] sec         The fractional seconds.
+/// @param[out] sign        Either -1 or +1; this represents the sign of the 
+///                         hexicondal degrees
 /// @throw                  Does not throw
 ///
 /// @note In case a negative angle is given, then the (output) degrees are also
 ///       going to be negative.
+///       Why use a seperate variable for sign? Well, if we didn't, we could e.g. 
+///       make deg positive or negative depending on decimal_deg. BUT, if deg is 
+///       zero, then we have a problem cause -0 cannot be (usually) represented, 
+///       so the signs of decimal_deg and deg would not be the same!
 ///
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
-constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec) noexcept {
+constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec, int& sign) noexcept {
   T decdeg{std::abs(decimal_deg)};
   deg = static_cast<int>(decdeg);
   min = static_cast<int>((decdeg - static_cast<T>(deg)) * static_cast<T>(60e0));
   sec = decdeg - (static_cast<T>(deg) + static_cast<T>(min) / 60e0);
   sec *= 3600e0;
 
-  if (decimal_deg < T{0})
-    deg *= -1;
+  sign = static_cast<int>(std::copysign(1e0, decimal_deg));
   return;
 }
 
@@ -139,20 +144,29 @@ constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec) noexcept {
 /// @param[in] deg  Integer degrees.
 /// @param[in] min  Integer minutes.
 /// @param[in] sec  The fractional seconds.
+/// @param[in] sign The sign of the hexicondal degrees; that is any integer with 
+///                 the correct sign (we only consider the sign of the parameter 
+///                 not its value). 
 /// @return         The angle in decimal degrees.
 /// @throw          Does not throw
 ///
-/// @note If the angle is negative, only the deg parameter should be negative;
-///       if so the (decimal) degrees returned will also be negative. The other
-///       two parameters are not checked for their sign, they should *ALWAYS* be
-///       positive.
+/// @note If the angle is negative, only the sign parameter should be negative;
+///       (deg parameter could also be negative; the function will only use its
+///       absolute value, disregarding the sign).
+///       if so the (decimal) degrees returned will also be negative. The 
+///       parameters min and sec are not checked for their sign, they should 
+///       *ALWAYS* be positive.
+///       Why do we need the sign parameter? Well, if deg is zero, but the degrees 
+///       are negative (e.g. -0deg 10min 10.10sec), how could we know the sign? 
+///       There is no -0; so we need to mark the sign via the sign parameter.
+///       E.g.
+///       a = hexd2decd(-10, 10, 10)
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
-constexpr T hexd2decd(int deg, int min, T sec) noexcept {
+constexpr T hexd2decd(int deg, int min, T sec, int sign=1) noexcept {
   T angle{static_cast<T>(std::abs(deg)) +
           (static_cast<T>(min) + sec / 60e0) / 60e0};
-
-  return std::copysign(angle, (T)deg);
+  return std::copysign(angle, (T)sign);
 }
 
 /// @brief Hexicondal degrees to radians.
@@ -161,17 +175,25 @@ constexpr T hexd2decd(int deg, int min, T sec) noexcept {
 /// @param[in] deg  Integer degrees.
 /// @param[in] min  Integer minutes.
 /// @param[in] sec  The fractional seconds.
+/// @param[in] sign The sign of the hexicondal degrees; that is any integer with 
+///                 the correct sign (we only consider the sign of the parameter 
+///                 not its value). 
 /// @return         The angle in radians.
 /// @throw          Does not throw
 ///
-/// @note If the angle is negative, only the deg parameter should be negative;
-///       if so the radians returned will also be negative. The other two
-///       parameters are not checked for their sign, they should *ALWAYS* be
-///       positive.
+/// @note If the angle is negative, only the sign parameter should be negative;
+///       (deg parameter could also be negative; the function will only use its
+///       absolute value, disregarding the sign).
+///       if so the (decimal) degrees returned will also be negative. The 
+///       parameters min and sec are not checked for their sign, they should 
+///       *ALWAYS* be positive.
+///       Why do we need the sign parameter? Well, if deg is zero, but the degrees 
+///       are negative (e.g. -0deg 10min 10.10sec), how could we know the sign? 
+///       There is no -0; so we need to mark the sign via the sign parameter.
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
-constexpr T hexd2rad(int deg, int min, T sec) noexcept {
-  return deg2rad(hexd2decd(deg, min, sec));
+constexpr T hexd2rad(int deg, int min, T sec, int sign=1) noexcept {
+  return deg2rad(hexd2decd(deg, min, sec, sign));
 }
 
 /// @brief Radians to hexicondal degrees.
@@ -181,15 +203,21 @@ constexpr T hexd2rad(int deg, int min, T sec) noexcept {
 /// @param[out] deg         Integer degrees.
 /// @param[out] min         Integer minutes.
 /// @param[out] sec         The fractional seconds.
+/// @param[out] sign        Either -1 or +1; this represents the sign of the 
+///                         hexicondal degrees
 /// @throw                  Does not throw
 ///
 /// @note In case a negative angle is given, then the (output) degrees are also
 ///       going to be negative.
+///       Why use a seperate variable for sign? Well, if we didn't, we could e.g. 
+///       make deg positive or negative depending on decimal_deg. BUT, if deg is 
+///       zero, then we have a problem cause -0 cannot be (usually) represented, 
+///       so the signs of decimal_deg and deg would not be the same!
 ///
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
-constexpr void rad2hexd(T radians, int &deg, int &min, T &sec) noexcept {
-  return decd2hexd(rad2deg(radians), deg, min, sec);
+constexpr void rad2hexd(T radians, int &deg, int &min, T &sec, int& sign) noexcept {
+  return decd2hexd(rad2deg(radians), deg, min, sec, sign);
 }
 
 /// @brief Bearing (i.e. forward azimouth) of great circle between two points

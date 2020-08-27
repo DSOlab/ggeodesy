@@ -98,11 +98,13 @@ int main ()
   // assert( std::abs(S-54972.271) < 1e-3 ); // millimeter accuracy
   // assert( std::abs(a_for-hexd2rad(306, 52, 5.37)) < 3*1e-5 ); // .1 sec accuracy
   // assert( std::abs(a_bac-hexd2rad(127, 10,25.07)) < 3*1e-5 ); // .1 sec accuracy
-  
+ 
+  int sign = std::copysign(1e0, a_for); 
   printf("Distance of the ellipsoidal: %+15.5f m\n", S);
-  rad2hexd(a_for, a_deg, a_min, a_sec);
+  rad2hexd(a_for, a_deg, a_min, a_sec, sign);
   printf("Forward Azimouth           : %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
-  rad2hexd(a_bac, a_deg, a_min, a_sec);
+  sign = std::copysign(1e0, a_bac);
+  rad2hexd(a_bac, a_deg, a_min, a_sec, sign);
   printf("Backward Azimouth          : %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
 
   printf("> Everything looks OK!\n");
@@ -122,11 +124,14 @@ int main ()
   // assert(std::abs(new_lon-p2.y) < 3*1e-7 ); // .001 sec accuracy
   // assert(std::abs(new_az-a_bac) < 3*1e-7 ); // .001 sec accuracy
 
-  rad2hexd(new_lon, a_deg, a_min, a_sec);
+  sign = std::copysign(1e0, new_lon);
+  rad2hexd(new_lon, a_deg, a_min, a_sec, sign);
   printf("Longtitude:  %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
-  rad2hexd(new_lat, a_deg, a_min, a_sec);
+  sign = std::copysign(1e0, new_lat);
+  rad2hexd(new_lat, a_deg, a_min, a_sec, sign);
   printf("Latitude  :  %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
-  rad2hexd(new_az, a_deg, a_min, a_sec);
+  sign = std::copysign(1e0, new_az);
+  rad2hexd(new_az, a_deg, a_min, a_sec, sign);
   printf("Azimouth  :  %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
 
   printf("Going back the geodetic to point 2, yields differences: (i.e. in point 2)\n");
@@ -162,7 +167,8 @@ int main ()
   printf("------------------------------------\n");
   double fr_bearing = bearing(p1.x, p1.y, p2.x, p2.y);
   printf("Difference in bearing between Vincenty and simple (ngpt::bearing) algorithms:\n");
-  rad2hexd(fr_bearing, a_deg, a_min, a_sec);
+  sign = std::copysign(1e0, fr_bearing);
+  rad2hexd(fr_bearing, a_deg, a_min, a_sec, sign);
   printf("\tBearing: %+3d %2d %8.5f\n", a_deg, a_min, a_sec);
   printf("\tdAz = %15.7f sec or %6.2f%%\n", rad2deg(std::abs(a_for-fr_bearing))*3600.0,
       std::abs(a_for-fr_bearing)*100.0/D2PI);

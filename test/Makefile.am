@@ -25,8 +25,7 @@ MCXXFLAGS = \
 	-W \
 	-Wshadow \
 	-Wdisabled-optimization \
-	-DDEBUG \
-        -DCHECK_PRECISION
+	-DDEBUG
 
 testGeodesy_SOURCES   = test_geodesy.cpp
 testGeodesy_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src 
