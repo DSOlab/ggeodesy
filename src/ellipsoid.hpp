@@ -206,18 +206,19 @@ template <> struct ellipsoid_traits<ellipsoid::pz90> {
   static constexpr const char *n{"PZ90"};
 };
 
-template<ellipsoid E> double meridian_arc_length(double lat, int alg=0) noexcept {
+template <ellipsoid E>
+double meridian_arc_length(double lat, int alg = 0) noexcept {
   constexpr double a = ellipsoid_traits<E>::a;
   constexpr double f = ellipsoid_traits<E>::f;
   switch (alg) {
-    case 0:
-      return core::meridian_arc_length_impl1(a, f, lat);
-    case 1:
-      return core::meridian_arc_length_impl2(a, f, lat);
-    case 2:
-      return core::meridian_arc_length_impl3(a, f, lat);
-    default:
-      return core::meridian_arc_length_impl1(a, f, lat);
+  case 0:
+    return core::meridian_arc_length_impl1(a, f, lat);
+  case 1:
+    return core::meridian_arc_length_impl2(a, f, lat);
+  case 2:
+    return core::meridian_arc_length_impl3(a, f, lat);
+  default:
+    return core::meridian_arc_length_impl1(a, f, lat);
   }
 }
 
@@ -293,6 +294,17 @@ template <ellipsoid E> double N(double lat) noexcept {
 /// @see ngpt::core::M
 template <ellipsoid E> double M(double lat) noexcept {
   return core::M(lat, ellipsoid_traits<E>::a, semi_minor<E>());
+}
+
+/// @brief Compute mean earth radius; in geophysics, the International Union of
+///        Geodesy and Geophysics (IUGG) defines the mean radius (denoted R1)
+///        to be: R1 = (2α + b) / 3
+/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
+///
+/// @see https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
+template <ellipsoid E> double mean_earth_radius() noexcept {
+  return 2e0 * ellipsoid_traits<E>::a / 3e0 + semi_minor<E>() / 3e0;
 }
 
 /// @brief Arc length of an infinitesimal element of the meridian
@@ -387,6 +399,18 @@ public:
   /// @see ngpt::core::M
   double M(double lat) const noexcept {
     return core::M(lat, __a, this->semi_minor());
+  }
+
+  /// @brief Compute mean earth radius; in geophysics, the International Union
+  /// of
+  ///        Geodesy and Geophysics (IUGG) defines the mean radius (denoted R1)
+  ///        to be: R1 = (2α + b) / 3
+  /// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+  /// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
+  ///
+  /// @see https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
+  double mean_earth_radius() const noexcept {
+    return 2e0 * __a / 3e0 + this->semi_minor() / 3e0;
   }
 
 private:

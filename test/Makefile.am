@@ -11,7 +11,8 @@ check_PROGRAMS = testEllipsoid \
         testUnits \
 	testAngleNormalization \
         testTransformations \
-	testMeridianArc
+	testMeridianArc \
+        testSphericalEarth
 
 MCXXFLAGS = \
 	-std=c++17 \
@@ -58,3 +59,7 @@ testTransformations_LDADD     = $(top_srcdir)/src/libggeodesy.la
 testMeridianArc_SOURCES   = test_meridian_arc.cpp
 testMeridianArc_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
 testMeridianArc_LDADD     = $(top_srcdir)/src/libggeodesy.la
+
+testSphericalEarth_SOURCES   = test_spherical_earth.cpp
+testSphericalEarth_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
+testSphericalEarth_LDADD     = $(top_srcdir)/src/libggeodesy.la

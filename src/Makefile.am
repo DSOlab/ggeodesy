@@ -35,6 +35,7 @@ pkginclude_HEADERS = \
         car2top.hpp \
         ell2car.hpp \
 	vincenty.hpp \
+        great_circle.hpp \
 	trnsfdtls.hpp
 
 ##
@@ -46,4 +47,5 @@ dist_libggeodesy_la_SOURCES = \
 	top2car.cpp \
 	trnsfdtls.cpp \
 	meridian_arc.cpp \
+        great_circle.cpp \
 	wgs84_to_pz90.cpp

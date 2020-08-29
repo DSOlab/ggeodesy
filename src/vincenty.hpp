@@ -26,62 +26,6 @@ namespace ngpt {
 
 namespace core {
 
-/// @brief Compute the haversine function.
-///
-/// This function is used within the haversine formula to compute great-circle
-/// distances between two points on a sphere from their longitudes and
-/// latitudes.
-/// It is called the "haversine function" (half a versine) and given an angle
-/// θ it is computed as:
-/// \f$ hav(\theta ) =  \sin^2 \frac{\theta}{2} = \frac{1- \cos \theta}{2}\f$
-///
-/// @param[in] angle  The angle to compute the haversine function for (radians)
-/// @return The haversine function
-///
-/// @see https://en.wikipedia.org/wiki/Haversine_formula
-double haversine_angle(double angle) noexcept {
-  const double sinHalfTheta{std::sin(angle / 2e0)};
-  return sinHalfTheta * sinHalfTheta;
-}
-
-/// @brief Compute the great circle distance between two points using the
-/// haversine formula.
-///
-/// Given the (ellipsoidal) coordinates of two points (1 and 2) in radians,
-/// compute the great circle distance between them, using the haversine formula
-/// see https://en.wikipedia.org/wiki/Haversine_formula.
-///
-/// For this computation we need the radius of the sphere/ellipsoid. Here, we
-/// considere the mean radius as: \f$ \frac{2*semi-major+semi-minor}{3} \f$
-///
-/// @param[in] lat1  Latitude of point 1 (radians)
-/// @param[in] lon1  Longtitude  point 1 (radians)
-/// @param[in] lat2  Latitude of point 2 (radians)
-/// @param[in] lon2  Longtitude  point 2 (radians)
-/// @param[in] a     Semi-major axis of reference ellipsoid (meters)
-/// @param[in] b     Semi-minor axis of reference ellipsoid (meters)
-/// @return          Great circle distance between points 1 and 2 (meters)
-///
-/// @warning h only approaches 1 for antipodal points (on opposite sides of the
-///          sphere). This will cause the formula to fail!
-///
-/// @note The haversine formula and law of cosines can't be guaranteed correct
-///       to better than 0.5%
-///
-/// @see https://en.wikipedia.org/wiki/Haversine_formula
-///
-double haversine(double lat1, double lon1, double lat2, double lon2, double a,
-                 double b) {
-  const double h{haversine_angle(lat2 - lat1) +
-                 std::cos(lat1) * std::cos(lat2) *
-                     haversine_angle(lon2 - lon1)};
-  // according to wikipedia, The International Union of Geodesy and Geophysics
-  // (IUGG) defines the mean radius (denoted R_1) to be
-  // 2a+b/3
-  const double EarthRadius{(2e0 * a + b) / 3e0};
-  return 2e0 * EarthRadius * std::asin(std::sqrt(h));
-}
-
 /// @brief Compute the inverse Vincenty formula.
 ///
 /// Given the (ellipsoidal) coordinates of two points (1 and 2) in radians,
@@ -280,6 +224,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
 
 } // namespace core
 
+/*
 /// @brief Compute the great circle distance between two points using the
 /// haversine formula.
 ///
@@ -314,7 +259,7 @@ double haversine(double lat1, double lon1, double lat2, double lon2,
   const double a = e.semi_major();
   const double b = e.semi_minor();
   return core::haversine(lat1, lon1, lat2, lon2, a, b);
-}
+}*/
 
 /// @brief Compute the inverse Vincenty formula.
 ///

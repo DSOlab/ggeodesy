@@ -17,7 +17,7 @@
  * results from the three different implementations agree to within a precision
  * of PRECISION meters.
  *
- * In either case, the program will also run a speed test on the three 
+ * In either case, the program will also run a speed test on the three
  * implementations (aka measure and report execution time)
  */
 
