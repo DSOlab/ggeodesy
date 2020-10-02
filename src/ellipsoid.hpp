@@ -303,7 +303,7 @@ template <ellipsoid E> double M(double lat) noexcept {
 /// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
 ///
 /// @see https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
-template <ellipsoid E> double mean_earth_radius() noexcept {
+template <ellipsoid E> constexpr double mean_earth_radius() noexcept {
   return 2e0 * ellipsoid_traits<E>::a / 3e0 + semi_minor<E>() / 3e0;
 }
 
@@ -319,6 +319,19 @@ template <ellipsoid E, typename T,
 T infinitesimal_meridian_arc(T lat, T dlat) noexcept {
   T M_ = core::M(lat, ellipsoid_traits<E>::a, semi_minor<E>());
   return M_ * dlat;
+}
+
+/// @brief Arc length on parallel
+///
+/// @param[in] lat  Latitude of the parallel (radians)
+/// @param[in] dlon Longtitude difference (radians)
+/// @return         Arc length (on parallel) in meters
+template <ellipsoid E, typename T,
+          typename = std::enable_if_t<std::is_floating_point<T>::value>>
+T parallel_arc_length(T lat, T dlon) noexcept {
+  const T N_ = core::N(lat, ellipsoid_traits<E>::a, semi_minor<E>());
+  const T cosf = std::cos(lat);
+  return N_ * cosf * dlon;
 }
 
 /// @class Ellipsoid
@@ -409,7 +422,7 @@ public:
   /// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
   ///
   /// @see https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
-  double mean_earth_radius() const noexcept {
+  constexpr double mean_earth_radius() const noexcept {
     return 2e0 * __a / 3e0 + this->semi_minor() / 3e0;
   }
 

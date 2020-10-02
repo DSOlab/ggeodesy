@@ -122,6 +122,36 @@ double great_circle_distance_vincenty(double lat1, double lon1, double lat2,
 double great_circle_distance_chordl(double lat1, double lon1, double lat2,
                                     double lon2, double R) noexcept;
 
+/// @brief Compute great circle distance between two points on a sphere of
+///        radius R
+/// @param[in] lat1  Latitude of point 1 (radians)
+/// @param[in] lon1  Longtitude  point 1 (radians)
+/// @param[in] lat2  Latitude of point 2 (radians)
+/// @param[in] lon2  Longtitude  point 2 (radians)
+/// @param[in] R     Radius of sphere (meters)
+/// @return          Great circle distance between points 1 and 2 (meters)
+///
+/// This is a 'quick n dirty' implementation; for small distances Pythagoras’
+/// theorem can be used on an equirectangular projection. This uses just one
+/// trig and one sqrt function but accuracy is an issue.
+/// see https://www.movable-type.co.uk/scripts/latlong.html
+double great_circle_distance_pythagoras(double lat1, double lon1, double lat2,
+                                        double lon2, double R) noexcept;
+
+/// @brief Compute great circle distance between two points on a sphere of
+///        radius R
+/// @param[in] lat1  Latitude of point 1 (radians)
+/// @param[in] lon1  Longtitude  point 1 (radians)
+/// @param[in] lat2  Latitude of point 2 (radians)
+/// @param[in] lon2  Longtitude  point 2 (radians)
+/// @param[in] R     Radius of sphere (meters)
+/// @return          Great circle distance between points 1 and 2 (meters)
+///
+/// This is a 'quick n dirty' implementation; for small distances the polar
+/// coordinate flat-earth formula can be used
+/// see https://www.movable-type.co.uk/scripts/latlong.html
+double great_circle_distance_polar(double lat1, double lon1, double lat2,
+                                   double lon2, double R) noexcept;
 } // namespace core
 
 } // namespace ngpt

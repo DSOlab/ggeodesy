@@ -4,6 +4,7 @@
 /// @todo
 
 #include "great_circle.hpp"
+#include "geoconst.hpp"
 #include <cassert>
 
 /// @brief Compute the haversine function.
@@ -80,4 +81,26 @@ double ngpt::core::great_circle_distance_chordl(double lat1, double lon1,
   // central angle
   const double dsigma = std::asin(c / 2e0) * 2e0;
   return R * dsigma;
+}
+
+/// @brief Compute great circle distance between two points on a sphere of
+///        radius R
+double ngpt::core::great_circle_distance_pythagoras(double lat1, double lon1,
+                                                    double lat2, double lon2,
+                                                    double R) noexcept {
+  const double fm = (lat1 + lat2) / 2e0;
+  const double x = (lon2 - lon1) * std::cos(fm);
+  const double y = (lat2 - lat1);
+  return std::sqrt(x * x + y * y) * R;
+}
+
+/// @brief Compute great circle distance between two points on a sphere of
+///        radius R
+double ngpt::core::great_circle_distance_polar(double lat1, double lon1,
+                                               double lat2, double lon2,
+                                               double R) noexcept {
+  const double theta1 = ngpt::DPI - lat1;
+  const double theta2 = ngpt::DPI - lat2;
+  return R * std::sqrt(theta1 * theta1 + theta2 * theta2 -
+                       2e0 * theta1 * theta2 * std::cos(lon2 - lon1));
 }

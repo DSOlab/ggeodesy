@@ -45,6 +45,7 @@ pkginclude_HEADERS = \
 dist_libggeodesy_la_SOURCES = \
 	top2daz.cpp \
 	top2car.cpp \
+        vincenty.cpp \
 	trnsfdtls.cpp \
 	meridian_arc.cpp \
         great_circle.cpp \

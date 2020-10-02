@@ -1,11 +1,13 @@
 noinst_PROGRAMS = testGeodesy \
 	transform \
-	vincenty
+	testVincenty \
+        testGeodTest
 
 TESTS = testEllipsoid \
         testUnits \
 	testAngleNormalization \
-	testMeridianArc
+	testMeridianArc  \
+        testSphericalEarth
 
 check_PROGRAMS = testEllipsoid \
         testUnits \
@@ -63,3 +65,11 @@ testMeridianArc_LDADD     = $(top_srcdir)/src/libggeodesy.la
 testSphericalEarth_SOURCES   = test_spherical_earth.cpp
 testSphericalEarth_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
 testSphericalEarth_LDADD     = $(top_srcdir)/src/libggeodesy.la
+
+testVincenty_SOURCES   = test_vincenty.cpp
+testVincenty_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
+testVincenty_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+
+testGeodTest_SOURCES   = test_geodtest.cpp
+testGeodTest_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
+testGeodTest_LDADD     = $(top_srcdir)/src/libggeodesy.la 
