@@ -1,4 +1,4 @@
-noinst_PROGRAMS = transform
+noinst_PROGRAMS = transform \
         testGeodTest
 
 TESTS = testEllipsoid \
