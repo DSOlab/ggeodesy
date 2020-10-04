@@ -1,5 +1,4 @@
-noinst_PROGRAMS = testGeodesy \
-	transform \
+noinst_PROGRAMS = transform
         testGeodTest
 
 TESTS = testEllipsoid \
