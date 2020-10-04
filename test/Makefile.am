@@ -1,6 +1,5 @@
 noinst_PROGRAMS = testGeodesy \
 	transform \
-#	testVincenty \
         testGeodTest
 
 TESTS = testEllipsoid \
