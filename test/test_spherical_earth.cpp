@@ -130,7 +130,8 @@ int main() {
         std::array<double, 7>{meand, dd1, dd2, dd3, dd4, dd5, dd6});
   }
 
-  printf("\n%12s %12s %12s %12s %12s %12s %12s", "Av. Distance", "Cosines", "Haversine", "Vincenty", "ChordL", "Pythagoras", "Polar");
+  printf("\n%12s %12s %12s %12s %12s %12s %12s", "Av. Distance", "Cosines",
+         "Haversine", "Vincenty", "ChordL", "Pythagoras", "Polar");
   std::sort(diffs.begin(), diffs.end(),
             [](const std::array<double, 7> &a1,
                const std::array<double, 7> &a2) { return a1[0] < a2[0]; });

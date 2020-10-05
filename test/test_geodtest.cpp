@@ -31,9 +31,9 @@ double lat_at1, lat_at2, lat_at3;
 /// struct to hold each line of the GeodTest file
 /// see https://zenodo.org/record/32156
 struct TestLine {
-  // lat1[0], lon1[1], az1[2], 
-  // lat2[3], lon2[4], az2[5], 
-  // s12[6],  arc[7],  rs12[8], 
+  // lat1[0], lon1[1], az1[2],
+  // lat2[3], lon2[4], az2[5],
+  // s12[6],  arc[7],  rs12[8],
   // t[9]
   double ar[10];
 
@@ -134,8 +134,9 @@ int main() {
     std::cout << "\n>> " << batch.second;
     std::cout
         << "\n-------------------------------------------------------------";
-    printf("\nMax difs: lat:%20.15fsec lon:%20.15fsec az:%20.15fsec lat:%15.4f(m) lon:%15.4f(m)", max_error_lat,
-           max_error_lon, max_error_az,
+    printf("\nMax difs: lat:%20.15fsec lon:%20.15fsec az:%20.15fsec "
+           "lat:%15.4f(m) lon:%15.4f(m)",
+           max_error_lat, max_error_lon, max_error_az,
            infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
                lat_at1, deg2rad(max_error_lat / 3600e0)),
            parallel_arc_length<ellipsoid::wgs84, double>(

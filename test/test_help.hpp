@@ -1,6 +1,6 @@
 #include "ellipsoid.hpp"
-#include <iostream>
 #include <cassert>
+#include <iostream>
 #include <random>
 
 double generate_random_double(double lower_bound, double upper_bound) noexcept {
@@ -11,17 +11,17 @@ double generate_random_double(double lower_bound, double upper_bound) noexcept {
 }
 
 // infinitesimal element of the meridian m = M(φ) * dφ
-template<ngpt::ellipsoid E>
+template <ngpt::ellipsoid E>
 double m_rad2meters(double dlat, double lat) noexcept {
   auto M = ngpt::M<E>(lat);
-  return M*dlat;
+  return M * dlat;
 }
 
 // infinitesimal element of the parallel m = N *cos(φ) *dlon
-template<ngpt::ellipsoid E>
+template <ngpt::ellipsoid E>
 double p_rad2meters(double dlon, double lat) noexcept {
   auto N = ngpt::N<E>(lat);
-  return N * std::cos(lat)*dlon;
+  return N * std::cos(lat) * dlon;
 }
 
 // see
@@ -32,7 +32,8 @@ bool approxEqual(
     TReal a, TReal b,
     TReal tolerance = std::numeric_limits<TReal>::epsilon()) noexcept {
   TReal diff = std::abs(a - b);
-  // std::cout<<"\nDiff: "<<std::abs(a - b)<<" tolerance: "<<tolerance<<" precision: "<<std::max(std::abs(a), std::abs(b)) * tolerance;
+  // std::cout<<"\nDiff: "<<std::abs(a - b)<<" tolerance: "<<tolerance<<"
+  // precision: "<<std::max(std::abs(a), std::abs(b)) * tolerance;
   if (diff < tolerance)
     return true;
   if (diff < std::max(std::abs(a), std::abs(b)) * tolerance)
