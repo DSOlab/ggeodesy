@@ -28,17 +28,9 @@ MCXXFLAGS = \
 	-Wdisabled-optimization \
 	-DDEBUG
 
-testGeodesy_SOURCES   = test_geodesy.cpp
-testGeodesy_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src 
-testGeodesy_LDADD     = $(top_srcdir)/src/libggeodesy.la
-
 transform_SOURCES   = crd_transform_ex.cpp
 transform_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
 transform_LDADD     = $(top_srcdir)/src/libggeodesy.la 
-
-vincenty_SOURCES   = vincenty_ex.cpp
-vincenty_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-vincenty_LDADD     = $(top_srcdir)/src/libggeodesy.la 
 
 testEllipsoid_SOURCES   = test_ellipsoid.cpp
 testEllipsoid_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
@@ -63,10 +55,6 @@ testMeridianArc_LDADD     = $(top_srcdir)/src/libggeodesy.la
 testSphericalEarth_SOURCES   = test_spherical_earth.cpp
 testSphericalEarth_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
 testSphericalEarth_LDADD     = $(top_srcdir)/src/libggeodesy.la
-
-testVincenty_SOURCES   = test_vincenty.cpp
-testVincenty_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testVincenty_LDADD     = $(top_srcdir)/src/libggeodesy.la 
 
 testGeodTest_SOURCES   = test_geodtest.cpp
 testGeodTest_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
