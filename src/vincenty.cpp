@@ -2,6 +2,7 @@
 #include "geoconst.hpp"
 #include <cmath>
 #include <stdexcept>
+#include "geodesy.hpp"
 
 using ngpt::D2PI;
 using ngpt::DPI;
@@ -211,7 +212,12 @@ double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
                 C * sinSigma *
                     (cosSigmaM2 +
                      C * cosSigma * (-1e0 + 2e0 * cosSigmaM2 * cosSigmaM2)))};
-  lon2 = L + lon1;
+  // there are some rare case (e.g when the two points run between vertices 
+  // (i.e. a1 = a2 = 90deg) or end close to vertices, when the following
+  // result (lon2) takes values (a little less) than 180degrees (due to roundoff
+  // errors. To protect against this, we normalize the longtitude in the range
+  // [-180, 180] degrees.
+  lon2 = ngpt::normalize_angle(L + lon1, -ngpt::DPI, ngpt::DPI);
 
   // compute azimouth
   return std::atan2(sina, -sinU1 * sinSigma + cosU1 * cosSigma * cosa1);
@@ -310,7 +316,12 @@ double ngpt::core::direct_vincenty2(double lat1, double lon1, double a1,
                                 (cos2sigma_m +
                                  C * cosSigma *
                                      (-1e0 + 2e0 * cos2sigma_m * cos2sigma_m)));
-  lon2 = lon1 + L;
+  // there are some rare case (e.g when the two points run between vertices 
+  // (i.e. a1 = a2 = 90deg) or end close to vertices, when the following
+  // result (lon2) takes values (a little less) than 180degrees (due to roundoff
+  // errors. To protect against this, we normalize the longtitude in the range
+  // [-180, 180] degrees.
+  lon2 = ngpt::normalize_angle(L + lon1, -ngpt::DPI, ngpt::DPI);
 
   const double a2 = std::atan2(sina, -x);
   return std::fmod(a2 + ngpt::D2PI, D2PI);
