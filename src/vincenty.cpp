@@ -214,7 +214,7 @@ double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
   lon2 = L + lon1;
 
   // compute azimouth
-  return std::atan2(sina, -sinU1 * sinSigma + cosU1 * cosSigma * cosa1) + DPI;
+  return std::atan2(sina, -sinU1 * sinSigma + cosU1 * cosSigma * cosa1);
 }
 
 /// @brief Direct Vincenty formula.

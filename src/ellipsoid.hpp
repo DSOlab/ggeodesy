@@ -23,11 +23,19 @@
 ///      Ellipsoid e (ellipsoid::grs80);
 ///      double semi_major = e.semi_major();
 ///      double N = e.N(lat);
+/// Note that the semi-major axis is sometimes reffered to as 
+/// "equatorial radius" and the semi-minor axis is sometimes reffered to as
+/// "polar radius".
+/// In the following and when no other qualification is used, latitude is used
+/// for Geodetic latitude.
 ///
 /// @example test_ellipsoid.cpp
 ///
 /// [1] H. Moritz, GEODETIC REFERENCE SYSTEM 1980,
 /// https://geodesy.geology.ohio-state.edu/course/refpapers/00740128.pdf
+///
+/// [2] Charles F. F. Karney, Algorithms for geodesics, J Geod (2013) 87:43–55
+/// [3] https://en.wikipedia.org/wiki/Latitude
 
 #ifndef __REFERENCE_ELLIPSOID__
 #define __REFERENCE_ELLIPSOID__
@@ -53,6 +61,17 @@ double meridian_arc_length_impl4(double a, double f, double lat) noexcept;
 /// @return      squared eccentricity
 constexpr double eccentricity_squared(double f) noexcept {
   return (2e0 - f) * f;
+}
+
+/// @brief Compute the third flattening
+///
+/// Compute the third flattening (usually denoted as \f$ n \f$), given the
+/// flattening \f$ f \f$, aka \f$ n = f/(2-f) \f$.
+/// @param[in] f flattening
+/// @return third flattening \f$ n \f$
+/// Reference [2]
+constexpr double third_flattening(double f) noexcept {
+  return f / (2e0-f);
 }
 
 /// @brief Compute the semi-minor axis (aka b)
@@ -144,6 +163,45 @@ constexpr
   const double tmpd{acosf * acosf + bsinf * bsinf};
   return ((a * b) / tmpd) * ((a * b) / std::sqrt(tmpd));
 }
+
+/// @brief Compute the geocentric latitude
+///
+/// The geocentric latitude is the angle between the equatorial plane and the 
+/// radius from the centre to a point on the surface. The relation between the 
+/// geocentric latitude(θ) and the geodetic latitude(φ) is 
+/// \f$ \theta (\fi ) = tan^-1 ((1-f)^2 tan(\fi)) \f$
+/// The geodetic and geocentric latitudes are equal at the equator and at the 
+/// poles but at other latitudes they differ by a few minutes of arc.
+/// @param[in] lat The (geodetic) latitude in radians
+/// @param[in] f   The ellipsoid's flattening
+/// @return        The geocentric latitude at lat in radians
+///
+/// Reference [3]
+#if defined(__GNUC__) && !defined(__llvm__)
+constexpr
+#endif
+double geocentric_latitude(double lat, double f) noexcept {
+  return std::atan((1e0-f)*(1e0-f)*std::tan(lat));
+}
+
+/// @brief Compute the parametric or reduced latitude
+///
+/// The parametric or reduced latitude, \f$ beta \f$ is defined by the radius 
+/// drawn from the centre of the ellipsoid to that point Q on the surrounding 
+/// sphere (of radius a) which is the projection parallel to the Earth's axis 
+/// of a point P on the ellipsoid at latitude \f$ \phi \f$
+/// @param[in] lat The (geodetic) latitude in radians
+/// @param[in] f   The ellipsoid's flattening
+/// @return        The parametric or reduced latitude at lat in radians
+///
+/// Reference [3]
+#if defined(__GNUC__) && !defined(__llvm__)
+constexpr
+#endif
+double reduced_latitude(double lat, double f) noexcept {
+  return std::atan((1e0-f)*std::tan(lat));
+}
+
 } // namespace core
 
 /// @brief A list of well-known reference ellipsoids.
@@ -240,7 +298,6 @@ template <ellipsoid E> constexpr double eccentricity_squared() noexcept {
 /// @throw     Does not throw.
 ///
 /// @see ngpt::core::linear_eccentricity
-
 template <ellipsoid E>
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
@@ -270,6 +327,50 @@ template <ellipsoid E> constexpr double semi_minor() noexcept {
 template <ellipsoid E> constexpr double polar_radius_of_curvature() noexcept {
   return core::polar_radius_of_curvature(ellipsoid_traits<E>::a,
                                          ellipsoid_traits<E>::f);
+}
+
+/// @brief Compute the third flattening
+///
+/// @tparam E The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @return   The third flattening
+///
+/// @see ngpt::core::third_flattening
+template <ellipsoid E> constexpr double third_flattening() noexcept {
+  return core::third_flattening(ellipsoid_traits<E>::f);
+}
+
+/// @brief Compute the geocentric latitude at some geodetic latitude on the 
+///        ellipsoid
+///
+/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @param[in] lat The geodetic latitude in radians
+/// @return        The geocentric latitude in radians
+/// @throw     Does not throw.
+///
+/// @see ngpt::core::geocentric_latitude
+template <ellipsoid E>
+#if defined(__GNUC__) && !defined(__llvm__)
+constexpr
+#endif
+    double geocentric_latitude(double lat) noexcept {
+  return core::geocentric_latitude(lat, ellipsoid_traits<E>::f);
+}
+
+/// @brief Compute the parametric or reduced latitude at some geodetic latitude
+///        on the ellipsoid
+///
+/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @param[in] lat The geodetic latitude in radians
+/// @return        The parametric or reduced latitude in radians
+/// @throw     Does not throw.
+///
+/// @see ngpt::core::reduced_latitude
+template <ellipsoid E>
+#if defined(__GNUC__) && !defined(__llvm__)
+constexpr
+#endif
+    double reduced_latitude(double lat) noexcept {
+  return core::reduced_latitude(lat, ellipsoid_traits<E>::f);
 }
 
 /// @brief Compute the normal radius of curvature at a given latitude (on a
@@ -392,6 +493,27 @@ public:
   /// @see ngpt::core::semi_minor
   constexpr double semi_minor() const noexcept {
     return core::semi_minor(__a, __f);
+  }
+
+  /// @brief Get the third flattening \f$ n \f$
+  /// @return The third flattening
+  /// @see ngpt::core::third_flattening
+  constexpr double third_flattening() const noexcept {
+    return core::third_flattening(__f);
+  }
+
+  /// @brief Compute the geocentric latitude at some (geodetic) latitude
+  /// @param[in] lat The geodecit latitude
+  /// @return        The geocentric latitude at lat
+  double geocentric_latitude(double lat) const noexcept {
+    return core::geocentric_latitude(lat, __f);
+  }
+  
+  /// @brief Compute the reduced latitude at some (geodetic) latitude
+  /// @param[in] lat The geodecit latitude
+  /// @return        The reduced latitude at lat
+  double reduced_latitude(double lat) const noexcept {
+    return core::reduced_latitude(lat, __f);
   }
 
   /// @brief  Compute the normal radius of curvature at a given latitude

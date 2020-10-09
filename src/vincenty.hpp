@@ -125,7 +125,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
   const double a = ellipsoid_traits<E>::a;
   const double f = ellipsoid_traits<E>::f;
   const double b = semi_minor<E>();
-  return core::direct_vincenty(lat1, lon1, a1, s, a, f, b, lat2, lon2,
+  return core::direct_vincenty2(lat1, lon1, a1, s, a, f, b, lat2, lon2,
                                convergence_limit);
 }
 /// @brief Direct Vincenty formula.
@@ -149,7 +149,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
   const double a = e.semi_major();
   const double f = e.flattening();
   const double b = e.semi_minor();
-  return core::direct_vincenty(lat1, lon1, a1, s, a, f, b, lat2, lon2,
+  return core::direct_vincenty2(lat1, lon1, a1, s, a, f, b, lat2, lon2,
                                convergence_limit);
 }
 

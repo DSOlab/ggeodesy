@@ -26,6 +26,8 @@ double rad2seconds(double rad) noexcept {
 double max_error_lat = std::numeric_limits<double>::min(),
        max_error_lon = std::numeric_limits<double>::min(),
        max_error_az = std::numeric_limits<double>::min();
+double acc_error_lat, acc_error_lon, acc_error_az, acc_error_lat_m,
+    acc_error_lon_m;
 double lat_at1, lat_at2, lat_at3;
 
 /// struct to hold each line of the GeodTest file
@@ -39,24 +41,32 @@ struct TestLine {
 
   void test_vincenty_direct(bool print = true) const {
     double lat2, lon2, az2;
-    az2 = ngpt::core::direct_vincenty2(ar[0], ar[1], ar[2], ar[6], A, F, B,
-                                       lat2, lon2);
+    double err_lat, err_lon, err_az;
+    az2 = ngpt::core::direct_vincenty(ar[0], ar[1], ar[2], ar[6], A, F, B, lat2,
+                                      lon2, 1e-15);
     if (print)
       printf("\ndlat=%20.15f dlon=%20.15f dAz=%20.15f s=%15.3f",
              rad2seconds(ar[3] - lat2), rad2seconds(ar[4] - lon2),
              rad2seconds(ar[5] - az2), ar[6] * 1e-3);
-    if (std::abs(rad2seconds(ar[3] - lat2)) > max_error_lat) {
-      max_error_lat = std::abs(rad2seconds(ar[3] - lat2));
+    if ((err_lat = std::abs(rad2seconds(ar[3] - lat2))) > max_error_lat) {
+      max_error_lat = err_lat;
       lat_at1 = ar[3];
     }
-    if (std::abs(rad2seconds(ar[4] - lon2)) > max_error_lon) {
-      max_error_lon = std::abs(rad2seconds(ar[4] - lon2));
+    if ((err_lon = std::abs(rad2seconds(ar[4] - lon2))) > max_error_lon) {
+      max_error_lon = err_lon;
       lat_at2 = ar[3];
     }
-    if (std::abs(rad2seconds(ar[5] - az2)) > max_error_az) {
-      max_error_az = std::abs(rad2seconds(ar[5] - az2));
+    if ((err_az = std::abs(rad2seconds(ar[5] - az2))) > max_error_az) {
+      max_error_az = err_az;
       lat_at3 = ar[3];
     }
+    acc_error_lat += err_lat;
+    acc_error_lon += err_lon;
+    acc_error_az += err_az;
+    acc_error_lat_m += infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
+        lat2, deg2rad(err_lat / 3600e0));
+    acc_error_lon_m += parallel_arc_length<ellipsoid::wgs84, double>(
+        lat2, deg2rad(err_lon / 3600e0));
     return;
   }
 };
@@ -113,6 +123,10 @@ int main() {
   std::vector<TestLine> vec;
   TestLine tl;
 
+  printf("\n%50s %17s %17s %17s %15s %15s", "Description", "Lat(seconds)",
+         "Lon(seconds)", "Az(seconds)", "Lat(meters)", "Lon(meters)");
+  std::cout
+      << "\n-------------------------------------------------------------";
   for (const auto &batch : GeodTest_descr) {
     line_nr = 0;
     vec.clear();
@@ -120,6 +134,8 @@ int main() {
     max_error_lat = std::numeric_limits<double>::min();
     max_error_lon = std::numeric_limits<double>::min();
     max_error_az = std::numeric_limits<double>::min();
+    acc_error_lat = acc_error_lon = acc_error_az = acc_error_lat_m =
+        acc_error_lon_m = 0e0;
     do {
       fin.getline(line, MAX_CHARS);
       if (!fin.good() || from_line(line, tl)) {
@@ -131,16 +147,20 @@ int main() {
     for (const auto &ar : vec) {
       ar.test_vincenty_direct(false);
     }
-    std::cout << "\n>> " << batch.second;
-    std::cout
-        << "\n-------------------------------------------------------------";
-    printf("\nMax difs: lat:%20.15fsec lon:%20.15fsec az:%20.15fsec "
-           "lat:%15.4f(m) lon:%15.4f(m)",
-           max_error_lat, max_error_lon, max_error_az,
+    double mean_error_lat = acc_error_lat / (double)batch.first;
+    double mean_error_lon = acc_error_lon / (double)batch.first;
+    double mean_error_az = acc_error_az / (double)batch.first;
+    double mean_error_lat_m = acc_error_lat_m / (double)batch.first;
+    double mean_error_lon_m = acc_error_lon_m / (double)batch.first;
+    printf("\n%50s %17.15f %17.15f %17.15f %15.12f %15.12f",
+           batch.second.c_str(), max_error_lat, max_error_lon, max_error_az,
            infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
                lat_at1, deg2rad(max_error_lat / 3600e0)),
            parallel_arc_length<ellipsoid::wgs84, double>(
                lat_at2, deg2rad(max_error_lon / 3600e0)));
+    printf("\n%50s %17.15f %17.15f %17.15f %15.12f %15.12f",
+           batch.second.c_str(), mean_error_lat, mean_error_lon, mean_error_az,
+           mean_error_lat_m, mean_error_lon_m);
   }
   printf("\nNumber of lines read: %15d", (int)line_count);
 
