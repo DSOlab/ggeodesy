@@ -79,19 +79,20 @@ template <typename T> constexpr T rad2deg(T radians) noexcept {
 /// @param[in] angle  The angle to normalize (note that the unit should be the
 ///                   same as in lower and upper parameters).
 /// @param[in] lower  lower bound (inclusive). Default value is 0
-/// @param[in] upper  upper bound (exclusive). Default is 2*π
+/// @param[in] upper  upper bound (exclusive). Default is 2* \f$\pi\f$
 ///
 /// @note  It is not always needed to use this function to normalize an angle.
 ///        If i.e. the angle is a result of a function that returns values in
-///        the range (-π , +π] radians, and we need to normalize in the range
-///        [0, 2π), then we can use: angle = std::fmod(angle+2π, 2π).
+///        the range (-\f$\pi\f$ , +\f$\pi\f$] radians, and we need to normalize
+///        in the range [0, 2\f$\pi\f$), then we can use: angle =
+///        std::fmod(angle+2\f$\pi\f$, 2\f$\pi\f$).
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
 T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
   assert(lower < upper);
 
-  // std::fmod can do the job for a range with lower limit >= 0 (e.g. 0 to 2π)
-  // but will fail for e.g. -π to π
+  // std::fmod can do the job for a range with lower limit >= 0 (e.g. 0 to 2\pi)
+  // but will fail for e.g. -\pi to \pi
   if (lower >= 0e0)
     return std::fmod(angle + upper, upper);
 
@@ -286,11 +287,10 @@ T bearing(T lat1, T lon1, T lat2, T lon2) noexcept {
 ///
 /// The general transformation of the Cartesian coordinates (X) of any point
 /// close to the Earth from any one TRS to any other one will be givenby a
-/// tri-dimensional similarity transformation (T is a translation vector, λ a
-/// scale factor and R a rotation matrix) as follows:
-/// X_trs1 = T + λ * R * X_trs2
-/// The parameters for transforming an X system into an XS system are denoted
-/// T1,T2,T3,D,R1,R2, and R3:
+/// tri-dimensional similarity transformation (T is a translation vector,
+/// \f$\lambda\f$ a scale factor and R a rotation matrix) as follows: \f$X_trs1
+/// = T + \lambda * R * X_trs2\f$ The parameters for transforming an X system
+/// into an XS system are denoted T1,T2,T3,D,R1,R2, and R3:
 ///
 /// | Xs |   | X |   | T1 |   | D   -R3  R2 | | X |
 /// | Ys | = | Y | + | T2 | + | R3   D  -R1 |*| Y |

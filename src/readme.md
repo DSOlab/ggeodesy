@@ -70,7 +70,7 @@ and hexicondal degrees. Namely:
   - `ngpt::hexd2rad` transforms hexicondal degrees to radians
 
 Additionaly the function `ngpt::normalize_angle` can normalize a given angle 
-to a specified range (e.g. in range -π to π).
+to a specified range (e.g. in range -\f$\pi\f$ to \f$\pi\f$).
 
 All of the above functions are defined in the header file [geodesy.hpp](https://github.com/xanthospap/ggeodesy/blob/master/src/geodesy.hpp). For usage examples, see 
 [test_units.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_units.cpp) and [test_angle_normalization.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_angle_normalization.cc).
@@ -96,7 +96,7 @@ an `Ellipsoid` instance with the wanted parameters (aka semi-major axis and flat
     Ellipsoid myell = Ellipsoid(6378136.0e0/*semi-major axis*/, 1/298.25784/*flattening factor*/);
     // use the created ellipsoid in some way ....
     double semi_major = myell.semi_major();
-    double N = myell.N(some_latitude);
+    double N = myell.N(some_latitude);\f$\pi\f$
     // ....
 ```
 
@@ -126,15 +126,15 @@ For more information on how to use the reference ellipsoids, see e.g. [test_elli
 ### Coordinate Transformations
 
 The following coordinate transformations are provided (for points on some reference ellipsoid):
-* Cartesian to Ellipsoidal (aka [x, y, z] to [φ, λ, height])
-* Ellipsoidal to Cartesian (aka [φ, λ, height] to [x, y, z])
-* Cartesian to Topocentric (aka [δx, δy, δz] to [north, east, up])
-* Topocentric to Cartesian (aka  [north, east, up] to [δx, δy, δz])
+* Cartesian to Ellipsoidal (aka [x, y, z] to [\f$\phi\f$, \f$\lambda\f$, height])
+* Ellipsoidal to Cartesian (aka [\f$\phi\f$, \f$\lambda\f$, height] to [x, y, z])
+* Cartesian to Topocentric (aka [\f$delta\f$x, \f$delta\f$y, \f$delta\f$z] to [north, east, up])
+* Topocentric to Cartesian (aka  [north, east, up] to [\f$delta\f$x, \f$delta\f$y, \f$delta\f$z])
 
 ### Meridian Arc Length
 
-As is well known in geodesy, the meridian arc length S(\f$\phi\f$) on the earth ellipsoid 
-from the equator to the geographic latitude \f$\phi\f$ includes an elliptic integral and 
+As is well known in geodesy, the meridian arc length S( \phi ) on the earth ellipsoid 
+from the equator to the geographic latitude \phi includes an elliptic integral and 
 cannot be expressed explicitly using a combination of elementary functions. The library 
 provides three implementations for computing the meridian arc length using approximations.
 
@@ -152,7 +152,7 @@ The above implementations agree within the following precision limits:
 * impl2 vs impl3 : 3e-5 meters
 
 Users can select one of the algorithms via the (optional) intput parameter `alg` 
-(using values in range [0,2]) when calling the function 
+(using values in rabge [0,2]) when calling the function 
 `template<ellipsoid E> double meridian_arc_length(double lat, int alg=0)` (aka 
 by default the function will use the 
 

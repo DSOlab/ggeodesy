@@ -4,11 +4,11 @@
 /// @brief Transformation of cartesian to topocentric vector.
 ///
 /// The functions here have (in general) two forms, depending on how the user
-/// passes in the cartesian geocentric vector Δx; that is, users can pass in
-/// two points (named i and j with their x, y and z components), or pass in the
-/// vector directly (as dx, dy and dz). Note that in this last case, we also
-/// need to know the coordinates of the first/starting point (i), cause this
-/// is the central point for the topocentric system.
+/// passes in the cartesian geocentric vector \f$\Delta\f$x; that is, users can
+/// pass in two points (named i and j with their x, y and z components), or pass
+/// in the vector directly (as dx, dy and dz). Note that in this last case, we
+/// also need to know the coordinates of the first/starting point (i), cause
+/// this is the central point for the topocentric system.
 ///
 
 #ifndef _CARTESIAN_TO_TOPOCENTRIC_
@@ -32,9 +32,9 @@ namespace core {
 /// @param[in]  xi     Cartesian x-component of point i (meters)
 /// @param[in]  yi     Cartesian y-component of point i (meters)
 /// @param[in]  zi     Cartesian z-component of point i (meters)
-/// @param[in]  dx     x-component of ΔX vector (meters)
-/// @param[in]  dy     y-component of ΔX vector (meters)
-/// @param[in]  dz     z-component of ΔX vector (meters)
+/// @param[in]  dx     x-component of \f$\Delta x\f$ vector (meters)
+/// @param[in]  dy     y-component of \f$\Delta y\f$ vector (meters)
+/// @param[in]  dz     z-component of \f$\Delta z\f$ vector (meters)
 /// @param[in]  semi_major  The semi-major axis of the ref. ellipsoid
 /// @param[in]  flattening  The flattening of the ref. ellipsoid
 /// @param[out] north  Vector north component (meters)
@@ -113,9 +113,9 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
 /// @param[in]  xi     Cartesian x-component of point i (meters)
 /// @param[in]  yi     Cartesian y-component of point i (meters)
 /// @param[in]  zi     Cartesian z-component of point i (meters)
-/// @param[in]  dx     x-component of ΔX vector (meters)
-/// @param[in]  dy     y-component of ΔX vector (meters)
-/// @param[in]  dz     z-component of ΔX vector (meters)
+/// @param[in]  dx     x-component of \f$\Delta x\f$ vector (meters)
+/// @param[in]  dy     y-component of \f$\Delta y\f$ vector (meters)
+/// @param[in]  dz     z-component of \f$\Delta z\f$ vector (meters)
 /// @param[out] north  Vector north component (meters)
 /// @param[out] east   Vector east component (meters)
 /// @param[out] up     Vector up component (meters)
@@ -169,9 +169,9 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
 /// @param[in]  xi     Cartesian x-component of point i (meters)
 /// @param[in]  yi     Cartesian y-component of point i (meters)
 /// @param[in]  zi     Cartesian z-component of point i (meters)
-/// @param[in]  dx     x-component of ΔX vector (meters)
-/// @param[in]  dy     y-component of ΔX vector (meters)
-/// @param[in]  dz     z-component of ΔX vector (meters)
+/// @param[in]  dx     x-component of \f$\Delta x\f$ vector (meters)
+/// @param[in]  dy     y-component of \f$\Delta y\f$ vector (meters)
+/// @param[in]  dz     z-component of \f$\Delta z\f$ vector (meters)
 /// @param[in]  e      the reference ellipsoid (ngpt::Ellipsoid)
 /// @param[out] north  Vector north component (meters)
 /// @param[out] east   Vector east component (meters)

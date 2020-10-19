@@ -7,12 +7,13 @@
 ///        The Earth is nearly spherical, so great-circle distance formulas
 ///        give the distance between points on the surface of the Earth correct
 ///        to within about 0.5%.
-///        Let λ1, ϕ1 and λ2, ϕ2 be the geographical longitude and latitude in
-///        radians of two points 1 and 2, and Δλ, Δϕ be their absolute
+///        Let \f$\lambda_1\f$, \f$\phi_1\f$ and \f$\lambda_2\f$, \f$\phi_2\f$
+///        be the geographical longitude and latitude in radians of two points 1
+///        and 2, and \f$\Delta \lambda\f$, \f$\Delta \phi\f$ be their absolute
 ///        differences; the key thing then for arc legth computation is to
-///        find Δσ, the central angle between them. Once we know Δσ, the actual
-///        arc length d on a sphere of radius r can be trivially computed as
-///        d = r * Δσ
+///        find \f$\Delta\sigma\f$, the central angle between them. Once we know
+///        \f$\Delta\sigma\f$, the actual arc length d on a sphere of radius r
+///        can be trivially computed as d = r * \f$\Delta\sigma\f$
 ///
 /// @see   https://en.wikipedia.org/wiki/Great-circle_distance
 /// @todo
@@ -32,7 +33,7 @@ namespace core {
 /// distances between two points on a sphere from their longitudes and
 /// latitudes.
 /// It is called the "haversine function" (half a versine) and given an angle
-/// θ it is computed as:
+/// \f$\theta\f$ it is computed as:
 /// \f$ hav(\theta ) =  \sin^2 \frac{\theta}{2} = \frac{1- \cos \theta}{2}\f$
 ///
 /// @param[in] angle  The angle to compute the haversine function for (radians)

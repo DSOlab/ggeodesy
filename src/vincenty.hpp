@@ -35,6 +35,11 @@ namespace ngpt {
 
 namespace core {
 
+/// @brief Compute the inverse Vincenty formula for nearly antipodal points
+double inverse_vincenty_nearly_antipodal(double lat1, double lon1, double lat2, double lon2,
+                        double semi_major, double flattening, double semi_minor,
+                        double &a12, double &a21,
+                        double convergence_limit = 1e-12);
 /// @brief Compute the inverse Vincenty formula.
 double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
                         double semi_major, double flattening, double semi_minor,
@@ -61,7 +66,7 @@ double direct_vincenty2(double lat1, double lon1, double a1, double s,
 /// @param[in]  lon2        Longtitude of point 2 (radians)
 /// @param[out] a12         Azimouth from point 1 to point 2 (radians)
 /// @param[out] a21         Azimouth from point 2 to point 1 (radians)
-/// @param[in]  convergence_limit Convergence limit (radians). 10e−12
+/// @param[in]  convergence_limit Convergence limit (radians) \f$10^{-12}\f$
 ///                         corresponds to approximately 0.06mm
 /// @return      Ellipsoidal (along the geodesic) distance between the two
 ///              points (meters).
@@ -87,7 +92,7 @@ double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 /// @param[in]  lon2        Longtitude of point 2 (radians)
 /// @param[out] a12         Azimouth from point 1 to point 2 (radians)
 /// @param[out] a21         Azimouth from point 2 to point 1 (radians)
-/// @param[in]  convergence_limit Convergence limit (radians). 10e−12
+/// @param[in]  convergence_limit Convergence limit (radians) \f$10^{-12}\f$
 ///                         corresponds to approximately 0.06mm
 /// @return      Ellipsoidal (along the geodesic) distance between the two
 ///              points (meters).
@@ -113,7 +118,7 @@ double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 ///                         1 to point 2 (meters)
 /// @param[out] lat2        Latitude of point 2 (radians)
 /// @param[out] lon2        Longtitude of point 2 (radians)
-/// @param[in]  convergence_limit Convergence limit (radians). 10e−12
+/// @param[in]  convergence_limit Convergence limit (radians) \f$10^{-12}\f$
 ///                         corresponds to approximately 0.06mm
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
@@ -126,7 +131,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
   const double f = ellipsoid_traits<E>::f;
   const double b = semi_minor<E>();
   return core::direct_vincenty2(lat1, lon1, a1, s, a, f, b, lat2, lon2,
-                               convergence_limit);
+                                convergence_limit);
 }
 /// @brief Direct Vincenty formula.
 ///
@@ -138,7 +143,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
 ///                         1 to point 2 (meters)
 /// @param[out] lat2        Latitude of point 2 (radians)
 /// @param[out] lon2        Longtitude of point 2 (radians)
-/// @param[in]  convergence_limit Convergence limit (radians). 10e−12
+/// @param[in]  convergence_limit Convergence limit (radians) \f$10^{-12}\f$
 ///                         corresponds to approximately 0.06mm
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
@@ -150,7 +155,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
   const double f = e.flattening();
   const double b = e.semi_minor();
   return core::direct_vincenty2(lat1, lon1, a1, s, a, f, b, lat2, lon2,
-                               convergence_limit);
+                                convergence_limit);
 }
 
 } // end namespace ngpt

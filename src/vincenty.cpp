@@ -1,8 +1,8 @@
 #include "vincenty.hpp"
 #include "geoconst.hpp"
+#include "geodesy.hpp"
 #include <cmath>
 #include <stdexcept>
-#include "geodesy.hpp"
 
 using ngpt::D2PI;
 using ngpt::DPI;
@@ -14,7 +14,7 @@ using ngpt::DPI;
 /// a21) and the ellipsoidal (along the geodesic) distance between the two
 /// points. The inverse Vincenty's formula is used for the computation.
 /// Vincenty’s solution for the distance between points on an ellipsoidal earth
-/// model is accurate to within 0.5 mm distance (!), 0.000015″ bearing, on the
+/// model is accurate to within 0.5 mm distance (!), 0.000015'' bearing, on the
 /// ellipsoid being used. Calculations based on a spherical earth model, such
 /// as the (much simpler) Haversine, are accurate to around 0.3% – which is
 /// still good enough for many (most?) purposes, of course (see
@@ -29,7 +29,7 @@ using ngpt::DPI;
 /// @param[in]  flattening  Flattening of reference ellipsoid
 /// @param[out] a12         Azimouth from point 1 to point 2 (radians)
 /// @param[out] a21         Azimouth from point 2 to point 1 (radians)
-/// @param[in]  convergence_limit Convergence limit (radians). 10e−12
+/// @param[in]  convergence_limit Convergence limit (radians). 10e-12
 ///                         corresponds to approximately 0.06mm
 /// @return      Ellipsoidal (along the geodesic) distance between the two
 ///              points (meters).
@@ -39,8 +39,126 @@ using ngpt::DPI;
 ///        to converge. Solution to the inverse problem fails to converge or
 ///        converges slowly for nearly antipodal points.
 ///
-/// @see https://en.wikipedia.org/wiki/Vincenty's_formulae
+/// @see [1] https://en.wikipedia.org/wiki/Vincenty's_formulae
+/// @see [2] https://futureboy.us/fsp/colorize.fsp?fileName=navigation.frink
+/// @see [3] https://github.com/boostorg/geometry/blob/develop/include/boost/geometry/formulas/vincenty_inverse.hpp
+double ngpt::core::inverse_vincenty_nearly_antipodal(
+    double lat1, double lon1, double lat2, double lon2, double semi_major,
+    double flattening, double semi_minor, double &a12, double &a21,
+    double convergence_limit) {
+  const int MAX_ITERATIONS = 100;
+  int iteration = 0;
+
+  const double a = semi_major;
+  const double f = flattening;
+  const double b = semi_minor;
+
+  double L{lon2 - lon1};
+  if (L<-DPI) L+= D2PI;
+  if (L>DPI) L-=D2PI;
+  const double Ld = (L>0e0) ? (DPI - L) : (-DPI - L);
+  //  For the trigonometrics of U1 and U2, boost uses the following:
+  //+ see Reference [3]
+  const double one_min_f = 1e0 - f;
+  const double tan_U1 = one_min_f * std::tan(lat1);
+  const double tan_U2 = one_min_f * std::tan(lat2);
+  // calculate sin U and cos U using trigonometric identities
+  const double temp_den_U1 = std::sqrt(1e0 + std::sqr(tan_U1));
+  const double temp_den_U2 = std::sqrt(1e0 + std::sqr(tan_U2));
+  // cos = 1 / sqrt(1 + tan^2)
+  const double cosU1 = 1e0 / temp_den_U1;
+  const double cosU2 = 1e0 / temp_den_U2;
+  // sin = tan / sqrt(1 + tan^2)
+  // sin = tan * cos
+  const double sinU1 = tan_U1 * cos_U1;
+  const double sinU2 = tan_U2 * cos_U2;
+  /*
+  const double U1{std::atan((1e0 - f) * std::tan(lat1))};
+  const double U2{std::atan((1e0 - f) * std::tan(lat2))};
+  const double sinU1{std::sin(U1)};
+  const double sinU2{std::sin(U2)};
+  const double cosU1{std::cos(U1)};
+  const double cosU2{std::cos(U2)};
+  */
+  double lambda{L}, lambdad = 0e0;
+  double sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, C, cos2SigmaM,
+      lambdaP, sinLambda, cosLambda;
+  cosSqAlpha = 0.5e0;
+  cos2SigmaM = 0e0;
+  sigma = DPI - std::abs(std::atan(sinU1/cosU1)+std::atan(sinU2/cosU2));
+  do {
+    if (++iteration > MAX_ITERATIONS) {
+      throw std::out_of_range(
+          "[ERROR] Inverse Vincenty cannot converge after 100 iterations!");
+    }
+    C = (f / 16e0) * cosSqAlpha * (4e0 + f * (4e0 - 3e0 * cosSqAlpha));
+    cosSigma = std::cos(sigma);
+    sinSigma = std::sin(sigma);
+    cos2SigmaM = cosSigma - 2e0 * sinU1 * sinU2 / cosSqAlpha;
+    D = (1e0 - C) * f *
+        (sigma + C * sinSigma *
+                     (cos2SigmaM + C * cosSigma * (-1e0 + 2e0 * cos2SigmaM)));
+    sinAlpha = (Ld - lambdad) / D;
+    sinLambda = sinAlpha * sinSigma / (cosU1*cosU2);
+    sinSqSigma = (cosU2 * sinLambda) * (cosU2 * sinLambda) +
+                 (cosU1 * sinU2 + sinU1 * cosU2 * cosLambda) *
+                     (cosU1 * sinU2 + sinU1 * cosU2 * cosLambda);
+    cosSqAlpha = 1e0 - sinAlpha*sinAlpha;
+    lambdad = std::asin(sinLambda);
+
+  } while (std::abs(sinAlpha_prev-sinAlpha) > convergence_limit);
+
+  double sinAlpha1 = sinAlpha / cosU1;
+  double cosAlpha1 = std::sqrt(1e0-sinAlpha1*sinAlpha1);
+  if ((cosU1*sinU2+sinU1*cosU2*cosLambda_dot)<0e0) cosAlpha1 = -cosAlpha1;
+  a12 = std::atan2(sinAlpha1, cosAlpha1);
+  a21 = std::atan2(sinAlpha, -sinU1*sinSigma+cosU1*cosSigma*cosAlpha1);
+
+  const double epsilon = (a*a-b*b)/(b*b);
+  const double E = std::sqrt(1e0+epsilon*cosSqAlpha);
+  const double F = (E-1e0)/(E+1e0);
+  const double A = (1e0+0.25e0*F*F)/(1e0-F);
+  const double B = F*(1e0-(3e0/8e0)*F*F);
+  const double deltaSigma = B*sinSigma*(cos2SigmaM + 0.25e0*B*(cosSigma*(-1e0+2e0*cos2SigmaM*cos2SigmaM)
+            -(1e0/6e0)*B*cos2SigmaM*(-3e0+4e0*sinSqSigma)*(-3e0+4e0*cos2SigmaM*cos2SigmaM)));
+  return b*A*(sigma-deltaSigma);
+}
+
+/// @brief Compute the inverse Vincenty formula.
 ///
+/// Given the (ellipsoidal) coordinates of two points (1 and 2) in radians,
+/// calculate the forward azimouths from 1->2 (i.e. a12) and from 2->1 (i.e.
+/// a21) and the ellipsoidal (along the geodesic) distance between the two
+/// points. The inverse Vincenty's formula is used for the computation.
+/// Vincenty’s solution for the distance between points on an ellipsoidal earth
+/// model is accurate to within 0.5 mm distance (!), 0.000015'' bearing, on the
+/// ellipsoid being used. Calculations based on a spherical earth model, such
+/// as the (much simpler) Haversine, are accurate to around 0.3% – which is
+/// still good enough for many (most?) purposes, of course (see
+/// https://www.movable-type.co.uk/scripts/latlong-vincenty.html).
+///
+/// @param[in]  lat1        Latitude of point 1 (radians)
+/// @param[in]  lon1        Longtitude of point 1 (radians)
+/// @param[in]  lat2        Latitude of point 2 (radians)
+/// @param[in]  lon2        Longtitude of point 2 (radians)
+/// @param[in]  semi_major  Semi-major axis of reference ellipsoid (meters)
+/// @param[in]  semi_minor  Semi-minor axis of reference ellipsoid (meters)
+/// @param[in]  flattening  Flattening of reference ellipsoid
+/// @param[out] a12         Azimouth from point 1 to point 2 (radians)
+/// @param[out] a21         Azimouth from point 2 to point 1 (radians)
+/// @param[in]  convergence_limit Convergence limit (radians). 10e-12
+///                         corresponds to approximately 0.06mm
+/// @return      Ellipsoidal (along the geodesic) distance between the two
+///              points (meters).
+///
+/// @throw Will throw an std::out_of_range (implying the input aruments/points)
+///        in case more than MAX_ITERATIONS(=100) are needed for the algorithm
+///        to converge. Solution to the inverse problem fails to converge or
+///        converges slowly for nearly antipodal points.
+///
+/// @see [1] https://en.wikipedia.org/wiki/Vincenty's_formulae
+/// @see [2] https://futureboy.us/fsp/colorize.fsp?fileName=navigation.frink
+/// @see [3] https://github.com/boostorg/geometry/blob/develop/include/boost/geometry/formulas/vincenty_inverse.hpp
 double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
                                     double lon2, double semi_major,
                                     double flattening, double semi_minor,
@@ -53,19 +171,43 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
   const double f = flattening;
   const double b = semi_minor;
 
+  double L{lon2 - lon1};
+  if (L<-DPI) L+= D2PI;
+  if (L>DPI) L-=D2PI;
+  //  For the trigonometrics of U1 and U2, boost uses the following:
+  //+ see Reference [3]
+  const double one_min_f = 1e0 - f;
+  const double tan_U1 = one_min_f * std::tan(lat1);
+  const double tan_U2 = one_min_f * std::tan(lat2);
+  // calculate sin U and cos U using trigonometric identities
+  const double temp_den_U1 = std::sqrt(1e0 + std::sqr(tan_U1));
+  const double temp_den_U2 = std::sqrt(1e0 + std::sqr(tan_U2));
+  // cos = 1 / sqrt(1 + tan^2)
+  const double cosU1 = 1e0 / temp_den_U1;
+  const double cosU2 = 1e0 / temp_den_U2;
+  // sin = tan / sqrt(1 + tan^2)
+  // sin = tan * cos
+  const double sinU1 = tan_U1 * cos_U1;
+  const double sinU2 = tan_U2 * cos_U2;
+  /*
   const double U1{std::atan((1e0 - f) * std::tan(lat1))};
   const double U2{std::atan((1e0 - f) * std::tan(lat2))};
-  const double L{lon2 - lon1};
   const double sinU1{std::sin(U1)};
   const double sinU2{std::sin(U2)};
   const double cosU1{std::cos(U1)};
   const double cosU2{std::cos(U2)};
+  */
   double lambda{L};
   double sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, C, cos2SigmaM,
       lambdaP, sinLambda, cosLambda;
 
   do {
     if (++iteration > MAX_ITERATIONS) {
+      try {
+        return inverse_vincenty_nearly_antipodal(lat1, lon1, lat2, lon2, semi_major, flattening, semi_minor, a12, a21, convergence_limit);
+      } catch (std::out_of_range& e) {
+        printf("\n[ERROR] Failed to converge for nearly antipodal!");
+      }
       throw std::out_of_range(
           "[ERROR] Inverse Vincenty cannot converge after 100 iterations!");
     }
@@ -75,11 +217,15 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
                          (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) *
                              (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
     cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;
-    sigma = atan2(sinSigma, cosSigma);
     sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma;
     cosSqAlpha = 1e0 - sinAlpha * sinAlpha;
-    cos2SigmaM = cosSigma - 2e0 * sinU1 * sinU2 / cosSqAlpha;
+    // check for equatorial points -- see reference [2]
+    if (cosSqAlpha == 0e0)
+      cos2SigmaM = 0e0;
+    else
+      cos2SigmaM = cosSigma - 2e0 * sinU1 * sinU2 / cosSqAlpha;
     C = (f / 16e0) * cosSqAlpha * (4e0 + f * (4e0 - 3e0 * cosSqAlpha));
+    sigma = atan2(sinSigma, cosSigma);
     lambdaP = lambda;
     lambda = L + (1e0 - C) * f * sinAlpha *
                      (sigma + C * sinSigma *
@@ -122,9 +268,9 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
 /// s, along the geodesic the problem is to find the end point (lat2, lon2)
 /// and azimuth, a2.
 /// Vincenty’s solution for the distance between points on an ellipsoidal earth
-/// model is accurate to within 0.5 mm distance (!), 0.000015″ bearing, on the
+/// model is accurate to within 0.5 mm distance (!), 0.000015'' bearing, on the
 /// ellipsoid being used. Calculations based on a spherical earth model, such
-/// as the (much simpler) Haversine, are accurate to around 0.3% – which is
+/// as the (much simpler) Haversine, are accurate to around 0.3% - which is
 /// still good enough for many (most?) purposes, of course (see
 /// https://www.movable-type.co.uk/scripts/latlong-vincenty.html).
 ///
@@ -138,7 +284,7 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
 /// @param[in]  flattening  Flattening of reference ellipsoid
 /// @param[out] lat2        Latitude of point 2 (radians)
 /// @param[out] lon2        Longtitude of point 2 (radians)
-/// @param[in]  convergence_limit Convergence limit (radians). 10e−12
+/// @param[in]  convergence_limit Convergence limit (radians). 10e-12
 ///                         corresponds to approximately 0.06mm
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
@@ -212,7 +358,7 @@ double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
                 C * sinSigma *
                     (cosSigmaM2 +
                      C * cosSigma * (-1e0 + 2e0 * cosSigmaM2 * cosSigmaM2)))};
-  // there are some rare case (e.g when the two points run between vertices 
+  // there are some rare case (e.g when the two points run between vertices
   // (i.e. a1 = a2 = 90deg) or end close to vertices, when the following
   // result (lon2) takes values (a little less) than 180degrees (due to roundoff
   // errors. To protect against this, we normalize the longtitude in the range
@@ -229,9 +375,9 @@ double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
 /// s, along the geodesic the problem is to find the end point (lat2, lon2)
 /// and azimuth, a2.
 /// Vincenty’s solution for the distance between points on an ellipsoidal earth
-/// model is accurate to within 0.5 mm distance (!), 0.000015″ bearing, on the
+/// model is accurate to within 0.5 mm distance (!), 0.000015'' bearing, on the
 /// ellipsoid being used. Calculations based on a spherical earth model, such
-/// as the (much simpler) Haversine, are accurate to around 0.3% – which is
+/// as the (much simpler) Haversine, are accurate to around 0.3% - which is
 /// still good enough for many (most?) purposes, of course (see
 /// https://www.movable-type.co.uk/scripts/latlong-vincenty.html).
 ///
@@ -245,7 +391,7 @@ double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
 /// @param[in]  flattening  Flattening of reference ellipsoid
 /// @param[out] lat2        Latitude of point 2 (radians)
 /// @param[out] lon2        Longtitude of point 2 (radians)
-/// @param[in]  convergence_limit Convergence limit (radians). 10e−12
+/// @param[in]  convergence_limit Convergence limit (radians). 10e-12
 ///                         corresponds to approximately 0.06mm
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
@@ -316,7 +462,7 @@ double ngpt::core::direct_vincenty2(double lat1, double lon1, double a1,
                                 (cos2sigma_m +
                                  C * cosSigma *
                                      (-1e0 + 2e0 * cos2sigma_m * cos2sigma_m)));
-  // there are some rare case (e.g when the two points run between vertices 
+  // there are some rare case (e.g when the two points run between vertices
   // (i.e. a1 = a2 = 90deg) or end close to vertices, when the following
   // result (lon2) takes values (a little less) than 180degrees (due to roundoff
   // errors. To protect against this, we normalize the longtitude in the range

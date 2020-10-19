@@ -23,7 +23,7 @@
 ///      Ellipsoid e (ellipsoid::grs80);
 ///      double semi_major = e.semi_major();
 ///      double N = e.N(lat);
-/// Note that the semi-major axis is sometimes reffered to as 
+/// Note that the semi-major axis is sometimes reffered to as
 /// "equatorial radius" and the semi-minor axis is sometimes reffered to as
 /// "polar radius".
 /// In the following and when no other qualification is used, latitude is used
@@ -55,7 +55,7 @@ double meridian_arc_length_impl4(double a, double f, double lat) noexcept;
 
 /// @brief Compute the squared eccentricity.
 ///
-/// Compute the squared (first) eccentricity (i.e. e^2) given the
+/// Compute the squared (first) eccentricity (i.e. \f$e^2\f$) given the
 /// flattening of an ellipsoid, aka \f$ e^2 = (2-f)*f \f$
 /// @param[in] f flattening
 /// @return      squared eccentricity
@@ -70,13 +70,11 @@ constexpr double eccentricity_squared(double f) noexcept {
 /// @param[in] f flattening
 /// @return third flattening \f$ n \f$
 /// Reference [2]
-constexpr double third_flattening(double f) noexcept {
-  return f / (2e0-f);
-}
+constexpr double third_flattening(double f) noexcept { return f / (2e0 - f); }
 
-/// @brief Compute the semi-minor axis (aka b)
+/// @brief Compute the semi-minor axis (aka \f$b\f$)
 ///
-/// Compute the semi-minor axis of an ellipsoid(i.e. e^2), given the
+/// Compute the semi-minor axis of an ellipsoid(i.e. \f$e^2\f$), given the
 /// flattening and the semi-major axis, aka \f$ \beta = \alpha * (1-f) \f$
 /// @param[in] f flattening
 /// @param[in] a semi-major axis (meters)
@@ -103,7 +101,7 @@ constexpr
 
 /// @brief Polar radius of curvature
 ///
-/// Compute the polar radius of curvature of an ellipsoid (i.e. E) from the
+/// Compute the polar radius of curvature of an ellipsoid (i.e. c) from the
 /// formula \f$ c = a^2 / b\f$
 /// @param[in] f flattening
 /// @param[in] a semi-major axis (meters)
@@ -166,11 +164,11 @@ constexpr
 
 /// @brief Compute the geocentric latitude
 ///
-/// The geocentric latitude is the angle between the equatorial plane and the 
-/// radius from the centre to a point on the surface. The relation between the 
-/// geocentric latitude(θ) and the geodetic latitude(φ) is 
-/// \f$ \theta (\fi ) = tan^-1 ((1-f)^2 tan(\fi)) \f$
-/// The geodetic and geocentric latitudes are equal at the equator and at the 
+/// The geocentric latitude is the angle between the equatorial plane and the
+/// radius from the centre to a point on the surface. The relation between the
+/// geocentric latitude(\f$\theta\f$) and the geodetic latitude(\f$\phi\f$) is
+/// \f$ \theta (\phi) = tan^{-1} ((1-f)^2 tan(\phi)) \f$
+/// The geodetic and geocentric latitudes are equal at the equator and at the
 /// poles but at other latitudes they differ by a few minutes of arc.
 /// @param[in] lat The (geodetic) latitude in radians
 /// @param[in] f   The ellipsoid's flattening
@@ -180,15 +178,16 @@ constexpr
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
 #endif
-double geocentric_latitude(double lat, double f) noexcept {
-  return std::atan((1e0-f)*(1e0-f)*std::tan(lat));
+    double
+    geocentric_latitude(double lat, double f) noexcept {
+  return std::atan((1e0 - f) * (1e0 - f) * std::tan(lat));
 }
 
 /// @brief Compute the parametric or reduced latitude
 ///
-/// The parametric or reduced latitude, \f$ beta \f$ is defined by the radius 
-/// drawn from the centre of the ellipsoid to that point Q on the surrounding 
-/// sphere (of radius a) which is the projection parallel to the Earth's axis 
+/// The parametric or reduced latitude, \f$ beta \f$ is defined by the radius
+/// drawn from the centre of the ellipsoid to that point Q on the surrounding
+/// sphere (of radius a) which is the projection parallel to the Earth's axis
 /// of a point P on the ellipsoid at latitude \f$ \phi \f$
 /// @param[in] lat The (geodetic) latitude in radians
 /// @param[in] f   The ellipsoid's flattening
@@ -198,8 +197,9 @@ double geocentric_latitude(double lat, double f) noexcept {
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
 #endif
-double reduced_latitude(double lat, double f) noexcept {
-  return std::atan((1e0-f)*std::tan(lat));
+    double
+    reduced_latitude(double lat, double f) noexcept {
+  return std::atan((1e0 - f) * std::tan(lat));
 }
 
 } // namespace core
@@ -339,7 +339,7 @@ template <ellipsoid E> constexpr double third_flattening() noexcept {
   return core::third_flattening(ellipsoid_traits<E>::f);
 }
 
-/// @brief Compute the geocentric latitude at some geodetic latitude on the 
+/// @brief Compute the geocentric latitude at some geodetic latitude on the
 ///        ellipsoid
 ///
 /// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
@@ -352,7 +352,8 @@ template <ellipsoid E>
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
 #endif
-    double geocentric_latitude(double lat) noexcept {
+    double
+    geocentric_latitude(double lat) noexcept {
   return core::geocentric_latitude(lat, ellipsoid_traits<E>::f);
 }
 
@@ -369,7 +370,8 @@ template <ellipsoid E>
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
 #endif
-    double reduced_latitude(double lat) noexcept {
+    double
+    reduced_latitude(double lat) noexcept {
   return core::reduced_latitude(lat, ellipsoid_traits<E>::f);
 }
 
@@ -399,7 +401,7 @@ template <ellipsoid E> double M(double lat) noexcept {
 
 /// @brief Compute mean earth radius; in geophysics, the International Union of
 ///        Geodesy and Geophysics (IUGG) defines the mean radius (denoted R1)
-///        to be: R1 = (2α + b) / 3
+///        to be: \f$ R1 = (2\alpha + b) / 3 \f$
 /// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
 /// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
 ///
@@ -508,7 +510,7 @@ public:
   double geocentric_latitude(double lat) const noexcept {
     return core::geocentric_latitude(lat, __f);
   }
-  
+
   /// @brief Compute the reduced latitude at some (geodetic) latitude
   /// @param[in] lat The geodecit latitude
   /// @return        The reduced latitude at lat
@@ -539,7 +541,7 @@ public:
   /// @brief Compute mean earth radius; in geophysics, the International Union
   /// of
   ///        Geodesy and Geophysics (IUGG) defines the mean radius (denoted R1)
-  ///        to be: R1 = (2α + b) / 3
+  ///        to be: \f$ R1 = (2\alpha + b) / 3 \f$
   /// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
   /// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
   ///
