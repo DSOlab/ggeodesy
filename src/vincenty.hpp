@@ -36,10 +36,11 @@ namespace ngpt {
 namespace core {
 
 /// @brief Compute the inverse Vincenty formula for nearly antipodal points
-double inverse_vincenty_nearly_antipodal(double lat1, double lon1, double lat2, double lon2,
-                        double semi_major, double flattening, double semi_minor,
-                        double &a12, double &a21,
-                        double convergence_limit = 1e-12);
+double inverse_vincenty_nearly_antipodal(double lat1, double lon1, double lat2,
+                                         double lon2, double semi_major,
+                                         double flattening, double semi_minor,
+                                         double &a12, double &a21,
+                                         double convergence_limit = 1e-12);
 /// @brief Compute the inverse Vincenty formula.
 double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
                         double semi_major, double flattening, double semi_minor,

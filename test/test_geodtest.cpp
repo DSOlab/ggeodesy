@@ -125,7 +125,8 @@ int from_line(const char *line, TestLine &tl) {
 }
 
 /// various constants
-const char *GeodTest = "/home/xanthos/Builds/ggeodesy/test/GeodTest.dat";
+// const char *GeodTest = "/home/xanthos/Builds/ggeodesy/test/GeodTest.dat";
+const char *GeodTest = "/home/xanthos/Software/ggeodesy/test/GeodTest.dat";
 constexpr std::size_t MAX_CHARS = 256;
 using szstr_pair = std::pair<std::size_t, std::string>;
 const std::vector<szstr_pair> GeodTest_descr = {
