@@ -26,7 +26,6 @@ double p_rad2meters(double dlon, double lat) noexcept {
 
 // see
 // https://stackoverflow.com/questions/17333/what-is-the-most-effective-way-for-float-and-double-comparison
-
 template <typename TReal>
 bool approxEqual(
     TReal a, TReal b,

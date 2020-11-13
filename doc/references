@@ -1,0 +1,5 @@
+* Vincenty Inverse
+  https://github.com/boostorg/geometry/blob/develop/include/boost/geometry/formulas/vincenty_inverse.hpp#L159
+  https://zenodo.org/record/32999/files/vincenty75-antipodal.pdf?download=1
+  http://www.movable-type.co.uk/scripts/LatLongVincenty.html
+  https://futureboy.us/fsp/colorize.fsp?fileName=navigation.frink

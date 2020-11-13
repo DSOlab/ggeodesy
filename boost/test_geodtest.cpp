@@ -1,5 +1,4 @@
 #include "geodesy.hpp"
-#include "test_help.hpp"
 #include "vincenty.hpp"
 #include <algorithm>
 #include <array>
@@ -8,24 +7,32 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#ifdef DEBUG
+#include <boost/geometry.hpp>
+#endif
 
 using namespace ngpt;
+using namespace boost::geometry;
 
 /// constants for wgs84 ellipsoid
 constexpr double A = ellipsoid_traits<ellipsoid::wgs84>::a,
                  F = ellipsoid_traits<ellipsoid::wgs84>::f,
                  B = semi_minor<ellipsoid::wgs84>();
-
-/// transform radians to seconds (of degrees)
-double rad2seconds(double rad) noexcept {
-  double ddeg = rad2deg(rad);
-  return ddeg * 3600e0;
-}
+// For storing the resulting values.
+formula::result_inverse<double> result_inv;
+// WGS-84 spheroid.
+srs::spheroid<double> spheroid(A, B);
+// Define the strategy.
+typedef formula::vincenty_inverse<double, true, true, true>
+    vincenty_inverse_type;
 
 /// hold (absolute) max error values in seconds
 double max_error_lat = std::numeric_limits<double>::min(),
        max_error_lon = std::numeric_limits<double>::min(),
        max_error_az = std::numeric_limits<double>::min();
+double max_error_lat_gb = std::numeric_limits<double>::min(),
+       max_error_lon_gb = std::numeric_limits<double>::min(),
+       max_error_az_gb = std::numeric_limits<double>::min();
 double acc_error_lat, acc_error_lon, acc_error_az, acc_error_lat_m,
     acc_error_lon_m;
 double lat_at1, lat_at2, lat_at3;
@@ -52,15 +59,15 @@ struct TestLine {
       printf("\nOutput: lon=%+8.3f should be %+8.3f", ngpt::rad2deg(lon2),
              ngpt::rad2deg(ar[4]));
     }
-    if ((err_lat = std::abs(rad2seconds(ar[3] - lat2))) > max_error_lat) {
+    if ((err_lat = std::abs(rad2sec(ar[3] - lat2))) > max_error_lat) {
       max_error_lat = err_lat;
       lat_at1 = ar[3];
     }
-    if ((err_lon = std::abs(rad2seconds(ar[4] - lon2))) > max_error_lon) {
+    if ((err_lon = std::abs(rad2sec(ar[4] - lon2))) > max_error_lon) {
       max_error_lon = err_lon;
       lat_at2 = ar[3];
     }
-    if ((err_az = std::abs(rad2seconds(ar[5] - az2))) > max_error_az) {
+    if ((err_az = std::abs(rad2sec(ar[5] - az2))) > max_error_az) {
       max_error_az = err_az;
       lat_at3 = ar[3];
     }
@@ -75,11 +82,12 @@ struct TestLine {
   }
 
   void test_vincenty_inverse(/*bool print = true*/) const {
-    // err lat -> err in a12
-    // err lon -> err in a21
-    // err az  -> err in s12
-    double s12, a12, a21;
+    // err lat -> err in a12 radians
+    // err lon -> err in a21 radians
+    // err az  -> err in s12 meters
+    double s12 = 0e0, a12, a21;
     double err_lat, err_lon, err_az;
+    bool failed = false;
     try {
       s12 = ngpt::core::inverse_vincenty(ar[0], ar[1], ar[3], ar[4], A, F, B,
                                          a12, a21, 1e-12);
@@ -101,11 +109,44 @@ struct TestLine {
       acc_error_lon += err_lon;
       acc_error_az += err_az;
     } catch (std::out_of_range &e) {
-      /*printf("\n[ERROR] Vincenty-Inverse failed to converge!");
+      /*printf("\n[ERROR] ngpt::Vincenty-Inverse failed to converge!");
       printf("\n        From point (%5.1f, %5.1f) to (%5.1f, %5.1f)",
-          ngpt::rad2deg(ar[0]), ngpt::rad2deg(ar[1]), ngpt::rad2deg(ar[3]),
-          ngpt::rad2deg(ar[4]));*/
+             ngpt::rad2deg(ar[0]), ngpt::rad2deg(ar[1]), ngpt::rad2deg(ar[3]),
+             ngpt::rad2deg(ar[4]));*/
       ++failed_converges;
+      failed = true;
+    }
+
+    // check boost
+    try {
+      result_inv =
+          vincenty_inverse_type::apply(ar[1], ar[0], ar[4], ar[3], spheroid);
+      if (!failed) {
+        if ((err_lat = std::abs(a12 - result_inv.azimuth)) > max_error_lat_gb) {
+          max_error_lat_gb = err_lat;
+        }
+        if ((err_lon = std::abs(a21 - result_inv.reverse_azimuth)) >
+            max_error_lon_gb) {
+          max_error_lon_gb = err_lon;
+        }
+        if ((err_az = std::abs(s12 - result_inv.distance)) > max_error_az_gb) {
+          max_error_az_gb = err_az;
+        } /*
+             if
+             (std::abs(ngpt::rad2deg(a12)-ngpt::rad2deg(result_inv.azimuth))>1e-12)
+             { printf("\n[DEBUG] Difference between boost and ggeodesy in
+             azimouth > 1e-12 degrees");
+             }
+             if (std::abs(s12-result_inv.distance)>1e-6) {
+             printf("\n[DEBUG] Difference between boost and ggeodesy in distance
+             > 1e-06 meters");
+             }*/
+      }
+    } catch (std::exception &e) {
+      printf("\n[ERROR] boost::Vincenty-Inverse failed to converge!");
+      printf("\n        From point (%5.1f, %5.1f) to (%5.1f, %5.1f)",
+             ngpt::rad2deg(ar[0]), ngpt::rad2deg(ar[1]), ngpt::rad2deg(ar[3]),
+             ngpt::rad2deg(ar[4]));
     }
 
     return;
@@ -211,16 +252,19 @@ int main() {
   fin.seekg(0);
   line_count = 0;
   printf("\n%50s %17s %17s %17s", "Description", "Az1->2(seconds)",
-         "Az2->1(seconds)", "Distance(seconds)");
+         "Az2->1(seconds)", "Distance(meters)");
   std::cout
       << "\n-------------------------------------------------------------";
   for (const auto &batch : GeodTest_descr) {
     line_nr = 0;
     vec.clear();
     vec.reserve(batch.first);
-    max_error_lat = std::numeric_limits<double>::min(); // a12
-    max_error_lon = std::numeric_limits<double>::min(); // a21
-    max_error_az = std::numeric_limits<double>::min();  // s12
+    max_error_lat = std::numeric_limits<double>::min();    // a12
+    max_error_lon = std::numeric_limits<double>::min();    // a21
+    max_error_az = std::numeric_limits<double>::min();     // s12
+    max_error_lat_gb = std::numeric_limits<double>::min(); // a12
+    max_error_lon_gb = std::numeric_limits<double>::min(); // a21
+    max_error_az_gb = std::numeric_limits<double>::min();  // s12
     acc_error_lat = acc_error_lon = acc_error_az = 0e0;
     do {
       fin.getline(line, MAX_CHARS);
@@ -231,7 +275,7 @@ int main() {
     } while (++line_nr < batch.first);
     line_count += line_nr;
     bool doprint = false;
-    if (batch.second == "randomly distributed") {
+    //if (batch.second == "randomly distributed") {
       for (const auto &ar : vec) {
         ar.test_vincenty_inverse();
       }
@@ -239,10 +283,13 @@ int main() {
       double mean_error_lon = acc_error_lon / (double)batch.first;
       double mean_error_az = acc_error_az / (double)batch.first;
       printf("\n%50s %17.15f %17.15f %17.15f Max Err.", batch.second.c_str(),
-             max_error_lat, max_error_lon, max_error_az);
+             rad2sec(max_error_lat), rad2sec(max_error_lon), max_error_az);
       printf("\n%50s %17.15f %17.15f %17.15f Mean Err.", batch.second.c_str(),
-             mean_error_lat, mean_error_lon, mean_error_az);
-    }
+             rad2sec(mean_error_lat), rad2sec(mean_error_lon), mean_error_az);
+      printf("\n%50s %17.15f %17.15f %17.15f Max ngptVsboost Err.",
+             batch.second.c_str(), rad2sec(max_error_lat_gb),
+             rad2sec(max_error_lon_gb), max_error_az_gb);
+    //}
   }
   printf("\nNumber of lines read: %15d failed to converge %3d%% (aka %15d)",
          (int)line_count, (int)(failed_converges * 100 / line_count),

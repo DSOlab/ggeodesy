@@ -21,6 +21,8 @@
 /// implementations) or runtime parameters (where an Ellipsoid instance is
 /// needed).
 ///
+/// @see https://adl1995.github.io/inaccuracy-in-boost-geometry-geodesic-algorithms-for-nearly-antipodal-points.html
+///
 /// @todo
 ///       - Need to test!
 ///       - Implement the direct/inverse algorithms from GographicLib, see
