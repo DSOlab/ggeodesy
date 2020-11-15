@@ -11,8 +11,8 @@
 /// this is the central point for the topocentric system.
 ///
 
-#ifndef _CARTESIAN_TO_TOPOCENTRIC_
-#define _CARTESIAN_TO_TOPOCENTRIC_
+#ifndef __CARTESIAN_TO_TOPOCENTRIC__
+#define __CARTESIAN_TO_TOPOCENTRIC__
 
 #include "car2ell.hpp"
 #include <cmath>
@@ -58,10 +58,10 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
   core::car2ell(xi, yi, zi, semi_major, flattening, phi_i, lambda_i, h_i);
 
   // Trigonometric numbers.
-  double cosf{std::cos(phi_i)};
-  double cosl{std::cos(lambda_i)};
-  double sinf{std::sin(phi_i)};
-  double sinl{std::sin(lambda_i)};
+  const double cosf{std::cos(phi_i)};
+  const double cosl{std::cos(lambda_i)};
+  const double sinf{std::sin(phi_i)};
+  const double sinl{std::sin(lambda_i)};
 
   // Topocentric vector.
   north = -sinf * cosl * dx - sinf * sinl * dy + cosf * dz;
@@ -95,9 +95,9 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
   constexpr double flattening{ellipsoid_traits<E>::f};
 
   // Catresian vector.
-  double dx{xj - xi};
-  double dy{yj - yi};
-  double dz{zj - zi};
+  const double dx{xj - xi};
+  const double dy{yj - yi};
+  const double dz{zj - zi};
 
   // transform to topocentric
   core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,
@@ -152,9 +152,9 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
   const double flattening{e.flattening()};
 
   // Catresian vector.
-  double dx{xj - xi};
-  double dy{yj - yi};
-  double dz{zj - zi};
+  const double dx{xj - xi};
+  const double dy{yj - yi};
+  const double dz{zj - zi};
 
   // transform to topocentric
   core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,

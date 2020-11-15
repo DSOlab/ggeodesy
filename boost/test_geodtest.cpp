@@ -1,5 +1,6 @@
 #include "geodesy.hpp"
 #include "vincenty.hpp"
+#include "units.hpp"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -20,11 +21,14 @@ constexpr double A = ellipsoid_traits<ellipsoid::wgs84>::a,
                  B = semi_minor<ellipsoid::wgs84>();
 // For storing the resulting values.
 formula::result_inverse<double> result_inv;
+formula::result_direct<double> result_drc;
 // WGS-84 spheroid.
 srs::spheroid<double> spheroid(A, B);
 // Define the strategy.
 typedef formula::vincenty_inverse<double, true, true, true>
     vincenty_inverse_type;
+typedef formula::vincenty_direct<double, true, true, false, false>
+    vincenty_direct_type;
 
 /// hold (absolute) max error values in seconds
 double max_error_lat = std::numeric_limits<double>::min(),
@@ -59,15 +63,15 @@ struct TestLine {
       printf("\nOutput: lon=%+8.3f should be %+8.3f", ngpt::rad2deg(lon2),
              ngpt::rad2deg(ar[4]));
     }
-    if ((err_lat = std::abs(rad2sec(ar[3] - lat2))) > max_error_lat) {
+    if ((err_lat = std::abs(ar[3] - lat2)) > max_error_lat) {
       max_error_lat = err_lat;
       lat_at1 = ar[3];
     }
-    if ((err_lon = std::abs(rad2sec(ar[4] - lon2))) > max_error_lon) {
+    if ((err_lon = std::abs(ar[4] - lon2)) > max_error_lon) {
       max_error_lon = err_lon;
       lat_at2 = ar[3];
     }
-    if ((err_az = std::abs(rad2sec(ar[5] - az2))) > max_error_az) {
+    if ((err_az = std::abs(ar[5] - az2)) > max_error_az) {
       max_error_az = err_az;
       lat_at3 = ar[3];
     }
@@ -78,6 +82,19 @@ struct TestLine {
         lat2, deg2rad(err_lat / 3600e0));
     acc_error_lon_m += parallel_arc_length<ellipsoid::wgs84, double>(
         lat2, deg2rad(err_lon / 3600e0));
+    // check against boost
+    result_drc =
+        vincenty_direct_type::apply(ar[1], ar[0], ar[6], ar[2], spheroid);
+    if ((err_lat = std::abs(lat2 - result_drc.lat2)) > max_error_lat_gb) {
+      max_error_lat_gb = err_lat;
+    }
+    if ((err_lon = std::abs(lon2 - result_drc.lon2)) >
+        max_error_lon_gb) {
+      max_error_lon_gb = err_lon;
+    }
+    if ((err_az = std::abs(az2 - result_drc.reverse_azimuth)) > max_error_az_gb) {
+      max_error_az_gb = err_az;
+    }
     return;
   }
 
@@ -218,6 +235,9 @@ int main() {
     max_error_lat = std::numeric_limits<double>::min();
     max_error_lon = std::numeric_limits<double>::min();
     max_error_az = std::numeric_limits<double>::min();
+    max_error_lat_gb = std::numeric_limits<double>::min();
+    max_error_lon_gb = std::numeric_limits<double>::min();
+    max_error_az_gb = std::numeric_limits<double>::min();
     acc_error_lat = acc_error_lon = acc_error_az = acc_error_lat_m =
         acc_error_lon_m = 0e0;
     do {
@@ -237,14 +257,16 @@ int main() {
     double mean_error_lat_m = acc_error_lat_m / (double)batch.first;
     double mean_error_lon_m = acc_error_lon_m / (double)batch.first;
     printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Max Err.",
-           batch.second.c_str(), max_error_lat, max_error_lon, max_error_az,
+           batch.second.c_str(), rad2sec(max_error_lat), rad2sec(max_error_lon), rad2sec(max_error_az),
            infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
-               lat_at1, deg2rad(max_error_lat / 3600e0)),
+               lat_at1, max_error_lat),
            parallel_arc_length<ellipsoid::wgs84, double>(
-               lat_at2, deg2rad(max_error_lon / 3600e0)));
+               lat_at2, max_error_lon));
     printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Mean Err.",
-           batch.second.c_str(), mean_error_lat, mean_error_lon, mean_error_az,
+           batch.second.c_str(), rad2sec(mean_error_lat), rad2sec(mean_error_lon), rad2sec(mean_error_az),
            mean_error_lat_m, mean_error_lon_m);
+    printf("\n%50s %17.15f %17.15f %17.15f Max ngptVsboost Err. ",
+           batch.second.c_str(), rad2sec(max_error_lat_gb), rad2sec(max_error_lon_gb), rad2sec(max_error_az_gb));
   }
   printf("\nNumber of lines read: %15d", (int)line_count);
 

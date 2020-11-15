@@ -131,8 +131,10 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libggeodesy_la_LIBADD =
 dist_libggeodesy_la_OBJECTS = libggeodesy_la-top2daz.lo \
-	libggeodesy_la-top2car.lo libggeodesy_la-vincenty.lo \
-	libggeodesy_la-trnsfdtls.lo libggeodesy_la-meridian_arc.lo \
+	libggeodesy_la-top2car.lo libggeodesy_la-vincenty_direct.lo \
+	libggeodesy_la-vincenty_inverse.lo \
+	libggeodesy_la-karney_direct.lo libggeodesy_la-trnsfdtls.lo \
+	libggeodesy_la-meridian_arc_length.lo \
 	libggeodesy_la-great_circle.lo libggeodesy_la-wgs84_to_pz90.lo
 libggeodesy_la_OBJECTS = $(dist_libggeodesy_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -159,11 +161,13 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/libggeodesy_la-great_circle.Plo \
-	./$(DEPDIR)/libggeodesy_la-meridian_arc.Plo \
+	./$(DEPDIR)/libggeodesy_la-karney_direct.Plo \
+	./$(DEPDIR)/libggeodesy_la-meridian_arc_length.Plo \
 	./$(DEPDIR)/libggeodesy_la-top2car.Plo \
 	./$(DEPDIR)/libggeodesy_la-top2daz.Plo \
 	./$(DEPDIR)/libggeodesy_la-trnsfdtls.Plo \
-	./$(DEPDIR)/libggeodesy_la-vincenty.Plo \
+	./$(DEPDIR)/libggeodesy_la-vincenty_direct.Plo \
+	./$(DEPDIR)/libggeodesy_la-vincenty_inverse.Plo \
 	./$(DEPDIR)/libggeodesy_la-wgs84_to_pz90.Plo
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -351,8 +355,11 @@ libggeodesy_la_CXXFLAGS = \
 
 pkginclude_HEADERS = \
         geoconst.hpp \
+        ellipsoid_core.hpp \
         ellipsoid.hpp \
         geodesy.hpp \
+        units.hpp \
+	meridian_arc_length.hpp \
         car2ell.hpp \
         car2top.hpp \
         ell2car.hpp \
@@ -363,9 +370,11 @@ pkginclude_HEADERS = \
 dist_libggeodesy_la_SOURCES = \
 	top2daz.cpp \
 	top2car.cpp \
-        vincenty.cpp \
+        vincenty_direct.cpp \
+        vincenty_inverse.cpp \
+        karney_direct.cpp \
 	trnsfdtls.cpp \
-	meridian_arc.cpp \
+	meridian_arc_length.cpp \
         great_circle.cpp \
 	wgs84_to_pz90.cpp
 
@@ -448,11 +457,13 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-great_circle.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-meridian_arc.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-karney_direct.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-meridian_arc_length.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-top2car.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-top2daz.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-trnsfdtls.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-vincenty.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-vincenty_direct.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-vincenty_inverse.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libggeodesy_la-wgs84_to_pz90.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -496,12 +507,26 @@ libggeodesy_la-top2car.lo: top2car.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-top2car.lo `test -f 'top2car.cpp' || echo '$(srcdir)/'`top2car.cpp
 
-libggeodesy_la-vincenty.lo: vincenty.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-vincenty.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-vincenty.Tpo -c -o libggeodesy_la-vincenty.lo `test -f 'vincenty.cpp' || echo '$(srcdir)/'`vincenty.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libggeodesy_la-vincenty.Tpo $(DEPDIR)/libggeodesy_la-vincenty.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='vincenty.cpp' object='libggeodesy_la-vincenty.lo' libtool=yes @AMDEPBACKSLASH@
+libggeodesy_la-vincenty_direct.lo: vincenty_direct.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-vincenty_direct.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-vincenty_direct.Tpo -c -o libggeodesy_la-vincenty_direct.lo `test -f 'vincenty_direct.cpp' || echo '$(srcdir)/'`vincenty_direct.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libggeodesy_la-vincenty_direct.Tpo $(DEPDIR)/libggeodesy_la-vincenty_direct.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='vincenty_direct.cpp' object='libggeodesy_la-vincenty_direct.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-vincenty.lo `test -f 'vincenty.cpp' || echo '$(srcdir)/'`vincenty.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-vincenty_direct.lo `test -f 'vincenty_direct.cpp' || echo '$(srcdir)/'`vincenty_direct.cpp
+
+libggeodesy_la-vincenty_inverse.lo: vincenty_inverse.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-vincenty_inverse.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-vincenty_inverse.Tpo -c -o libggeodesy_la-vincenty_inverse.lo `test -f 'vincenty_inverse.cpp' || echo '$(srcdir)/'`vincenty_inverse.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libggeodesy_la-vincenty_inverse.Tpo $(DEPDIR)/libggeodesy_la-vincenty_inverse.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='vincenty_inverse.cpp' object='libggeodesy_la-vincenty_inverse.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-vincenty_inverse.lo `test -f 'vincenty_inverse.cpp' || echo '$(srcdir)/'`vincenty_inverse.cpp
+
+libggeodesy_la-karney_direct.lo: karney_direct.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-karney_direct.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-karney_direct.Tpo -c -o libggeodesy_la-karney_direct.lo `test -f 'karney_direct.cpp' || echo '$(srcdir)/'`karney_direct.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libggeodesy_la-karney_direct.Tpo $(DEPDIR)/libggeodesy_la-karney_direct.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='karney_direct.cpp' object='libggeodesy_la-karney_direct.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-karney_direct.lo `test -f 'karney_direct.cpp' || echo '$(srcdir)/'`karney_direct.cpp
 
 libggeodesy_la-trnsfdtls.lo: trnsfdtls.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-trnsfdtls.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-trnsfdtls.Tpo -c -o libggeodesy_la-trnsfdtls.lo `test -f 'trnsfdtls.cpp' || echo '$(srcdir)/'`trnsfdtls.cpp
@@ -510,12 +535,12 @@ libggeodesy_la-trnsfdtls.lo: trnsfdtls.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-trnsfdtls.lo `test -f 'trnsfdtls.cpp' || echo '$(srcdir)/'`trnsfdtls.cpp
 
-libggeodesy_la-meridian_arc.lo: meridian_arc.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-meridian_arc.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-meridian_arc.Tpo -c -o libggeodesy_la-meridian_arc.lo `test -f 'meridian_arc.cpp' || echo '$(srcdir)/'`meridian_arc.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libggeodesy_la-meridian_arc.Tpo $(DEPDIR)/libggeodesy_la-meridian_arc.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='meridian_arc.cpp' object='libggeodesy_la-meridian_arc.lo' libtool=yes @AMDEPBACKSLASH@
+libggeodesy_la-meridian_arc_length.lo: meridian_arc_length.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-meridian_arc_length.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-meridian_arc_length.Tpo -c -o libggeodesy_la-meridian_arc_length.lo `test -f 'meridian_arc_length.cpp' || echo '$(srcdir)/'`meridian_arc_length.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libggeodesy_la-meridian_arc_length.Tpo $(DEPDIR)/libggeodesy_la-meridian_arc_length.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='meridian_arc_length.cpp' object='libggeodesy_la-meridian_arc_length.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-meridian_arc.lo `test -f 'meridian_arc.cpp' || echo '$(srcdir)/'`meridian_arc.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -c -o libggeodesy_la-meridian_arc_length.lo `test -f 'meridian_arc_length.cpp' || echo '$(srcdir)/'`meridian_arc_length.cpp
 
 libggeodesy_la-great_circle.lo: great_circle.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libggeodesy_la_CXXFLAGS) $(CXXFLAGS) -MT libggeodesy_la-great_circle.lo -MD -MP -MF $(DEPDIR)/libggeodesy_la-great_circle.Tpo -c -o libggeodesy_la-great_circle.lo `test -f 'great_circle.cpp' || echo '$(srcdir)/'`great_circle.cpp
@@ -687,11 +712,13 @@ clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/libggeodesy_la-great_circle.Plo
-	-rm -f ./$(DEPDIR)/libggeodesy_la-meridian_arc.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-karney_direct.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-meridian_arc_length.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-top2car.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-top2daz.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-trnsfdtls.Plo
-	-rm -f ./$(DEPDIR)/libggeodesy_la-vincenty.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-vincenty_direct.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-vincenty_inverse.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-wgs84_to_pz90.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -739,11 +766,13 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/libggeodesy_la-great_circle.Plo
-	-rm -f ./$(DEPDIR)/libggeodesy_la-meridian_arc.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-karney_direct.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-meridian_arc_length.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-top2car.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-top2daz.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-trnsfdtls.Plo
-	-rm -f ./$(DEPDIR)/libggeodesy_la-vincenty.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-vincenty_direct.Plo
+	-rm -f ./$(DEPDIR)/libggeodesy_la-vincenty_inverse.Plo
 	-rm -f ./$(DEPDIR)/libggeodesy_la-wgs84_to_pz90.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

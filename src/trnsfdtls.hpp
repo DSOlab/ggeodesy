@@ -9,7 +9,7 @@
 
 namespace ngpt {
 
-namespace detail {
+namespace core {
 
 /// Compute the rotation matrix R, to convert a cartesian vector to a
 /// topocentric one, i.e.
@@ -46,7 +46,7 @@ void car2top_matrix(double sinf, double sinl, double cosf, double cosl,
 ///
 void car2top_cov_matrix(double sin2f, double sin2l, double cos2f, double cos2l,
                         double *coef) noexcept;
-} // namespace detail
+} // namespace core 
 
 } // namespace ngpt
 

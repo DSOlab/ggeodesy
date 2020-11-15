@@ -8,7 +8,7 @@
 #define __CARTESIAN_TO_ELLIPSOIDAL__
 
 #include "ellipsoid.hpp"
-#include "geoconst.hpp" // Needed for ngpt::DPI
+#include "geoconst.hpp"
 #include <cmath>
 #ifdef DEBUG
 #include <iostream>

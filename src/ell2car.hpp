@@ -33,13 +33,13 @@ void ell2car(double phi, double lambda, double h, double &x, double &y,
   constexpr double e2{ngpt::eccentricity_squared<E>()};
 
   // Radius of curvature in the prime vertical.
-  double N{ngpt::N<E>(phi)};
+  const double N{ngpt::N<E>(phi)};
 
   // Trigonometric numbers.
-  double sinf{std::sin(phi)};
-  double cosf{std::cos(phi)};
-  double sinl{std::sin(lambda)};
-  double cosl{std::cos(lambda)};
+  const double sinf{std::sin(phi)};
+  const double cosf{std::cos(phi)};
+  const double sinl{std::sin(lambda)};
+  const double cosl{std::cos(lambda)};
 
   // Compute geocentric rectangular coordinates.
   x = (N + h) * cosf * cosl;
@@ -69,13 +69,13 @@ void ell2car(double phi, double lambda, double h, const Ellipsoid &e, double &x,
   double e2{e.eccentricity_squared()};
 
   // Radius of curvature in the prime vertical.
-  double N{e.N(phi)};
+  const double N{e.N(phi)};
 
   // Trigonometric numbers.
-  double sinf{std::sin(phi)};
-  double cosf{std::cos(phi)};
-  double sinl{std::sin(lambda)};
-  double cosl{std::cos(lambda)};
+  const double sinf{std::sin(phi)};
+  const double cosf{std::cos(phi)};
+  const double sinl{std::sin(lambda)};
+  const double cosl{std::cos(lambda)};
 
   // Compute geocentric rectangular coordinates.
   x = (N + h) * cosf * cosl;

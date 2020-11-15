@@ -2,7 +2,7 @@
 #include <cmath>
 
 /// @brief Rotation matrix for cartesian to topocentric transformation.
-void ngpt::detail::car2top_matrix(double sinf, double sinl, double cosf,
+void ngpt::core::car2top_matrix(double sinf, double sinl, double cosf,
                                   double cosl, double *coef) noexcept {
   coef[0] = -sinf * cosl;
   coef[1] = -sinf * sinl;
@@ -17,7 +17,7 @@ void ngpt::detail::car2top_matrix(double sinf, double sinl, double cosf,
 
 /// @brief Rotation matrix for cartesian to topocentric transformation of
 ///        variances.
-void ngpt::detail::car2top_cov_matrix(double sin2f, double sin2l, double cos2f,
+void ngpt::core::car2top_cov_matrix(double sin2f, double sin2l, double cos2f,
                                       double cos2l, double *coef) noexcept {
   coef[0] = sin2f * cos2l;
   coef[1] = sin2f * sin2l;

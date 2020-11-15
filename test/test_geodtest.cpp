@@ -1,6 +1,7 @@
 #include "geodesy.hpp"
 #include "test_help.hpp"
 #include "vincenty.hpp"
+#include "units.hpp"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -15,12 +16,6 @@ using namespace ngpt;
 constexpr double A = ellipsoid_traits<ellipsoid::wgs84>::a,
                  F = ellipsoid_traits<ellipsoid::wgs84>::f,
                  B = semi_minor<ellipsoid::wgs84>();
-
-/// transform radians to seconds (of degrees)
-double rad2seconds(double rad) noexcept {
-  double ddeg = rad2deg(rad);
-  return ddeg * 3600e0;
-}
 
 /// hold (absolute) max error values in seconds
 double max_error_lat = std::numeric_limits<double>::min(),
@@ -52,15 +47,15 @@ struct TestLine {
       printf("\nOutput: lon=%+8.3f should be %+8.3f", ngpt::rad2deg(lon2),
              ngpt::rad2deg(ar[4]));
     }
-    if ((err_lat = std::abs(rad2seconds(ar[3] - lat2))) > max_error_lat) {
+    if ((err_lat = std::abs(rad2sec(ar[3] - lat2))) > max_error_lat) {
       max_error_lat = err_lat;
       lat_at1 = ar[3];
     }
-    if ((err_lon = std::abs(rad2seconds(ar[4] - lon2))) > max_error_lon) {
+    if ((err_lon = std::abs(rad2sec(ar[4] - lon2))) > max_error_lon) {
       max_error_lon = err_lon;
       lat_at2 = ar[3];
     }
-    if ((err_az = std::abs(rad2seconds(ar[5] - az2))) > max_error_az) {
+    if ((err_az = std::abs(rad2sec(ar[5] - az2))) > max_error_az) {
       max_error_az = err_az;
       lat_at3 = ar[3];
     }

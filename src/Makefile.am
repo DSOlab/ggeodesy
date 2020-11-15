@@ -29,8 +29,11 @@ libggeodesy_la_CXXFLAGS = \
 ##
 pkginclude_HEADERS = \
         geoconst.hpp \
+        ellipsoid_core.hpp \
         ellipsoid.hpp \
         geodesy.hpp \
+        units.hpp \
+	meridian_arc_length.hpp \
         car2ell.hpp \
         car2top.hpp \
         ell2car.hpp \
@@ -45,8 +48,10 @@ pkginclude_HEADERS = \
 dist_libggeodesy_la_SOURCES = \
 	top2daz.cpp \
 	top2car.cpp \
-        vincenty.cpp \
+        vincenty_direct.cpp \
+        vincenty_inverse.cpp \
+        karney_direct.cpp \
 	trnsfdtls.cpp \
-	meridian_arc.cpp \
+	meridian_arc_length.cpp \
         great_circle.cpp \
 	wgs84_to_pz90.cpp
