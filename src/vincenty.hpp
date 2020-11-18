@@ -54,7 +54,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
                        double semi_major, double flattening, double semi_minor,
                        double &lat2, double &lon2,
                        double convergence_limit = 1e-12);
-double direct_karney(double lat1, double lon1, double a1, double s,
+double direct_karney(double lat1, double a1, double s,
                        double semi_major, double flattening, double semi_minor,
                        double &lat2, double &lon2);
 double direct_vincenty2(double lat1, double lon1, double a1, double s,

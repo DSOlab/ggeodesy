@@ -1,4 +1,5 @@
 #include "geodesy.hpp"
+#include "units.hpp"
 #include <cassert>
 #include <iostream>
 #include <random>

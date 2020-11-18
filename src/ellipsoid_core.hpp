@@ -20,7 +20,7 @@ namespace core {
 /// @brief Compute the squared eccentricity.
 ///
 /// Compute the squared (first) eccentricity (i.e. \f$e^2\f$) given the
-/// flattening of an ellipsoid, aka \f$ e^2 = (2-f)*f \f$
+/// flattening of an ellipsoid, aka \f$ e^2 = \frac{a^2-b^2}{a^2} = (2-f)*f \f$
 /// @param[in] f flattening
 /// @return      squared eccentricity
 constexpr double eccentricity_squared(double f) noexcept {
@@ -30,7 +30,7 @@ constexpr double eccentricity_squared(double f) noexcept {
 /// @brief Compute the third flattening
 ///
 /// Compute the third flattening (usually denoted as \f$ n \f$), given the
-/// flattening \f$ f \f$, aka \f$ n = f/(2-f) \f$.
+/// flattening \f$ f \f$, aka \f$ n = \frac{a-b}{a+b} = f/(2-f) \f$.
 /// @param[in] f flattening
 /// @return third flattening \f$ n \f$
 /// Reference [2]

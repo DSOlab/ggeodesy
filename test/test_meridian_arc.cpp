@@ -1,5 +1,6 @@
 #include "ellipsoid.hpp"
 #include "geodesy.hpp"
+#include "meridian_arc_length.hpp"
 #include "test_help.hpp"
 #include <chrono>
 #include <iostream>

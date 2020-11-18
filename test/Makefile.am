@@ -1,5 +1,6 @@
 noinst_PROGRAMS = transform \
-        testGeodTest
+        testGeodTest \
+        testKarney
 
 TESTS = testEllipsoid \
         testUnits \
@@ -60,6 +61,10 @@ testSphericalEarth_LDADD     = $(top_srcdir)/src/libggeodesy.la
 testGeodTest_SOURCES   = test_geodtest.cpp
 testGeodTest_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
 testGeodTest_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+
+testKarney_SOURCES   = test_karney.cpp
+testKarney_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
+testKarney_LDADD     = $(top_srcdir)/src/libggeodesy.la 
 
 testLatitudes_SOURCES   = test_latitudes.cpp
 testLatitudes_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
