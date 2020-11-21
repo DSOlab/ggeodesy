@@ -123,7 +123,7 @@ void series_expansion_I3(double epsilon, double n, const double* sigmas, double*
 /// @see https://link.springer.com/article/10.1007/s00190-012-0578-z
 ///      Karney 2012, Algorithms for geodesics, Journal of Geodesy volume 87,
 ///      pages43–55(2013)
-double ngpt::core::direct_karney(double lat1/*, double lon1*/, double a1, double s,
+double ngpt::core::direct_karney(double lat1, double lon1, double a1, double s,
                                  double semi_major, double flattening,
                                  double semi_minor, double &lat2,
                                  double &lon2) {
@@ -153,9 +153,9 @@ double ngpt::core::direct_karney(double lat1/*, double lon1*/, double a1, double
   // const double sigma1 = std::atan2(sinbeta1, cosalpha * cosbeta1);
   const double sigma1 = __sigma1;
   //printf("\nsigma1=%15.11f", rad2deg(sigma1));
-  //const double sinsigma1 = std::sin(sigma1);
-  //const double cossigma1 = std::cos(sigma1);
-  //const double omega1 = std::atan2(sinalpha0 * sinsigma1, cossigma1);
+  const double sinsigma1 = std::sin(sigma1);
+  const double cossigma1 = std::cos(sigma1);
+  const double omega1 = std::atan2(sinalpha0 * sinsigma1, cossigma1);
   //printf("\nomega1=%15.11f", rad2deg(omega1));
   // cmplx_norm =
   // std::sqrt((cosalpha0*cossigma)*(cosalpha0*cossigma)+sinalpha0*sinalpha0);
@@ -212,23 +212,22 @@ double ngpt::core::direct_karney(double lat1/*, double lon1*/, double a1, double
   //printf("\nA3=%17.11f", A3);
   double sigmas[] = {sigma1, sigma2}, giotas[2];
   series_expansion_I3(epsilon, n, sigmas, giotas); // perform both expansions
-  // const double giota3_s1 = A3*series_expansion_I3(epsilon, n, sigma);
-  //const double giota3_s1 = A3*giotas[0];
+  const double giota3_s1 = A3*giotas[0];
   //printf("\nI3(s1)=%17.11f", giota3_s1);
-  // const double giota3_s2 = A3*series_expansion_I3(epsilon, n, sigma2);
   const double giota3_s2 = A3*giotas[1];
   //printf("\nI3(s2)=%17.11f", giota3_s2);
-  //const double lambda1 = omega1 - f*std::sin(alpha0)*giota3_s1;
+  const double lambda1 = omega1 - f*std::sin(alpha0)*giota3_s1;
   //printf("\nlambda1=%17.11f", rad2deg(lambda1));
   const double lambda2 = omega2 - f*std::sin(alpha0)*giota3_s2;
   //printf("\nlambda2=%17.11f", rad2deg(lambda2));
-  // const double lambda12 = lambda2 - lambda1;
+  const double lambda12 = lambda2 - lambda1;
   //printf("\nlambda12=%17.11f", rad2deg(lambda12));
 
   // results
   lat2 = std::atan2(std::tan(beta2), (1e0-f));
   //printf("\nlat2=%17.11f", rad2deg(lat2));
-  lon2 = lambda2;
+  lon2 = ngpt::normalize_angle(lambda2, -ngpt::DPI, ngpt::DPI);
+  lon2 = ngpt::normalize_angle(lambda12, -ngpt::DPI, ngpt::DPI) + ngpt::normalize_angle(lon1, -ngpt::DPI, ngpt::DPI);
 
   return alpha2;
 }
