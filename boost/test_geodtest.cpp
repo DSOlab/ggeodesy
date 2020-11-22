@@ -118,7 +118,10 @@ struct TestLine {
     double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
     result_drc =
-        karney_direct_type::apply(ar[1], ar[0], ar[6], ar[2], spheroid);
+        karney_direct_type::apply(rad2deg(ar[1]), rad2deg(ar[0]), ar[6], rad2deg(ar[2]), spheroid);
+    result_drc.lat2 = deg2rad(result_drc.lat2);
+    result_drc.lon2 = deg2rad(result_drc.lon2);
+    result_drc.reverse_azimuth = deg2rad(result_drc.reverse_azimuth);
     if ((err_lat = std::abs(ar[3] - result_drc.lat2)) > mx_er_lat_bk) {
       mx_er_lat_bk = err_lat;
     }
