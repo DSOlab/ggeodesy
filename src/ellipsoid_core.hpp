@@ -10,7 +10,7 @@
 #ifndef __ELLIPSOID_GEOMETRY_CORE_HPP__
 #define __ELLIPSOID_GEOMETRY_CORE_HPP__
 
-#include<cmath>
+#include <cmath>
 
 namespace ngpt {
 
@@ -166,8 +166,8 @@ constexpr
   return std::atan((1e0 - f) * std::tan(lat));
 }
 
-}// namespace core
+} // namespace core
 
-}// namespace ngpt
+} // namespace ngpt
 
 #endif

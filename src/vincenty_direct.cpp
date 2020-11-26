@@ -1,6 +1,6 @@
-#include "vincenty.hpp"
 #include "geoconst.hpp"
 #include "units.hpp"
+#include "vincenty.hpp"
 #include <cmath>
 #include <stdexcept>
 #ifdef DEBUG

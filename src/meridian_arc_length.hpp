@@ -21,7 +21,7 @@ double meridian_arc_length_impl2(double a, double f, double lat) noexcept;
 double meridian_arc_length_impl3(double a, double f, double lat) noexcept;
 double meridian_arc_length_impl4(double a, double f, double lat) noexcept;
 
-}// namespace core
+} // namespace core
 
 template <ellipsoid E>
 double meridian_arc_length(double lat, int alg = 0) noexcept {
@@ -39,7 +39,6 @@ double meridian_arc_length(double lat, int alg = 0) noexcept {
   }
 }
 
-
-}// namespace ngpt
+} // namespace ngpt
 
 #endif

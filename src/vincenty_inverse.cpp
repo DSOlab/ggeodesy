@@ -1,5 +1,5 @@
-#include "vincenty.hpp"
 #include "geoconst.hpp"
+#include "vincenty.hpp"
 #include <cmath>
 #include <stdexcept>
 #ifdef DEBUG
@@ -43,8 +43,10 @@ using ngpt::DPI;
 ///
 /// @see [1] https://en.wikipedia.org/wiki/Vincenty's_formulae
 /// @see [2] https://futureboy.us/fsp/colorize.fsp?fileName=navigation.frink
-/// @see [3] https://github.com/boostorg/geometry/blob/develop/include/boost/geometry/formulas/vincenty_inverse.hpp
-/// @see [4] https://geographiclib.sourceforge.io/geodesic-papers/vincenty75b.pdf
+/// @see [3]
+/// https://github.com/boostorg/geometry/blob/develop/include/boost/geometry/formulas/vincenty_inverse.hpp
+/// @see [4]
+/// https://geographiclib.sourceforge.io/geodesic-papers/vincenty75b.pdf
 double ngpt::core::inverse_vincenty_nearly_antipodal(
     double lat1, double lon1, double lat2, double lon2, double semi_major,
     double flattening, double semi_minor, double &a12, double &a21,
@@ -96,21 +98,21 @@ double ngpt::core::inverse_vincenty_nearly_antipodal(
   if (lat2 == -lat1) {
     sigma = DPI;
     lambdad = 0e0;
-    //const double a1 = 1e0 - f/4e0 -f*f/16e0;
-    //const double a3 = f/4e0 - f*f/8e0;
-    //const double a5 = 3e0*f / 16e0;
-    const double b1 = 1e0 + f/4e0 +f*f/8e0;
+    // const double a1 = 1e0 - f/4e0 -f*f/16e0;
+    // const double a3 = f/4e0 - f*f/8e0;
+    // const double a5 = 3e0*f / 16e0;
+    const double b1 = 1e0 + f / 4e0 + f * f / 8e0;
     const double b3 = 1e0 - b1;
     const double b5 = 0e0;
-    const double Q = Ld / (f*DPI);
-    const double sina = b1*Q+b3*Q*Q*Q + b5*Q*Q*Q*Q*Q;
+    const double Q = Ld / (f * DPI);
+    const double sina = b1 * Q + b3 * Q * Q * Q + b5 * Q * Q * Q * Q * Q;
     a12 = std::asin(sina);
     a12 = std::fmod(a12 + D2PI, D2PI);
     const double epsilon = (a * a - b * b) / (b * b);
     const double E = std::sqrt(1e0 + epsilon * cosSqAlpha);
     const double F = (E - 1e0) / (E + 1e0);
     const double A = (1e0 + 0.25e0 * F * F) / (1e0 - F);
-    return b*A*DPI;
+    return b * A * DPI;
   }
   do {
     if (++iteration > MAX_ITERATIONS) {
@@ -230,8 +232,8 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
   const double tanU1 = one_min_f * std::tan(lat1);
   const double tanU2 = one_min_f * std::tan(lat2);
   // calculate sin U and cos U using trigonometric identities
-  const double temp_den_U1 = std::sqrt(1e0 + tanU1*tanU1);
-  const double temp_den_U2 = std::sqrt(1e0 + tanU2*tanU2);
+  const double temp_den_U1 = std::sqrt(1e0 + tanU1 * tanU1);
+  const double temp_den_U2 = std::sqrt(1e0 + tanU2 * tanU2);
   // cos = 1 / sqrt(1 + tan^2)
   const double cosU1 = 1e0 / temp_den_U1;
   const double cosU2 = 1e0 / temp_den_U2;
@@ -251,7 +253,7 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
       lambdaP, sinLambda, cosLambda;
 
   do {
-    if (++iteration > MAX_ITERATIONS || std::abs(lambda)> DPI) {
+    if (++iteration > MAX_ITERATIONS || std::abs(lambda) > DPI) {
       /*try {
         return inverse_vincenty_nearly_antipodal(
             lat1, lon1, lat2, lon2, semi_major, flattening, semi_minor, a12,
@@ -260,10 +262,9 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
         printf("\n[ERROR] Failed to converge for nearly antipodal!");
       }*/
       auto itstr = std::to_string(iteration);
-      throw std::out_of_range(
-          "[ERROR] ngpt::core::inverse_vincenty cannot "
-          "converge after " +
-          itstr + " iterations!");
+      throw std::out_of_range("[ERROR] ngpt::core::inverse_vincenty cannot "
+                              "converge after " +
+                              itstr + " iterations!");
     }
     sinLambda = std::sin(lambda);
     cosLambda = std::cos(lambda);
@@ -286,46 +287,46 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
                                   (cos2SigmaM +
                                    C * cosSigma *
                                        (-1e0 + 2e0 * cos2SigmaM * cos2SigmaM)));
-/*
-#ifdef DEBUG
-  bool isNan = false;
-  if (sinLambda != sinLambda) {
-    printf("\n[ERROR] sinLambda is Nan");
-    isNan = true;
-  }
-  if (cosLambda != cosLambda) {
-    printf("\n[ERROR] cosLambda is Nan");
-    isNan = true;
-  }
-  if (sinSigma != sinSigma) {
-    printf("\n[ERROR] sinSigma is Nan");
-    isNan = true;
-  }
-  if (cosSigma != cosSigma) {
-    printf("\n[ERROR] cosSigma is Nan");
-    isNan = true;
-  }
-  if (sinAlpha != sinAlpha) {
-    printf("\n[ERROR] sinAlpha is Nan");
-    isNan = true;
-  }
-  if (cosSqAlpha != cosSqAlpha) {
-    printf("\n[ERROR] cosSqAlpha is Nan");
-    isNan = true;
-  }
-  if (lambda != lambda) {
-    printf("\n[ERROR] Lambda is Nan");
-    isNan = true;
-  }
-  if (isNan) {
-      auto itstr = std::to_string(iteration);
-      throw std::out_of_range(
-          "[ERROR] ngpt::core::inverse_vincenty cannot "
-          "converge after " +
-          itstr + " iterations!");
-  }
-#endif
-  */
+    /*
+    #ifdef DEBUG
+      bool isNan = false;
+      if (sinLambda != sinLambda) {
+        printf("\n[ERROR] sinLambda is Nan");
+        isNan = true;
+      }
+      if (cosLambda != cosLambda) {
+        printf("\n[ERROR] cosLambda is Nan");
+        isNan = true;
+      }
+      if (sinSigma != sinSigma) {
+        printf("\n[ERROR] sinSigma is Nan");
+        isNan = true;
+      }
+      if (cosSigma != cosSigma) {
+        printf("\n[ERROR] cosSigma is Nan");
+        isNan = true;
+      }
+      if (sinAlpha != sinAlpha) {
+        printf("\n[ERROR] sinAlpha is Nan");
+        isNan = true;
+      }
+      if (cosSqAlpha != cosSqAlpha) {
+        printf("\n[ERROR] cosSqAlpha is Nan");
+        isNan = true;
+      }
+      if (lambda != lambda) {
+        printf("\n[ERROR] Lambda is Nan");
+        isNan = true;
+      }
+      if (isNan) {
+          auto itstr = std::to_string(iteration);
+          throw std::out_of_range(
+              "[ERROR] ngpt::core::inverse_vincenty cannot "
+              "converge after " +
+              itstr + " iterations!");
+      }
+    #endif
+      */
   } while (std::abs(lambda - lambdaP) > convergence_limit);
 
   const double uSq{cosSqAlpha * ((a * a - b * b) / (b * b))};

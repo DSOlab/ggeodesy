@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <boost/geometry.hpp>
+#include <boost/geometry/formulas/karney_direct.hpp>
 
 using namespace ngpt;
 

@@ -8,10 +8,8 @@
 #include <chrono>
 #include <iostream>
 #include <random>
-#ifdef DEBUG
 #include <boost/geometry.hpp>
 #include <boost/geometry/formulas/karney_direct.hpp>
-#endif
 
 using namespace boost::geometry;
 using namespace ngpt;

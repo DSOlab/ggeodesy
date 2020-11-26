@@ -1,6 +1,6 @@
 #include "geodesy.hpp"
-#include "vincenty.hpp"
 #include "units.hpp"
+#include "vincenty.hpp"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -8,10 +8,8 @@
 #include <fstream>
 #include <iostream>
 #include <random>
-#ifdef DEBUG
 #include <boost/geometry.hpp>
 #include <boost/geometry/formulas/karney_direct.hpp>
-#endif
 
 using namespace ngpt;
 using namespace boost::geometry;
@@ -34,26 +32,27 @@ typedef formula::karney_direct<double, true, true, false, false, 6u>
     karney_direct_type;
 
 /// hold (absolute) max error values in seconds
-double mx_er_lat_v = std::numeric_limits<double>::min(), // max error for vincenty in rad
-       mx_er_lon_v = std::numeric_limits<double>::min(),
+double mx_er_lat_v =
+           std::numeric_limits<double>::min(), // max error for vincenty in rad
+    mx_er_lon_v = std::numeric_limits<double>::min(),
        mx_er_az_v = std::numeric_limits<double>::min();
-double mx_er_lat_k = std::numeric_limits<double>::min(), // max error for karney in rad
-       mx_er_lon_k = std::numeric_limits<double>::min(),
+double mx_er_lat_k =
+           std::numeric_limits<double>::min(), // max error for karney in rad
+    mx_er_lon_k = std::numeric_limits<double>::min(),
        mx_er_az_k = std::numeric_limits<double>::min();
 double mx_er_lat_bv = std::numeric_limits<double>::min(), // max error for boost
-       mx_er_lon_bv = std::numeric_limits<double>::min(),
+    mx_er_lon_bv = std::numeric_limits<double>::min(),
        mx_er_az_bv = std::numeric_limits<double>::min();
 double mx_er_lat_bk = std::numeric_limits<double>::min(), // max error for boost
-       mx_er_lon_bk = std::numeric_limits<double>::min(),
+    mx_er_lon_bk = std::numeric_limits<double>::min(),
        mx_er_az_bk = std::numeric_limits<double>::min();
-double ac_er_lat_v, ac_er_lon_v, ac_er_az_v,             // accumulated error for vincenty
-  ac_er_lat_k, ac_er_lon_k, ac_er_az_k,                  // accumulated error for karney
-  ac_er_lat_bv, ac_er_lon_bv, ac_er_az_bv,                  // accumulated error for boost
-  ac_er_lat_bk, ac_er_lon_bk, ac_er_az_bk,                  // accumulated error for boost
-  ac_er_lat_vm, ac_er_lon_vm,                            // accumulated error for vincenty in meters
-  ac_er_lat_km, ac_er_lon_km,
-  ac_er_lat_bvm, ac_er_lon_bvm,
-  ac_er_lat_bkm, ac_er_lon_bkm;
+double ac_er_lat_v, ac_er_lon_v, ac_er_az_v, // accumulated error for vincenty
+    ac_er_lat_k, ac_er_lon_k, ac_er_az_k,    // accumulated error for karney
+    ac_er_lat_bv, ac_er_lon_bv, ac_er_az_bv, // accumulated error for boost
+    ac_er_lat_bk, ac_er_lon_bk, ac_er_az_bk, // accumulated error for boost
+    ac_er_lat_vm, ac_er_lon_vm, // accumulated error for vincenty in meters
+    ac_er_lat_km, ac_er_lon_km, ac_er_lat_bvm, ac_er_lon_bvm, ac_er_lat_bkm,
+    ac_er_lon_bkm;
 double lat_at1, lat_at2, lat_at3;
 // std::size_t failed_converges = 0;
 
@@ -99,8 +98,7 @@ struct TestLine {
     if ((err_lat = std::abs(ar[3] - result_drc.lat2)) > mx_er_lat_bv) {
       mx_er_lat_bv = err_lat;
     }
-    if ((err_lon = std::abs(ar[4] - result_drc.lon2)) >
-        mx_er_lon_bv) {
+    if ((err_lon = std::abs(ar[4] - result_drc.lon2)) > mx_er_lon_bv) {
       mx_er_lon_bv = err_lon;
     }
     if ((err_az = std::abs(ar[5] - result_drc.reverse_azimuth)) > mx_er_az_bv) {
@@ -117,16 +115,15 @@ struct TestLine {
   void test_boostk_direct() const {
     double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
-    result_drc =
-        karney_direct_type::apply(rad2deg(ar[1]), rad2deg(ar[0]), ar[6], rad2deg(ar[2]), spheroid);
+    result_drc = karney_direct_type::apply(rad2deg(ar[1]), rad2deg(ar[0]),
+                                           ar[6], rad2deg(ar[2]), spheroid);
     result_drc.lat2 = deg2rad(result_drc.lat2);
     result_drc.lon2 = deg2rad(result_drc.lon2);
     result_drc.reverse_azimuth = deg2rad(result_drc.reverse_azimuth);
     if ((err_lat = std::abs(ar[3] - result_drc.lat2)) > mx_er_lat_bk) {
       mx_er_lat_bk = err_lat;
     }
-    if ((err_lon = std::abs(ar[4] - result_drc.lon2)) >
-        mx_er_lon_bk) {
+    if ((err_lon = std::abs(ar[4] - result_drc.lon2)) > mx_er_lon_bk) {
       mx_er_lon_bk = err_lon;
     }
     if ((err_az = std::abs(ar[5] - result_drc.reverse_azimuth)) > mx_er_az_bk) {
@@ -144,8 +141,8 @@ struct TestLine {
     double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
     // check against karney
-    az2 = ngpt::core::direct_karney(ar[0], ar[1], ar[2], ar[6], A, F, B,
-                                       lat2, lon2);
+    az2 = ngpt::core::direct_karney(ar[0], ar[1], ar[2], ar[6], A, F, B, lat2,
+                                    lon2);
     if ((err_lat = std::abs(ar[3] - lat2)) > mx_er_lat_k) {
       mx_er_lat_k = err_lat;
       lat_at1 = ar[3];
@@ -231,26 +228,30 @@ int main() {
     line_nr = 0;
     vec.clear();
     vec.reserve(batch.first);
-    mx_er_lat_v = std::numeric_limits<double>::min(), // max error for vincenty in rad
-                mx_er_lon_v = std::numeric_limits<double>::min(),
-                mx_er_az_v = std::numeric_limits<double>::min();
-    mx_er_lat_k = std::numeric_limits<double>::min(), // max error for karney in rad
-                mx_er_lon_k = std::numeric_limits<double>::min(),
-                mx_er_az_k = std::numeric_limits<double>::min();
+    mx_er_lat_v =
+        std::numeric_limits<double>::min(), // max error for vincenty in rad
+        mx_er_lon_v = std::numeric_limits<double>::min(),
+    mx_er_az_v = std::numeric_limits<double>::min();
+    mx_er_lat_k =
+        std::numeric_limits<double>::min(), // max error for karney in rad
+        mx_er_lon_k = std::numeric_limits<double>::min(),
+    mx_er_az_k = std::numeric_limits<double>::min();
     mx_er_lat_bv = std::numeric_limits<double>::min(), // max error for boost
-                mx_er_lon_bv = std::numeric_limits<double>::min(),
-                mx_er_az_bv = std::numeric_limits<double>::min();
+        mx_er_lon_bv = std::numeric_limits<double>::min(),
+    mx_er_az_bv = std::numeric_limits<double>::min();
     mx_er_lat_bk = std::numeric_limits<double>::min(), // max error for boost
-                mx_er_lon_bk = std::numeric_limits<double>::min(),
-                mx_er_az_bk = std::numeric_limits<double>::min();
-    ac_er_lat_v= ac_er_lon_v= ac_er_az_v=             // accumulated error for vincenty
-      ac_er_lat_k= ac_er_lon_k= ac_er_az_k=                  // accumulated error for karney
-      ac_er_lat_bv= ac_er_lon_bv= ac_er_az_bv=                  // accumulated error for boost
-      ac_er_lat_bk= ac_er_lon_bk= ac_er_az_bk=                  // accumulated error for boost
-      ac_er_lat_vm= ac_er_lon_vm=                            // accumulated error for vincenty in meters
-      ac_er_lat_km= ac_er_lon_km=
-      ac_er_lat_bvm= ac_er_lon_bvm=
-      ac_er_lat_bkm= ac_er_lon_bkm = 0e0;
+        mx_er_lon_bk = std::numeric_limits<double>::min(),
+    mx_er_az_bk = std::numeric_limits<double>::min();
+    ac_er_lat_v = ac_er_lon_v = ac_er_az_v = // accumulated error for vincenty
+        ac_er_lat_k = ac_er_lon_k = ac_er_az_k = // accumulated error for karney
+        ac_er_lat_bv = ac_er_lon_bv =
+            ac_er_az_bv = // accumulated error for boost
+        ac_er_lat_bk = ac_er_lon_bk =
+            ac_er_az_bk = // accumulated error for boost
+        ac_er_lat_vm =
+            ac_er_lon_vm = // accumulated error for vincenty in meters
+        ac_er_lat_km = ac_er_lon_km = ac_er_lat_bvm = ac_er_lon_bvm =
+            ac_er_lat_bkm = ac_er_lon_bkm = 0e0;
     do {
       fin.getline(line, MAX_CHARS);
       if (!fin.good() || from_line(line, tl)) {
@@ -271,56 +272,64 @@ int main() {
     double mean_error_lat_m = ac_er_lat_vm / (double)batch.first;
     double mean_error_lon_m = ac_er_lon_vm / (double)batch.first;
     printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Max Err. Vincenty",
-           batch.second.c_str(), rad2sec(mx_er_lat_v), rad2sec(mx_er_lon_v), rad2sec(mx_er_az_v),
-           infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
-               lat_at1, mx_er_lat_v),
-           parallel_arc_length<ellipsoid::wgs84, double>(
-               lat_at2, mx_er_lon_v));
+           batch.second.c_str(), rad2sec(mx_er_lat_v), rad2sec(mx_er_lon_v),
+           rad2sec(mx_er_az_v),
+           infinitesimal_meridian_arc<ellipsoid::wgs84, double>(lat_at1,
+                                                                mx_er_lat_v),
+           parallel_arc_length<ellipsoid::wgs84, double>(lat_at2, mx_er_lon_v));
     printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Mean Err. Vincenty",
-           batch.second.c_str(), rad2sec(mean_error_lat), rad2sec(mean_error_lon), rad2sec(mean_error_az),
-           mean_error_lat_m, mean_error_lon_m);
+           batch.second.c_str(), rad2sec(mean_error_lat),
+           rad2sec(mean_error_lon), rad2sec(mean_error_az), mean_error_lat_m,
+           mean_error_lon_m);
     mean_error_lat = ac_er_lat_k / (double)batch.first;
     mean_error_lon = ac_er_lon_k / (double)batch.first;
     mean_error_az = ac_er_az_k / (double)batch.first;
     mean_error_lat_m = ac_er_lat_km / (double)batch.first;
     mean_error_lon_m = ac_er_lon_km / (double)batch.first;
     printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Max Err. Karney",
-           batch.second.c_str(), rad2sec(mx_er_lat_k), rad2sec(mx_er_lon_k), rad2sec(mx_er_az_k),
-           infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
-               lat_at1, mx_er_lat_k),
-           parallel_arc_length<ellipsoid::wgs84, double>(
-               lat_at2, mx_er_lon_k));
+           batch.second.c_str(), rad2sec(mx_er_lat_k), rad2sec(mx_er_lon_k),
+           rad2sec(mx_er_az_k),
+           infinitesimal_meridian_arc<ellipsoid::wgs84, double>(lat_at1,
+                                                                mx_er_lat_k),
+           parallel_arc_length<ellipsoid::wgs84, double>(lat_at2, mx_er_lon_k));
     printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Mean Err. Karney",
-           batch.second.c_str(), rad2sec(mean_error_lat), rad2sec(mean_error_lon), rad2sec(mean_error_az),
-           mean_error_lat_m, mean_error_lon_m);
+           batch.second.c_str(), rad2sec(mean_error_lat),
+           rad2sec(mean_error_lon), rad2sec(mean_error_az), mean_error_lat_m,
+           mean_error_lon_m);
     mean_error_lat = ac_er_lat_bv / (double)batch.first;
     mean_error_lon = ac_er_lon_bv / (double)batch.first;
     mean_error_az = ac_er_az_bv / (double)batch.first;
     mean_error_lat_m = ac_er_lat_bvm / (double)batch.first;
     mean_error_lon_m = ac_er_lon_bvm / (double)batch.first;
-    printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Max Err. Boost (Vincenty)",
-           batch.second.c_str(), rad2sec(mx_er_lat_bv), rad2sec(mx_er_lon_bv), rad2sec(mx_er_az_bv),
-           infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
-               lat_at1, mx_er_lat_bv),
-           parallel_arc_length<ellipsoid::wgs84, double>(
-               lat_at2, mx_er_lon_bv));
-    printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Mean Err. Boost (Vincenty)",
-           batch.second.c_str(), rad2sec(mean_error_lat), rad2sec(mean_error_lon), rad2sec(mean_error_az),
-           mean_error_lat_m, mean_error_lon_m);
+    printf(
+        "\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Max Err. Boost "
+        "(Vincenty)",
+        batch.second.c_str(), rad2sec(mx_er_lat_bv), rad2sec(mx_er_lon_bv),
+        rad2sec(mx_er_az_bv),
+        infinitesimal_meridian_arc<ellipsoid::wgs84, double>(lat_at1,
+                                                             mx_er_lat_bv),
+        parallel_arc_length<ellipsoid::wgs84, double>(lat_at2, mx_er_lon_bv));
+    printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Mean Err. Boost "
+           "(Vincenty)",
+           batch.second.c_str(), rad2sec(mean_error_lat),
+           rad2sec(mean_error_lon), rad2sec(mean_error_az), mean_error_lat_m,
+           mean_error_lon_m);
     mean_error_lat = ac_er_lat_bk / (double)batch.first;
     mean_error_lon = ac_er_lon_bk / (double)batch.first;
     mean_error_az = ac_er_az_bk / (double)batch.first;
     mean_error_lat_m = ac_er_lat_bkm / (double)batch.first;
     mean_error_lon_m = ac_er_lon_bkm / (double)batch.first;
-    printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Max Err. Boost (Karney)",
-           batch.second.c_str(), rad2sec(mx_er_lat_bk), rad2sec(mx_er_lon_bk), rad2sec(mx_er_az_bk),
-           infinitesimal_meridian_arc<ellipsoid::wgs84, double>(
-               lat_at1, mx_er_lat_bk),
-           parallel_arc_length<ellipsoid::wgs84, double>(
-               lat_at2, mx_er_lon_bk));
-    printf("\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Mean Err. Boost (Karney)",
-           batch.second.c_str(), rad2sec(mean_error_lat), rad2sec(mean_error_lon), rad2sec(mean_error_az),
-           mean_error_lat_m, mean_error_lon_m);
+    printf(
+        "\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Max Err. Boost (Karney)",
+        batch.second.c_str(), rad2sec(mx_er_lat_bk), rad2sec(mx_er_lon_bk),
+        rad2sec(mx_er_az_bk),
+        infinitesimal_meridian_arc<ellipsoid::wgs84, double>(lat_at1,
+                                                             mx_er_lat_bk),
+        parallel_arc_length<ellipsoid::wgs84, double>(lat_at2, mx_er_lon_bk));
+    printf(
+        "\n%50s %17.15f %17.15f %17.15f %15.4f %15.4f Mean Err. Boost (Karney)",
+        batch.second.c_str(), rad2sec(mean_error_lat), rad2sec(mean_error_lon),
+        rad2sec(mean_error_az), mean_error_lat_m, mean_error_lon_m);
   }
   printf("\nNumber of lines read: %15d", (int)line_count);
 

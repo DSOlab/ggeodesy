@@ -1,7 +1,7 @@
 ///
 /// @file units.hpp
 ///
-/// @brief A list of frequently used geodetic functions for unit conversion, 
+/// @brief A list of frequently used geodetic functions for unit conversion,
 ///        mostly targeted on angular units.
 ///
 
@@ -213,6 +213,6 @@ constexpr void rad2hexd(T radians, int &deg, int &min, T &sec,
   return decd2hexd(rad2deg(radians), deg, min, sec, sign);
 }
 
-}// ngpt
+} // namespace ngpt
 
 #endif

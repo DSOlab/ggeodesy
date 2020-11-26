@@ -21,7 +21,8 @@
 /// implementations) or runtime parameters (where an Ellipsoid instance is
 /// needed).
 ///
-/// @see https://adl1995.github.io/inaccuracy-in-boost-geometry-geodesic-algorithms-for-nearly-antipodal-points.html
+/// @see
+/// https://adl1995.github.io/inaccuracy-in-boost-geometry-geodesic-algorithms-for-nearly-antipodal-points.html
 ///
 /// @todo
 ///       - Need to test!
@@ -55,8 +56,8 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
                        double &lat2, double &lon2,
                        double convergence_limit = 1e-12);
 double direct_karney(double lat1, double lon1, double a1, double s,
-                       double semi_major, double flattening, double semi_minor,
-                       double &lat2, double &lon2);
+                     double semi_major, double flattening, double semi_minor,
+                     double &lat2, double &lon2);
 double direct_vincenty2(double lat1, double lon1, double a1, double s,
                         double semi_major, double flattening, double semi_minor,
                         double &lat2, double &lon2,
@@ -137,7 +138,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
   const double f = ellipsoid_traits<E>::f;
   const double b = semi_minor<E>();
   return core::direct_vincenty(lat1, lon1, a1, s, a, f, b, lat2, lon2,
-                                convergence_limit);
+                               convergence_limit);
 }
 
 /// @brief Direct Vincenty formula.
@@ -165,6 +166,6 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
                                 convergence_limit);
 }*/
 
-}// namespace ngpt
+} // namespace ngpt
 
 #endif

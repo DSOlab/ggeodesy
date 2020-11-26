@@ -378,6 +378,6 @@ private:
   double __a, __f;
 }; // class Ellipsoid
 
-}// namespace ngpt
+} // namespace ngpt
 
 #endif
