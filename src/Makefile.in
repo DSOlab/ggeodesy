@@ -340,8 +340,6 @@ top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libggeodesy.la
 libggeodesy_la_CXXFLAGS = \
 	-std=c++17 \
-	-g \
-	-pg \
 	-Wall \
 	-Wextra \
 	-Werror \
@@ -349,9 +347,8 @@ libggeodesy_la_CXXFLAGS = \
 	-W \
 	-Wshadow \
 	-Winline \
-	-Wdisabled-optimization \
-	-march=native \
-	-DDEBUG
+	-O2 \
+	-march=native
 
 pkginclude_HEADERS = \
         geoconst.hpp \

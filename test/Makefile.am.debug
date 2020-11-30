@@ -18,14 +18,17 @@ check_PROGRAMS = testEllipsoid \
 
 MCXXFLAGS = \
 	-std=c++17 \
+	-g \
+	-pg \
 	-Wno-unused-variable \
 	-Wall \
 	-Wextra \
 	-Werror \
 	-pedantic \
 	-W \
-	-O2 \
-	-Wshadow
+	-Wshadow \
+	-Wdisabled-optimization \
+	-DDEBUG
 
 transform_SOURCES   = crd_transform_ex.cpp
 transform_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src

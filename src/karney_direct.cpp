@@ -29,9 +29,9 @@ inline bool double_almost_equal(double x, double y, int ulp = 2) noexcept {
 /// @note This is not a general Clenshaw summation implementation. It is
 ///       specificallt designed for the summation of trigonometric series of
 ///       type Sum{C[i]*sin(i*θ)} for i = 1 ... 6.
-///       Note that in a lot of cases (especially in Karney, Algorithms for 
-///       geodesics) the actual theta angle that needs to be inserted in the 
-///       computation has a factor of two (e.g. in Eq. 15). Be sure to double 
+///       Note that in a lot of cases (especially in Karney, Algorithms for
+///       geodesics) the actual theta angle that needs to be inserted in the
+///       computation has a factor of two (e.g. in Eq. 15). Be sure to double
 ///       the angle before passing it as parameter!
 /// @see https://en.wikipedia.org/wiki/Clenshaw_algorithm and most specificaly
 ///      the chapter on meridian arc, i.e.
@@ -48,12 +48,12 @@ inline double clenshaw_sum_order6(double theta, const double *coefs) noexcept {
   // unroll the loop; its only six terms anyway
   const double b8 = 0e0;
   const double b7 = 0e0;
-  const double b6 = *(coefs+5) + 2e0*cost*b7 - b8;
-  const double b5 = *(coefs+4) + 2e0*cost*b6 - b7;
-  const double b4 = *(coefs+3) + 2e0*cost*b5 - b6;
-  const double b3 = *(coefs+2) + 2e0*cost*b4 - b5;
-  const double b2 = *(coefs+1) + 2e0*cost*b3 - b4;
-  const double b1 = *(coefs+0) + 2e0*cost*b2 - b3;
+  const double b6 = *(coefs + 5) + 2e0 * cost * b7 - b8;
+  const double b5 = *(coefs + 4) + 2e0 * cost * b6 - b7;
+  const double b4 = *(coefs + 3) + 2e0 * cost * b5 - b6;
+  const double b3 = *(coefs + 2) + 2e0 * cost * b4 - b5;
+  const double b2 = *(coefs + 1) + 2e0 * cost * b3 - b4;
+  const double b1 = *(coefs + 0) + 2e0 * cost * b2 - b3;
   // assert(b[2] == b1);
   // return b[2]*sint;
   return b1 * sint;
@@ -65,7 +65,7 @@ inline double clenshaw_sum_order6(double theta, const double *coefs) noexcept {
 /// @note This is only the part in parenthesis, aka needs to be
 ///       multiplied by A1.
 ///       The summation of trigonometric numbers is performed via the
-///       Clenshaw algorithm; this is more efficient than summing over 
+///       Clenshaw algorithm; this is more efficient than summing over
 ///       all the different sin/cos terms
 double series_expansion_eq15(double epsilon, double sigma) noexcept {
   const double e = epsilon;
@@ -83,7 +83,7 @@ double series_expansion_eq15(double epsilon, double sigma) noexcept {
   /*double sum = 0e0;
   for (int l = 0; l < 6; l++)
     sum += C[l] * std::sin(2e0 * static_cast<double>(l + 1) * sigma);*/
-  double sum = clenshaw_sum_order6(2e0*sigma, C);
+  double sum = clenshaw_sum_order6(2e0 * sigma, C);
   return sum + sigma;
 }
 
@@ -91,7 +91,7 @@ double series_expansion_eq15(double epsilon, double sigma) noexcept {
 /// @param[in] epsilon An expansion parameter, see Karney eq. 16
 /// @param[in] tau     Input parameter, see Karney eq. 20
 /// @note The summation of trigonometric numbers is performed via the
-///       Clenshaw algorithm; this is more efficient than summing over 
+///       Clenshaw algorithm; this is more efficient than summing over
 ///       all the different sin/cos terms
 double series_expansion_eq20(double epsilon, double tau) noexcept {
   const double e = epsilon;
@@ -109,7 +109,7 @@ double series_expansion_eq20(double epsilon, double tau) noexcept {
   /*double sum = 0e0;
   for (int l = 0; l < 6; l++)
     sum += C[l] * std::sin(2e0 * static_cast<double>(l + 1) * tau);*/
-  double sum = clenshaw_sum_order6(2e0*tau, C);
+  double sum = clenshaw_sum_order6(2e0 * tau, C);
   return sum + tau;
 }
 
@@ -122,10 +122,10 @@ double series_expansion_eq20(double epsilon, double tau) noexcept {
 /// @note This is only the part in parenthesis, aka needs to be
 ///       multiplied by A3.
 ///       The summation of trigonometric numbers is performed via the
-///       Clenshaw algorithm; this is more efficient than summing over 
+///       Clenshaw algorithm; this is more efficient than summing over
 ///       all the different sin/cos terms
 void series_expansion_eq23(double epsilon, double n, const double *sigmas,
-                         double *sums) noexcept {
+                           double *sums) noexcept {
   const double e = epsilon;
   const double e2 = epsilon * epsilon;
   const double e3 = e2 * epsilon;
@@ -149,12 +149,12 @@ void series_expansion_eq23(double epsilon, double n, const double *sigmas,
   /*double sum = 0e0;
   for (int l = 0; l < 6; l++)
     sum += C[l] * std::sin(2e0 * static_cast<double>(l + 1) * sigmas[0]);*/
-  double sum = clenshaw_sum_order6(2e0*sigmas[0], C);
+  double sum = clenshaw_sum_order6(2e0 * sigmas[0], C);
   sums[0] = sum + sigmas[0];
   /*sum = 0e0;
   for (int l = 0; l < 6; l++)
     sum += C[l] * std::sin(2e0 * static_cast<double>(l + 1) * sigmas[1]);*/
-  sum = clenshaw_sum_order6(2e0*sigmas[1], C);
+  sum = clenshaw_sum_order6(2e0 * sigmas[1], C);
   sums[1] = sum + sigmas[1];
   return;
 }
