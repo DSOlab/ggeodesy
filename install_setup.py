@@ -73,3 +73,7 @@ for dir in [ os.path.join(args.project_dir, d) for d in mk_folders ]:
 with open(os.path.join(args.project_dir, 'Makefile.am'), 'w') as mk_out:
     print('SUBDIRS = {:}'.format(' '.join(mk_folders)), file=mk_out)
 
+## all done
+print('All done! Makefile.am created in all needed folders. Now run the '
+  'following to build the project:\nautoreconf -if\n./configure\nmake\n'
+  'and you should be good to go!')
