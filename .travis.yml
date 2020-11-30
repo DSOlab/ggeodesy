@@ -5,7 +5,7 @@ compiler:
   - clang
 
 script:
- - ./install_setup.py --include-boost -c production
+ - ./install_setup.py -c production
  - autoreconf -if
  - ./configure
  - make
