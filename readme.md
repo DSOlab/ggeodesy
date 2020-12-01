@@ -25,15 +25,10 @@ aka the directory under which `/src`, `/test` and `/doc` folders live.
 should rename [Makefile.am.production](src/Makefile.am.production) and [Makefile.am.production](test/Makefile.am.production) to
 `src/Makefile.am` and `test/Makefile.am` respectively, that is:~~
 
-```bash
-~~ mv src/Makefile.am.production src/Makefile.am
-~~ mv test/Makefile.am.production test/Makefile.am
-```
-
 To prepare the required files for compilation (that is the `Makefile.am` in each 
 of the relevant folders) you need to run the script [install_setup.py](install_setup.py). 
 You can use the `-h` switch to see the help message, but in most cases the 
-command `./install_setup.py -c production`
+command `./install_setup.py -c production` will suffice.
 
 If needed (that is you are not running the script from `ROOTDIR`) specify the 
 `ROOTDIR` path via the `-d` switch.
