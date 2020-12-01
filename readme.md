@@ -21,14 +21,24 @@ To compile the library, just follow the basic steps: (*note that the library is 
 For the following, `ROOTDIR` will be the root directory of this repository,
 aka the directory under which `/src`, `/test` and `/doc` folders live.
 
-**If you do not need the DEBUG version** (which most probably you don't), create the `Makefile.am` templates. This means that you
+~~**If you do not need the DEBUG version** (which most probably you don't), create the `Makefile.am` templates. This means that you
 should rename [Makefile.am.production](src/Makefile.am.production) and [Makefile.am.production](test/Makefile.am.production) to
-`src/Makefile.am` and `test/Makefile.am` respectively, that is:
+`src/Makefile.am` and `test/Makefile.am` respectively, that is:~~
 
-```bash
+~~```bash
 mv src/Makefile.am.production src/Makefile.am
 mv test/Makefile.am.production test/Makefile.am
+```~~
+
+To prepare the required files for compilation (that is the `Makefile.am` in each 
+of the relevant folders) you need to run the script [install_setup.py](install_setup.py). 
+You can use the `-h` switch to see the help message, but in most cases the 
+command
+```bash
+./install_setup.py -c production
 ```
+If needed (that is you are not running the script from `ROOTDIR`) specify the 
+`ROOTDIR` path via the `-d` switch.
 
 Then run Autotools and compile:
 

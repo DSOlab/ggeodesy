@@ -1,1 +1,1 @@
-SUBDIRS = src test boost
+SUBDIRS = src test
