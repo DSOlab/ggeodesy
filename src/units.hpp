@@ -11,6 +11,7 @@
 #include "geoconst.hpp"
 #include <cassert>
 #include <cmath>
+#include <type_traits>
 
 namespace ngpt {
 

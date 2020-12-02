@@ -9,7 +9,7 @@ lib_LTLIBRARIES = libggeodesy.la
 ## ----------------------------------------------------
 ##
 libggeodesy_la_CXXFLAGS = \
--std=c++11 \
+-std=c++14 \
 -g \
 -pg \
 -Wall \

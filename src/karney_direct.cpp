@@ -4,6 +4,7 @@
 #include "vincenty.hpp"
 #include <cmath>
 #include <stdexcept>
+#include <limits>
 
 using ngpt::D2PI;
 using ngpt::DPI;

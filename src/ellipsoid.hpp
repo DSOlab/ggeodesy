@@ -41,6 +41,7 @@
 #define __REFERENCE_ELLIPSOID_HPP__
 
 #include "ellipsoid_core.hpp"
+#include <type_traits>
 
 namespace ngpt {
 
