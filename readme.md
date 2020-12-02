@@ -37,10 +37,20 @@ project build files use the C++17 standard; to specify a different one, you can 
   * change the standard flag (`-std=c++17`) in every Makefile.am file, in the directories 
     `src`, `test` and optionally `boost`, or
   * [set the flag](#install-setup-script) when invoking the `install_setup.py` script (e.g. for C++14,
-    `./install_setup.py -s 14`
+    `./install_setup.py -s 14`)
 
 Apart from C++17 and C++14 no other standard has been tested; should you want another, 
 chances are you should probably adapt the source code.
+
+### testing against boost/geometry
+
+The folder [boost](boost) includes source code for testing the algorithms in 
+ggeodesy against the ones implemented in 
+(boost/geometry)[https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html].
+To compile these, you will need the respective developement files. Installing boost is 
+usually pretty trivial; relevant documentation can be found on the (boost webpage)[https://www.boost.org/].
+Once you have downloaded `boost/geometry` you can include the [boost](boost) source code 
+in the build process via the flag `--include-boost` in the [install_setup.py](#install-setup-script) script.
 
 ### install setup script
 
@@ -48,9 +58,9 @@ We provide a python script ([install_setup.py](install_setup.py)) to assist the
 creation/editing of the needed Makefile.am's; this way you most probably do not need to 
 mess up with any Makefiles. The script has a help message (just pass the `-h` option) 
 where you can see all applicable switches. The basic options are:
-  * choose between a __debug__ or a __production__ build and,
+  * choose between a __debug__ or a __production__ build,
   * [choose a C++ standard](#chossing_c++_standard),
-  * include [boost tests and examples](#testing_against_boost)
+  * include [boost tests and examples](#testing_against_boost/geometry)
 
 For most users, just running `install_setup.py -c production` should do just fine. This will 
 setup a build enviroment using the default options aka the C++17 standard, a production compilation 
