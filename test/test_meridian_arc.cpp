@@ -32,7 +32,7 @@ constexpr double PRECISION = 1e-4;
 
 int main() {
 
-  double angle_radians, lat;
+  double /*angle_radians,*/ lat;
   const double a = ngpt::ellipsoid_traits<ngpt::ellipsoid::grs80>::a;
   const double f = ngpt::ellipsoid_traits<ngpt::ellipsoid::grs80>::f;
 
