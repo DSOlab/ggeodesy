@@ -15,9 +15,11 @@
 
 int main() {
 
+  /*
   double angle_radians, lat;
   const double a = ngpt::ellipsoid_traits<ngpt::ellipsoid::grs80>::a;
   const double f = ngpt::ellipsoid_traits<ngpt::ellipsoid::grs80>::f;
+  */
 
   // check that the geocentric and geodetic latitudes are the same at the
   // equator and the poles.
