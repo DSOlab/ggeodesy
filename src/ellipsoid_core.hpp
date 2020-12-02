@@ -23,7 +23,7 @@ namespace core {
 /// flattening of an ellipsoid, aka \f$ e^2 = \frac{a^2-b^2}{a^2} = (2-f)*f \f$
 /// @param[in] f flattening
 /// @return      squared eccentricity
-constexpr double eccentricity_squared(double f) noexcept {
+inline constexpr double eccentricity_squared(double f) noexcept {
   return (2e0 - f) * f;
 }
 
@@ -34,7 +34,9 @@ constexpr double eccentricity_squared(double f) noexcept {
 /// @param[in] f flattening
 /// @return third flattening \f$ n \f$
 /// Reference [2]
-constexpr double third_flattening(double f) noexcept { return f / (2e0 - f); }
+inline constexpr double third_flattening(double f) noexcept {
+  return f / (2e0 - f);
+}
 
 /// @brief Compute the semi-minor axis (aka \f$b\f$)
 ///
@@ -43,7 +45,7 @@ constexpr double third_flattening(double f) noexcept { return f / (2e0 - f); }
 /// @param[in] f flattening
 /// @param[in] a semi-major axis (meters)
 /// @return      semi-minor axis (meters)
-constexpr double semi_minor(double a, double f) noexcept {
+inline constexpr double semi_minor(double a, double f) noexcept {
   return a * (1e0 - f);
 }
 
@@ -54,8 +56,9 @@ constexpr double semi_minor(double a, double f) noexcept {
 /// @param[in] f flattening
 /// @param[in] a semi-major axis (meters)
 /// @return      semi-minor axis (meters)
+inline
 #if defined(__GNUC__) && !defined(__llvm__)
-constexpr
+    constexpr
 #endif
     double
     linear_eccentricity(double a, double f) noexcept {
@@ -70,7 +73,7 @@ constexpr
 /// @param[in] f flattening
 /// @param[in] a semi-major axis (meters)
 /// @return      semi-minor axis (meters)
-constexpr double polar_radius_of_curvature(double a, double f) noexcept {
+inline constexpr double polar_radius_of_curvature(double a, double f) noexcept {
   const double b = semi_minor(a, f);
   return a * a / b;
 }
@@ -89,8 +92,9 @@ constexpr double polar_radius_of_curvature(double a, double f) noexcept {
 ///
 /// @see "Physical Geodesy", pg. 194
 /// @see https://en.wikipedia.org/wiki/Earth_radius
+inline
 #if defined(__GNUC__) && !defined(__llvm__)
-constexpr
+    constexpr
 #endif
     double
     N(double lat, double a, double b) noexcept {
@@ -113,8 +117,9 @@ constexpr
 ///
 /// @see https://en.wikipedia.org/wiki/Earth_radius
 ///
+inline
 #if defined(__GNUC__) && !defined(__llvm__)
-constexpr
+    constexpr
 #endif
     double
     M(double lat, double a, double b) noexcept {
@@ -139,8 +144,9 @@ constexpr
 /// @return        The geocentric latitude at lat in radians
 ///
 /// Reference [3]
+inline
 #if defined(__GNUC__) && !defined(__llvm__)
-constexpr
+    constexpr
 #endif
     double
     geocentric_latitude(double lat, double f) noexcept {
@@ -158,8 +164,9 @@ constexpr
 /// @return        The parametric or reduced latitude at lat in radians
 ///
 /// Reference [3]
+inline
 #if defined(__GNUC__) && !defined(__llvm__)
-constexpr
+    constexpr
 #endif
     double
     reduced_latitude(double lat, double f) noexcept {

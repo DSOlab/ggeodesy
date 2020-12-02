@@ -3,13 +3,13 @@
 #include "vincenty.hpp"
 #include <algorithm>
 #include <array>
+#include <boost/geometry.hpp>
+#include <boost/geometry/formulas/karney_direct.hpp>
 #include <cassert>
 #include <chrono>
 #include <fstream>
 #include <iostream>
 #include <random>
-#include <boost/geometry.hpp>
-#include <boost/geometry/formulas/karney_direct.hpp>
 
 using namespace ngpt;
 using namespace boost::geometry;

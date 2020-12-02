@@ -1,8 +1,8 @@
 #include "car2ell.hpp"
 #include "car2top.hpp"
+#include "ellipsoid.hpp"
 #include "geodesy.hpp"
 #include "units.hpp"
-#include "ellipsoid.hpp"
 #include <cassert>
 #include <stdio.h>
 

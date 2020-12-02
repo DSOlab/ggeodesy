@@ -1,35 +1,38 @@
 noinst_PROGRAMS = transform \
-        testGeodTest \
-        testKarney
+testGeodTest \
+testKarney
 
 TESTS = testEllipsoid \
-        testUnits \
-	testAngleNormalization \
-	testMeridianArc  \
-        testSphericalEarth
+testUnits \
+testAngleNormalization \
+testMeridianArc  \
+testSphericalEarth
 
 check_PROGRAMS = testEllipsoid \
-        testUnits \
-	testAngleNormalization \
-        testTransformations \
-	testMeridianArc \
-        testSphericalEarth \
-        testLatitudes
+testUnits \
+testAngleNormalization \
+testTransformations \
+testMeridianArc \
+testSphericalEarth \
+testLatitudes
 
 MCXXFLAGS = \
-	-std=c++17 \
-	-Wno-unused-variable \
-	-Wall \
-	-Wextra \
-	-Werror \
-	-pedantic \
-	-W \
-	-O2 \
-	-Wshadow
+-std=c++11 \
+-g \
+-pg \
+-Wno-unused-variable \
+-Wall \
+-Wextra \
+-Werror \
+-pedantic \
+-W \
+-Wshadow \
+-Wdisabled-optimization \
+-DDEBUG
 
 transform_SOURCES   = crd_transform_ex.cpp
 transform_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-transform_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+transform_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 testEllipsoid_SOURCES   = test_ellipsoid.cpp
 testEllipsoid_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
@@ -57,12 +60,12 @@ testSphericalEarth_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 testGeodTest_SOURCES   = test_geodtest.cpp
 testGeodTest_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testGeodTest_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+testGeodTest_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 testKarney_SOURCES   = test_karney.cpp
 testKarney_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testKarney_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+testKarney_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 testLatitudes_SOURCES   = test_latitudes.cpp
 testLatitudes_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testLatitudes_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+testLatitudes_LDADD     = $(top_srcdir)/src/libggeodesy.la

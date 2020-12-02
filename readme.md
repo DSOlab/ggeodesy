@@ -196,3 +196,6 @@ Mitsos, danast@mail.ntua.gr
 Conversion in the Gauss-Krüger Projection, Bulletin of the Geospatial Information Authority of Japan, Vol.59 December, 2011
 
 <a id="meridian_arc_wiki"></a> Wiki page on [Meridian Arc](https://en.wikipedia.org/wiki/Meridian_arc)
+
+<a id="moritz-grs80"></a>H. Moritz, GEODETIC REFERENCE SYSTEM 1980, available
+[here](https://geodesy.geology.ohio-state.edu/course/refpapers/00740128.pdf)

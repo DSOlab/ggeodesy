@@ -4,7 +4,7 @@ noinst_PROGRAMS = testGeodTest testGeodTime
 
 #check_PROGRAMS =
 
-libggeodesy_la_CXXFLAGS = \
+MXXFLAGS = \
 	-std=c++17 \
 	-Wall \
 	-Wextra \

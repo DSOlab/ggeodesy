@@ -1,7 +1,7 @@
 #include "geodesy.hpp"
 #include "test_help.hpp"
-#include "vincenty.hpp"
 #include "units.hpp"
+#include "vincenty.hpp"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -225,7 +225,7 @@ int main() {
       vec.emplace_back(tl);
     } while (++line_nr < batch.first);
     line_count += line_nr;
-    bool doprint = false;
+    // bool doprint = false;
     if (batch.second == "randomly distributed") {
       for (const auto &ar : vec) {
         ar.test_vincenty_inverse();
