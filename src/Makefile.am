@@ -9,7 +9,7 @@ lib_LTLIBRARIES = libggeodesy.la
 ## ----------------------------------------------------
 ##
 libggeodesy_la_CXXFLAGS = \
--std=c++14 \
+-std=c++17 \
 -g \
 -pg \
 -Wall \
@@ -51,6 +51,7 @@ top2car.cpp \
 vincenty_direct.cpp \
 vincenty_inverse.cpp \
 karney_direct.cpp \
+karney_inverse.cpp \
 trnsfdtls.cpp \
 meridian_arc_length.cpp \
 great_circle.cpp \

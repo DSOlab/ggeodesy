@@ -49,6 +49,9 @@ double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
                         double semi_major, double flattening, double semi_minor,
                         double &a12, double &a21,
                         double convergence_limit = 1e-12);
+double inverse_karney(double lat1, double lon1, double lat2, double lon2,
+                        double semi_major, double flattening, double semi_minor,
+                        double &a12, double &a21);
 
 /// @brief Direct Vincenty formula.
 double direct_vincenty(double lat1, double lon1, double a1, double s,

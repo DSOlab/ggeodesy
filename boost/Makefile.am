@@ -1,25 +1,27 @@
 noinst_PROGRAMS = testGeodTest testGeodTime
 
-#TESTS = 
+#TESTS =
 
 #check_PROGRAMS =
 
-libggeodesy_la_CXXFLAGS = \
-	-std=c++17 \
-	-Wall \
-	-Wextra \
-	-Werror \
-	-pedantic \
-	-W \
-	-Wshadow \
-	-Winline \
-	-O2 \
-	-march=native
+MCXXFLAGS = \
+-std=c++17 \
+-g \
+-pg \
+-Wno-unused-variable \
+-Wall \
+-Wextra \
+-Werror \
+-pedantic \
+-W \
+-Wshadow \
+-Wdisabled-optimization \
+-DDEBUG
 
 testGeodTest_SOURCES   = test_geodtest.cpp
 testGeodTest_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testGeodTest_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+testGeodTest_LDADD     = $(top_srcdir)/src/libggeodesy.la
 
 testGeodTime_SOURCES   = test_geodtime.cpp
 testGeodTime_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testGeodTime_LDADD     = $(top_srcdir)/src/libggeodesy.la 
+testGeodTime_LDADD     = $(top_srcdir)/src/libggeodesy.la

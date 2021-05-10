@@ -53,6 +53,22 @@ you 'll see all checks passing!
 
 Link, include and have fun!
 
+## Accuracy/Precision and Floating Point Numbers Considerations
+
+For testing purposes, we need to compare (floating point) results, aka check if 
+two floating point numbers are __equal__. But what does equal mean? Well, in this case 
+for most of the test programs we define the floating point comparisson (when comparing 
+numbers other than zero) as:
+```
+diff = abs(a - b)
+diff < max(abs(a), abs(b)) * tolerance or diff < tolerance
+```
+where __tolerance__ is defined as: `std::numeric_limits<double>::epsilon()`. That is, 
+we use a tolerance value proportional to max(a,b) when comparing two (floating point) numbers.
+(see also [this SO thread](https://stackoverflow.com/questions/17333/what-is-the-most-effective-way-for-float-and-double-comparison), 
+and [this also](https://stackoverflow.com/questions/48133572/what-can-stdnumeric-limitsdoubleepsilon-be-used-for)).
+
+
 ## The Library
 
 Here is a list of the provided utilities:
@@ -68,11 +84,12 @@ and hexicondal degrees. Namely:
   - `ngpt::rad2hexd` transforms radians to hexicondal degrees
   - `ngpt::hexd2decd` transforms hexicondal degrees to decimal degrees
   - `ngpt::hexd2rad` transforms hexicondal degrees to radians
+  - `ngpt::rad2sec` convert radians to seconds (of degree)
 
 Additionaly the function `ngpt::normalize_angle` can normalize a given angle 
 to a specified range (e.g. in range -\f$\pi\f$ to \f$\pi\f$).
 
-All of the above functions are defined in the header file [geodesy.hpp](https://github.com/xanthospap/ggeodesy/blob/master/src/geodesy.hpp). For usage examples, see 
+All of the above functions are defined in the header file [units.hpp](https://github.com/xanthospap/ggeodesy/blob/master/src/units.hpp). For usage examples, see 
 [test_units.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_units.cpp) and [test_angle_normalization.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_angle_normalization.cc).
 
 ### Reference Ellipsoids

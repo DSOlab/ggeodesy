@@ -17,7 +17,7 @@ testSphericalEarth \
 testLatitudes
 
 MCXXFLAGS = \
--std=c++14 \
+-std=c++17 \
 -g \
 -pg \
 -Wno-unused-variable \

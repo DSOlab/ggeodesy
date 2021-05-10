@@ -51,6 +51,7 @@ dist_libggeodesy_la_SOURCES = \
         vincenty_direct.cpp \
         vincenty_inverse.cpp \
         karney_direct.cpp \
+        karney_inverse.cpp \
 	trnsfdtls.cpp \
 	meridian_arc_length.cpp \
         great_circle.cpp \

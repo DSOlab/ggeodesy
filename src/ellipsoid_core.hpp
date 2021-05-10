@@ -3,7 +3,6 @@
 ///
 /// @brief Core function of ellipsoidal geometry
 ///
-///
 /// [1] H. Moritz, GEODETIC REFERENCE SYSTEM 1980,
 /// https://geodesy.geology.ohio-state.edu/course/refpapers/00740128.pdf
 
