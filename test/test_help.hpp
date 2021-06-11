@@ -31,11 +31,7 @@ bool approxEqual(
     TReal a, TReal b,
     TReal tolerance = std::numeric_limits<TReal>::epsilon()) noexcept {
   TReal diff = std::abs(a - b);
-  if (diff < tolerance)
-    return true;
-  if (diff < std::max(std::abs(a), std::abs(b)) * tolerance)
-    return true;
-  return false;
+  return diff <= std::max(std::abs(a), std::abs(b)) * tolerance;
 }
 
 template <typename TReal>

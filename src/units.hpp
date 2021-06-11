@@ -63,6 +63,9 @@ T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
   // but will fail for e.g. -\pi to \pi
   if (lower >= 0e0)
     return std::fmod(angle + upper, upper);
+    // angle -= D2PI * std::floor((angle + DPI) / D2PI);
+    // return angle;
+    // return std::atan2(std::sin(angle), std::cos(angle));
 
   double res{angle};
   if (angle > upper || angle == lower)
