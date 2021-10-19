@@ -13,7 +13,7 @@
 #include <cmath>
 #include <type_traits>
 
-namespace ngpt {
+namespace dso {
 
 /// @brief Convert degrees to radians.
 /// @tparam    T       Any floating type
@@ -98,8 +98,8 @@ T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
 ///       same! Hence, deg, min and sec are always >= 0 and the sign of the
 ///       angle is the sign of sign (variable).
 ///  E.g.
-///  ngpt::decd2hexd(10e0, deg1, min1, sec1, sgn1);
-///  ngpt::decd2hexd(-10e0, deg2, min2, sec2, sgn2);
+///  dso::decd2hexd(10e0, deg1, min1, sec1, sgn1);
+///  dso::decd2hexd(-10e0, deg2, min2, sec2, sgn2);
 ///  assert(deg1==deg2 && (min1==min2 && sec1==sec2));
 ///  assert(sgn1==-sgn2);
 template <typename T,
@@ -139,15 +139,15 @@ constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec,
 ///       the sign? There is no -0; so we need to mark the sign via the sign
 ///       parameter.
 /// E.g.
-///  ngpt::decd2hexd(10e0, deg1, min1, sec1, sgn1);
-///  ngpt::decd2hexd(-10e0, deg2, min2, sec2, sgn2);
+///  dso::decd2hexd(10e0, deg1, min1, sec1, sgn1);
+///  dso::decd2hexd(-10e0, deg2, min2, sec2, sgn2);
 ///  assert(deg1==deg2 && (min1==min2 && sec1==sec2));
 ///  assert(sgn1==-sgn2);
-///  a1 = ngpt::hexd2decd(deg1, min1, sec1, sgn1);
-///  a2 = ngpt::hexd2decd(deg2, min2, sec2, sgn2);
+///  a1 = dso::hexd2decd(deg1, min1, sec1, sgn1);
+///  a2 = dso::hexd2decd(deg2, min2, sec2, sgn2);
 ///  assert(a1 == -a2);
 ///  // note the sign of deg parameter is not considered!
-///  a2 = ngpt::hexd2decd(-deg1, min1, sec1, sgn1);
+///  a2 = dso::hexd2decd(-deg1, min1, sec1, sgn1);
 ///  assert(a1==a2);
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
@@ -180,11 +180,11 @@ constexpr T hexd2decd(int deg, int min, T sec, int sign = 1) noexcept {
 ///       the sign? There is no -0; so we need to mark the sign via the sign
 ///       parameter.
 /// E.g.
-///  a1 = ngpt::hexd2rad(deg1, min1, sec1, sgn1);
-///  a2 = ngpt::hexd2rad(deg2, min2, sec2, sgn2);
+///  a1 = dso::hexd2rad(deg1, min1, sec1, sgn1);
+///  a2 = dso::hexd2rad(deg2, min2, sec2, sgn2);
 ///  assert(a1==-a2);
 ///  // note the sign of deg parameter is not considered!
-///  a1 = ngpt::hexd2rad(-deg1, min1, sec1, sgn1);
+///  a1 = dso::hexd2rad(-deg1, min1, sec1, sgn1);
 ///  assert(a1==-a2);
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
@@ -217,6 +217,6 @@ constexpr void rad2hexd(T radians, int &deg, int &min, T &sec,
   return decd2hexd(rad2deg(radians), deg, min, sec, sign);
 }
 
-} // namespace ngpt
+} // dso
 
 #endif

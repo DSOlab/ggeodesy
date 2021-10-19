@@ -11,7 +11,7 @@
 #include <iostream>
 #include <random>
 
-using namespace ngpt;
+using namespace dso;
 using namespace boost::geometry;
 
 /// constants for wgs84 ellipsoid
@@ -68,7 +68,7 @@ struct TestLine {
   void test_vincenty_direct() const {
     double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
-    az2 = ngpt::core::direct_vincenty2(ar[0], ar[1], ar[2], ar[6], A, F, B,
+    az2 = dso::core::direct_vincenty2(ar[0], ar[1], ar[2], ar[6], A, F, B,
                                        lat2, lon2, 1e-15);
     if ((err_lat = std::abs(ar[3] - lat2)) > mx_er_lat_v) {
       mx_er_lat_v = err_lat;
@@ -141,7 +141,7 @@ struct TestLine {
     double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
     // check against karney
-    az2 = ngpt::core::direct_karney(ar[0], ar[1], ar[2], ar[6], A, F, B, lat2,
+    az2 = dso::core::direct_karney(ar[0], ar[1], ar[2], ar[6], A, F, B, lat2,
                                     lon2);
     if ((err_lat = std::abs(ar[3] - lat2)) > mx_er_lat_k) {
       mx_er_lat_k = err_lat;

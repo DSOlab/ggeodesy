@@ -9,7 +9,7 @@
 /// truncating the expansion at order e^10
 /// K. Kawase, "A General Formula for Calculating Meridian Arc Length and its
 /// Application to Coordinate Conversion in the Gauss-Krüger Projection"
-double ngpt::core::meridian_arc_length_impl1(double a, double f,
+double dso::core::meridian_arc_length_impl1(double a, double f,
                                              double lat) noexcept {
   const double e2 = eccentricity_squared(f);
   const double e4(e2 * e2), e6(e4 * e2), e8(e6 * e2), e10(e8 * e2);
@@ -43,9 +43,9 @@ double ngpt::core::meridian_arc_length_impl1(double a, double f,
 /// This is the Bessel’s formula implementation
 /// K. Kawase, "A General Formula for Calculating Meridian Arc Length and its
 /// Application to Coordinate Conversion in the Gauss-Krüger Projection"
-double ngpt::core::meridian_arc_length_impl2(double a, double f,
+double dso::core::meridian_arc_length_impl2(double a, double f,
                                              double lat) noexcept {
-  const double b = ngpt::core::semi_minor(a, f);
+  const double b = dso::core::semi_minor(a, f);
   // third flattening
   const double n = (a - b) / (a + b);
   const double n2(n * n), n3(n2 * n);
@@ -70,9 +70,9 @@ double ngpt::core::meridian_arc_length_impl2(double a, double f,
 /// This is the Helmert's formula implementation
 /// K. Kawase, "A General Formula for Calculating Meridian Arc Length and its
 /// Application to Coordinate Conversion in the Gauss-Krüger Projection"
-double ngpt::core::meridian_arc_length_impl3(double a, double f,
+double dso::core::meridian_arc_length_impl3(double a, double f,
                                              double lat) noexcept {
-  const double b = ngpt::core::semi_minor(a, f);
+  const double b = dso::core::semi_minor(a, f);
   // third flattening
   const double n = (a - b) / (a + b);
   const double n2(n * n), n3(n2 * n), n4(n3 * n);

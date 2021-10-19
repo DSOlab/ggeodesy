@@ -5,7 +5,7 @@
 #include "geodesy.hpp"
 #include <cmath>
 
-void ngpt::top2car(double north, double east, double up, double lat, double lon,
+void dso::top2car(double north, double east, double up, double lat, double lon,
                    double &dx, double &dy, double &dz) noexcept {
   const double slon = std::sin(lon);
   const double clon = std::cos(lon);

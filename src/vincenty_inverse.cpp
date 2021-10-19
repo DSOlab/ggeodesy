@@ -6,8 +6,8 @@
 #include <fenv.h>
 #endif
 
-using ngpt::D2PI;
-using ngpt::DPI;
+using dso::D2PI;
+using dso::DPI;
 
 /// @brief Compute the inverse Vincenty formula.
 ///
@@ -47,7 +47,7 @@ using ngpt::DPI;
 /// https://github.com/boostorg/geometry/blob/develop/include/boost/geometry/formulas/vincenty_inverse.hpp
 /// @see [4]
 /// https://geographiclib.sourceforge.io/geodesic-papers/vincenty75b.pdf
-double ngpt::core::inverse_vincenty_nearly_antipodal(
+double dso::core::inverse_vincenty_nearly_antipodal(
     double lat1, double lon1, double lat2, double lon2, double semi_major,
     double flattening, double semi_minor, double &a12, double &a21,
     double convergence_limit) {
@@ -118,7 +118,7 @@ double ngpt::core::inverse_vincenty_nearly_antipodal(
     if (++iteration > MAX_ITERATIONS) {
       auto itstr = std::to_string(iteration);
       throw std::out_of_range(
-          "[ERROR] ngpt::core::inverse_vincenty_nearly_antipodal cannot "
+          "[ERROR] dso::core::inverse_vincenty_nearly_antipodal cannot "
           "converge after " +
           itstr + " iterations!");
     }
@@ -208,7 +208,7 @@ double ngpt::core::inverse_vincenty_nearly_antipodal(
 /// @see [2] https://futureboy.us/fsp/colorize.fsp?fileName=navigation.frink
 /// @see [3]
 /// https://github.com/boostorg/geometry/blob/develop/include/boost/geometry/formulas/vincenty_inverse.hpp
-double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
+double dso::core::inverse_vincenty(double lat1, double lon1, double lat2,
                                     double lon2, double semi_major,
                                     double flattening, double semi_minor,
                                     double &a12, double &a21,
@@ -262,7 +262,7 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
         printf("\n[ERROR] Failed to converge for nearly antipodal!");
       }*/
       auto itstr = std::to_string(iteration);
-      throw std::out_of_range("[ERROR] ngpt::core::inverse_vincenty cannot "
+      throw std::out_of_range("[ERROR] dso::core::inverse_vincenty cannot "
                               "converge after " +
                               itstr + " iterations!");
     }
@@ -321,7 +321,7 @@ double ngpt::core::inverse_vincenty(double lat1, double lon1, double lat2,
       if (isNan) {
           auto itstr = std::to_string(iteration);
           throw std::out_of_range(
-              "[ERROR] ngpt::core::inverse_vincenty cannot "
+              "[ERROR] dso::core::inverse_vincenty cannot "
               "converge after " +
               itstr + " iterations!");
       }

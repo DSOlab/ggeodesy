@@ -11,7 +11,7 @@
 
 #include <cmath>
 
-namespace ngpt {
+namespace dso {
 
 /// @brief core namespace holds the core of ellipsoid-related functions
 namespace core {
@@ -172,8 +172,8 @@ inline
   return std::atan((1e0 - f) * std::tan(lat));
 }
 
-} // namespace core
+} // core
 
-} // namespace ngpt
+} // dso
 
 #endif

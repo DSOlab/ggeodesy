@@ -7,8 +7,8 @@
 #include <fenv.h>
 #endif
 
-using ngpt::D2PI;
-using ngpt::DPI;
+using dso::D2PI;
+using dso::DPI;
 
 /// @brief Direct Vincenty formula.
 ///
@@ -37,7 +37,7 @@ using ngpt::DPI;
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
 /// @see https://en.wikipedia.org/wiki/Vincenty%27s_formulae
-double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
+double dso::core::direct_vincenty(double lat1, double lon1, double a1,
                                    double s, double semi_major,
                                    double flattening, double semi_minor,
                                    double &lat2, double &lon2,
@@ -111,7 +111,7 @@ double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
   // result (lon2) takes values (a little less) than 180degrees (due to roundoff
   // errors. To protect against this, we normalize the longtitude in the range
   // [-180, 180] degrees.
-  lon2 = ngpt::normalize_angle(L + lon1, -ngpt::DPI, ngpt::DPI);
+  lon2 = dso::normalize_angle(L + lon1, -dso::DPI, dso::DPI);
 
   // compute azimouth
   return std::atan2(sina, -sinU1 * sinSigma + cosU1 * cosSigma * cosa1);
@@ -144,7 +144,7 @@ double ngpt::core::direct_vincenty(double lat1, double lon1, double a1,
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
 /// @see https://www.movable-type.co.uk/scripts/latlong-vincenty.html
-double ngpt::core::direct_vincenty2(double lat1, double lon1, double a1,
+double dso::core::direct_vincenty2(double lat1, double lon1, double a1,
                                     double s, double semi_major,
                                     double flattening, double semi_minor,
                                     double &lat2, double &lon2,
@@ -215,8 +215,8 @@ double ngpt::core::direct_vincenty2(double lat1, double lon1, double a1,
   // result (lon2) takes values (a little less) than 180degrees (due to roundoff
   // errors. To protect against this, we normalize the longtitude in the range
   // [-180, 180] degrees.
-  lon2 = ngpt::normalize_angle(L + lon1, -ngpt::DPI, ngpt::DPI);
+  lon2 = dso::normalize_angle(L + lon1, -dso::DPI, dso::DPI);
 
   const double a2 = std::atan2(sina, -x);
-  return std::fmod(a2 + ngpt::D2PI, D2PI);
+  return std::fmod(a2 + dso::D2PI, D2PI);
 }

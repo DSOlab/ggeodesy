@@ -22,7 +22,7 @@
 
 #include <cmath>
 
-namespace ngpt {
+namespace dso {
 
 void spherical2cart(double r, double phi, double theta, double &x, double &y,
                     double &z) noexcept {
@@ -43,5 +43,5 @@ void cart2spherical(double x, double y, double z, double &r, double &phi,
   return;
 }
 
-} // namespace ngpt
+} // dso
 #endif

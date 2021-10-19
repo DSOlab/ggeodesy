@@ -15,13 +15,13 @@ struct Point {
   double x, y, z;
 };
 
-using namespace ngpt;
+using namespace dso;
 
 int main() {
   /// a (reference) point on ellipsoid.
   Point p1{4595220.02261, 2039434.13622, 3912625.96044};
   Point p2, p3;
-  const double ER = mean_earth_radius<ngpt::ellipsoid::grs80>();
+  const double ER = mean_earth_radius<dso::ellipsoid::grs80>();
 
   // --------------------------------------------------------------------- //
   //                     TEST COORDINATE TRANSFORMATIONS
@@ -154,7 +154,7 @@ int main() {
   printf("\n> TEST HAVERSINE ALGORITHM\n");
   printf("------------------------------------\n");
   double S_haver =
-      ngpt::core::great_circle_distance_haversine(p1.x, p1.y, p2.x, p2.y, ER);
+      dso::core::great_circle_distance_haversine(p1.x, p1.y, p2.x, p2.y, ER);
   printf("Difference in distance between Vincenty and Haversine algorithms:\n");
   printf("\tdS = %10.5fm or %5.1f%%\n", std::abs(S_haver - S),
          std::abs(S_haver - S) * 100.0 / S);
@@ -173,7 +173,7 @@ int main() {
   printf("\n> TEST BEARING ALGORITHM\n");
   printf("------------------------------------\n");
   double fr_bearing = bearing(p1.x, p1.y, p2.x, p2.y);
-  printf("Difference in bearing between Vincenty and simple (ngpt::bearing) "
+  printf("Difference in bearing between Vincenty and simple (dso::bearing) "
          "algorithms:\n");
   sign = std::copysign(1e0, fr_bearing);
   rad2hexd(fr_bearing, a_deg, a_min, a_sec, sign);

@@ -17,7 +17,7 @@ struct Point {
   double x, y, z;
 };
 
-using namespace ngpt;
+using namespace dso;
 
 int main() {
   Point p1, p2;
@@ -26,7 +26,7 @@ int main() {
   int a_deg, a_min, a1_deg, a1_min, a2_deg, a2_min, b1_deg, b1_min, b2_deg,
       b2_min, sign;
   char cnt = 'y';
-  const double ER = mean_earth_radius<ngpt::ellipsoid::grs80>();
+  const double ER = mean_earth_radius<dso::ellipsoid::grs80>();
 
   printf("\n> TEST INVERSE VINCENTY ALGORITHM");
   printf("\n------------------------------------");
@@ -72,11 +72,11 @@ int main() {
 
     //  Perform the inverse Vincenty calculation, to find forward and backward
     //+ azimouths and distance between the two points.
-    S = inverse_vincenty<ngpt::ellipsoid::grs80>(p1.x, p1.y, p2.x, p2.y, a_for,
+    S = inverse_vincenty<dso::ellipsoid::grs80>(p1.x, p1.y, p2.x, p2.y, a_for,
                                                  a_bac, 1e-12);
     // let's also see the result (for the distance) using the haversine formula
     double S_haver =
-        ngpt::core::great_circle_distance_haversine(p1.x, p1.y, p2.x, p2.y, ER);
+        dso::core::great_circle_distance_haversine(p1.x, p1.y, p2.x, p2.y, ER);
 
     //  print results
     printf("\nInverse Vincenty Formula, gives:");

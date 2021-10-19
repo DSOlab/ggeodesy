@@ -11,7 +11,7 @@
 #include <iostream>
 #include <random>
 
-using namespace ngpt;
+using namespace dso;
 using namespace boost::geometry;
 using namespace std::chrono;
 
@@ -97,7 +97,7 @@ auto test_ggeodesy_vincenty(const std::vector<TestLine> &vec, double *maxer,
   double az2, lat2, lon2, err_lat, err_lon, err_az;
   auto start = high_resolution_clock::now();
   for (const auto &dataset : vec) {
-    az2 = ngpt::core::direct_vincenty2(
+    az2 = dso::core::direct_vincenty2(
         dataset.lat1(), dataset.lon1(), dataset.forward_azimuth(),
         dataset.distance(), A, F, B, lat2, lon2, 1e-15);
     if ((err_lat = std::abs(dataset.lat2() - lat2)) > maxer_lat) {
@@ -131,7 +131,7 @@ auto test_ggeodesy_karney(const std::vector<TestLine> &vec, double *maxer,
   double az2, lat2, lon2, err_lat, err_lon, err_az;
   auto start = high_resolution_clock::now();
   for (const auto &dataset : vec) {
-    az2 = ngpt::core::direct_karney(dataset.lat1(), dataset.lon1(),
+    az2 = dso::core::direct_karney(dataset.lat1(), dataset.lon1(),
                                     dataset.forward_azimuth(),
                                     dataset.distance(), A, F, B, lat2, lon2);
     if ((err_lat = std::abs(dataset.lat2() - lat2)) > maxer_lat) {

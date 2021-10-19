@@ -11,7 +11,7 @@
 #include <cmath>
 #include <stdexcept>
 
-void ngpt::top2daz(double north, double east, double up, double &distance,
+void dso::top2daz(double north, double east, double up, double &distance,
                    double &azimouth, double &zenith) {
 
   // spatial distance of vector
@@ -26,9 +26,9 @@ void ngpt::top2daz(double north, double east, double up, double &distance,
   double a{std::atan2(east, north)};
 
   // normalize to range [0-2pi)
-  azimouth = std::fmod(a, ngpt::D2PI);
+  azimouth = std::fmod(a, dso::D2PI);
   if (azimouth < 0e0)
-    azimouth += ngpt::D2PI;
+    azimouth += dso::D2PI;
 
   // zenith angle [0-pi)
   zenith = std::acos(up / distance);

@@ -6,8 +6,8 @@
 #include <stdexcept>
 #include <limits>
 
-using ngpt::D2PI;
-using ngpt::DPI;
+using dso::D2PI;
+using dso::DPI;
 
 // relative floating point comparisson;
 // see https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
@@ -183,7 +183,7 @@ void series_expansion_eq23(double epsilon, double n, const double *sigmas,
 /// @see https://link.springer.com/article/10.1007/s00190-012-0578-z
 ///      Karney 2012, Algorithms for geodesics, Journal of Geodesy volume 87,
 ///      pages43–55(2013)
-double ngpt::core::direct_karney(double lat1, double lon1, double a1, double s,
+double dso::core::direct_karney(double lat1, double lon1, double a1, double s,
                                  double semi_major, double flattening,
                                  double semi_minor, double &lat2,
                                  double &lon2) {
@@ -193,7 +193,7 @@ double ngpt::core::direct_karney(double lat1, double lon1, double a1, double s,
   const double b = semi_minor;
 
   // Solve triangle NEA
-  double beta1 = ngpt::core::reduced_latitude(lat1, f);
+  double beta1 = dso::core::reduced_latitude(lat1, f);
   const double sinbeta1 = std::sin(beta1);
   const double cosbeta1 = std::cos(beta1);
   const double sinalpha = std::sin(a1);
@@ -258,8 +258,8 @@ double ngpt::core::direct_karney(double lat1, double lon1, double a1, double s,
 
   // results
   lat2 = std::atan2(std::tan(beta2), (1e0 - f));
-  lon2 = ngpt::normalize_angle(lambda12, -ngpt::DPI, ngpt::DPI) +
-         ngpt::normalize_angle(lon1, -ngpt::DPI, ngpt::DPI);
+  lon2 = dso::normalize_angle(lambda12, -dso::DPI, dso::DPI) +
+         dso::normalize_angle(lon1, -dso::DPI, dso::DPI);
 
   return alpha2;
 }

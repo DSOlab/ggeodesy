@@ -9,7 +9,7 @@
 
 #include <cmath>
 
-namespace ngpt {
+namespace dso {
 /// The value of \f$\pi\f$.
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr double DPI{std::atan(1e0) * 4e0};
@@ -30,6 +30,6 @@ constexpr double RAD2DEG{180e0 / DPI};
 /// mas to radians factor aka \f$\theta_rad = \theta_mas * MAS2RAD\f$
 constexpr double MAS2RAD{4.847309743e-9};
 
-} // namespace ngpt
+} // dso
 
 #endif

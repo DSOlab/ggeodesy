@@ -6,8 +6,8 @@
 #include <iostream>
 #include <random>
 
-using ngpt::Ellipsoid;
-using ngpt::ellipsoid;
+using dso::Ellipsoid;
+using dso::ellipsoid;
 
 constexpr auto wgs84 = Ellipsoid(ellipsoid::wgs84);
 
@@ -25,11 +25,11 @@ int main() {
 
   // test ellipsoidal to cartesian and back
   for (int i = 0; i < 500; ++i) {
-    lat1 = generate_random_double(-ngpt::DPI / 2e0, ngpt::DPI / 2e0);
-    lon1 = generate_random_double(-ngpt::DPI, ngpt::DPI);
+    lat1 = generate_random_double(-dso::DPI / 2e0, dso::DPI / 2e0);
+    lon1 = generate_random_double(-dso::DPI, dso::DPI);
     hgt1 = generate_random_double(-10e0, 9e3);
-    ngpt::ell2car<ellipsoid::wgs84>(lat1, lon1, hgt1, x1, y1, z1);
-    ngpt::ell2car(lat1, lon1, hgt1, wgs84, x2, y2, z2);
+    dso::ell2car<ellipsoid::wgs84>(lat1, lon1, hgt1, x1, y1, z1);
+    dso::ell2car(lat1, lon1, hgt1, wgs84, x2, y2, z2);
 #ifdef CHECK_PRECISION
     if ((dx = std::abs(x1 - x2)) > max_dx)
       max_dx = dx;
@@ -40,7 +40,7 @@ int main() {
 #else
     assert(approxEqual(x1, x2) && approxEqual(y1, y2) && approxEqual(z1, z2));
 #endif
-    ngpt::car2ell<ellipsoid::wgs84>(x1, y1, z1, lat2, lon2, hgt2);
+    dso::car2ell<ellipsoid::wgs84>(x1, y1, z1, lat2, lon2, hgt2);
 #ifdef CHECK_PRECISION
     if ((dlat = std::abs(m_rad2meters<ellipsoid::wgs84>(lat1 - lat2, lat1))) >
         max_dlat)
@@ -54,7 +54,7 @@ int main() {
     assert(approxEqual(lat1, lat2) && approxEqual(lon1, lon2) &&
            approxEqual(hgt1, hgt2));
 #endif
-    // ngpt::car2ell(x1,y1,z1,wgs84,lat1,lon1,hgt1);
+    // dso::car2ell(x1,y1,z1,wgs84,lat1,lon1,hgt1);
     // assert(approxEqual(lat1,lat2) && approxEqual(lon1,lon2) &&
     // approxEqual(hgt1,hgt2));
   }

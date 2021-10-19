@@ -13,23 +13,23 @@ int main() {
 
   double lat1, lat2, lon1, lon2, d1, d2, d3, d4, d5, d6, meand, dd1, dd2, dd3,
       dd4, dd5, dd6;
-  const double R = ngpt::mean_earth_radius<ngpt::ellipsoid::wgs84>();
+  const double R = dso::mean_earth_radius<dso::ellipsoid::wgs84>();
   std::vector<std::array<double, 7>> diffs;
 
   for (int i = 0; i < 50; ++i) {
     // random point 1; make point 2 very-very close
-    lat1 = generate_random_double(-ngpt::DPI / 2e0, ngpt::DPI / 2e0);
+    lat1 = generate_random_double(-dso::DPI / 2e0, dso::DPI / 2e0);
     lat2 = lat1 + generate_random_double(-1e-5, 1e-5);
-    lon1 = generate_random_double(-ngpt::DPI, ngpt::DPI);
+    lon1 = generate_random_double(-dso::DPI, dso::DPI);
     lon2 = lon1 + generate_random_double(-1e-5, 1e-5);
     // compute great circle distance
-    d1 = ngpt::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
-    d2 = ngpt::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
-    d3 = ngpt::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
-    d4 = ngpt::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
+    d1 = dso::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
+    d2 = dso::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
+    d3 = dso::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
+    d4 = dso::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
     d5 =
-        ngpt::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
-    d6 = ngpt::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
+        dso::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
+    d6 = dso::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
     // printf("\n%15.5f %15.5f %15.5f %15.5f %15.5f %15.5f", d1, d2, d3, d4, d5,
     // d6);
     meand = (d1 + d2 + d3 + d4) / 4e0;
@@ -56,18 +56,18 @@ int main() {
 
   for (int i = 0; i < 50; ++i) {
     // random point 1; make point 2 too close
-    lat1 = generate_random_double(-ngpt::DPI / 2e0, ngpt::DPI / 2e0);
+    lat1 = generate_random_double(-dso::DPI / 2e0, dso::DPI / 2e0);
     lat2 = lat1 + generate_random_double(-1e-3, 1e-3);
-    lon1 = generate_random_double(-ngpt::DPI, ngpt::DPI);
+    lon1 = generate_random_double(-dso::DPI, dso::DPI);
     lon2 = lon1 + generate_random_double(-1e-3, 1e-3);
     // compute great circle distance
-    d1 = ngpt::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
-    d2 = ngpt::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
-    d3 = ngpt::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
-    d4 = ngpt::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
+    d1 = dso::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
+    d2 = dso::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
+    d3 = dso::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
+    d4 = dso::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
     d5 =
-        ngpt::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
-    d6 = ngpt::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
+        dso::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
+    d6 = dso::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
     // printf("\n%15.5f %15.5f %15.5f %15.5f %15.5f %15.5f", d1, d2, d3, d4, d5,
     // d6);
     meand = (d1 + d2 + d3 + d4) / 4e0;
@@ -94,18 +94,18 @@ int main() {
 
   for (int i = 0; i < 50; ++i) {
     // random point 1; make point 2 too close
-    lat1 = generate_random_double(-ngpt::DPI / 2e0, ngpt::DPI / 2e0);
+    lat1 = generate_random_double(-dso::DPI / 2e0, dso::DPI / 2e0);
     lat2 = lat1 + generate_random_double(-1e-2, 1e-2);
-    lon1 = generate_random_double(-ngpt::DPI, ngpt::DPI);
+    lon1 = generate_random_double(-dso::DPI, dso::DPI);
     lon2 = lon1 + generate_random_double(-1e-2, 1e-2);
     // compute great circle distance
-    d1 = ngpt::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
-    d2 = ngpt::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
-    d3 = ngpt::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
-    d4 = ngpt::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
+    d1 = dso::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
+    d2 = dso::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
+    d3 = dso::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
+    d4 = dso::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
     d5 =
-        ngpt::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
-    d6 = ngpt::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
+        dso::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
+    d6 = dso::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
     // printf("\n%15.5f %15.5f %15.5f %15.5f %15.5f %15.5f", d1, d2, d3, d4, d5,
     // d6);
     meand = (d1 + d2 + d3 + d4) / 4e0;
@@ -132,18 +132,18 @@ int main() {
 
   for (int i = 0; i < 50; ++i) {
     // random point 1; make point 2 too close
-    lat1 = generate_random_double(-ngpt::DPI / 2e0, ngpt::DPI / 2e0);
+    lat1 = generate_random_double(-dso::DPI / 2e0, dso::DPI / 2e0);
     lat2 = lat1 + generate_random_double(-1e-1, 1e-1);
-    lon1 = generate_random_double(-ngpt::DPI, ngpt::DPI);
+    lon1 = generate_random_double(-dso::DPI, dso::DPI);
     lon2 = lon1 + generate_random_double(-1e-1, 1e-1);
     // compute great circle distance
-    d1 = ngpt::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
-    d2 = ngpt::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
-    d3 = ngpt::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
-    d4 = ngpt::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
+    d1 = dso::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
+    d2 = dso::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
+    d3 = dso::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
+    d4 = dso::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
     d5 =
-        ngpt::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
-    d6 = ngpt::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
+        dso::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
+    d6 = dso::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
     // printf("\n%15.5f %15.5f %15.5f %15.5f %15.5f %15.5f", d1, d2, d3, d4, d5,
     // d6);
     meand = (d1 + d2 + d3 + d4) / 4e0;
@@ -170,18 +170,18 @@ int main() {
 
   for (int i = 0; i < 150; ++i) {
     // random points 1 and 2
-    lat1 = generate_random_double(-ngpt::DPI / 2e0, ngpt::DPI / 2e0);
-    lat2 = generate_random_double(-ngpt::DPI / 2e0, ngpt::DPI / 2e0);
-    lon1 = generate_random_double(-ngpt::DPI, ngpt::DPI);
-    lon2 = generate_random_double(-ngpt::DPI, ngpt::DPI);
+    lat1 = generate_random_double(-dso::DPI / 2e0, dso::DPI / 2e0);
+    lat2 = generate_random_double(-dso::DPI / 2e0, dso::DPI / 2e0);
+    lon1 = generate_random_double(-dso::DPI, dso::DPI);
+    lon2 = generate_random_double(-dso::DPI, dso::DPI);
     // compute great circle distance
-    d1 = ngpt::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
-    d2 = ngpt::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
-    d3 = ngpt::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
-    d4 = ngpt::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
+    d1 = dso::core::great_circle_distance_cosines(lat1, lon1, lat2, lon2, R);
+    d2 = dso::core::great_circle_distance_haversine(lat1, lon1, lat2, lon2, R);
+    d3 = dso::core::great_circle_distance_vincenty(lat1, lon1, lat2, lon2, R);
+    d4 = dso::core::great_circle_distance_chordl(lat1, lon1, lat2, lon2, R);
     d5 =
-        ngpt::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
-    d6 = ngpt::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
+        dso::core::great_circle_distance_pythagoras(lat1, lon1, lat2, lon2, R);
+    d6 = dso::core::great_circle_distance_polar(lat1, lon1, lat2, lon2, R);
     // printf("\n%15.5f %15.5f %15.5f %15.5f %15.5f %15.5f", d1, d2, d3, d4, d5,
     // d6);
     meand = (d1 + d2 + d3 + d4) / 4e0;

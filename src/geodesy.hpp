@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-namespace ngpt {
+namespace dso {
 
 /// @brief Topocentric vector to azimouth, zenith and distance.
 ///
@@ -135,6 +135,6 @@ constexpr struct {
 void pz90_to_wgs84(const double *xwgs, double *xpz, int pts = 1,
                    int selection = 0);
 
-} // namespace ngpt
+} // dso
 
 #endif

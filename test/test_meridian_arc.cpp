@@ -33,20 +33,20 @@ constexpr double PRECISION = 1e-4;
 int main() {
 
   double /*angle_radians,*/ lat;
-  const double a = ngpt::ellipsoid_traits<ngpt::ellipsoid::grs80>::a;
-  const double f = ngpt::ellipsoid_traits<ngpt::ellipsoid::grs80>::f;
+  const double a = dso::ellipsoid_traits<dso::ellipsoid::grs80>::a;
+  const double f = dso::ellipsoid_traits<dso::ellipsoid::grs80>::f;
 
   for (int i = 0; i < 10000; ++i) {
-    lat = generate_random_double(-ngpt::DPI, ngpt::DPI);
-    double s1 = ngpt::meridian_arc_length<ngpt::ellipsoid::grs80>(lat, 0);
+    lat = generate_random_double(-dso::DPI, dso::DPI);
+    double s1 = dso::meridian_arc_length<dso::ellipsoid::grs80>(lat, 0);
     // printf("\nMeridian Arc Length to lat = %+5.1f is %+20.10fm",
-    // ngpt::rad2deg(lat), s1);
-    double s2 = ngpt::meridian_arc_length<ngpt::ellipsoid::grs80>(lat, 1);
+    // dso::rad2deg(lat), s1);
+    double s2 = dso::meridian_arc_length<dso::ellipsoid::grs80>(lat, 1);
     // printf("\nMeridian Arc Length to lat = %+5.1f is %+20.10fm",
-    // ngpt::rad2deg(lat), s2);
-    double s3 = ngpt::meridian_arc_length<ngpt::ellipsoid::grs80>(lat, 2);
+    // dso::rad2deg(lat), s2);
+    double s3 = dso::meridian_arc_length<dso::ellipsoid::grs80>(lat, 2);
     // printf("\nMeridian Arc Length to lat = %+5.1f is %+20.10fm",
-    // ngpt::rad2deg(lat), s3);
+    // dso::rad2deg(lat), s3);
 #ifdef CHECK_PRECISION
     if (std::abs(s1 - s2) > precision_12)
       precision_12 = std::abs(s1 - s2);
@@ -70,8 +70,8 @@ int main() {
 
   auto t1 = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < 10000; ++i) {
-    lat = generate_random_double(-ngpt::DPI, ngpt::DPI);
-    ngpt::core::meridian_arc_length_impl1(a, f, lat);
+    lat = generate_random_double(-dso::DPI, dso::DPI);
+    dso::core::meridian_arc_length_impl1(a, f, lat);
   }
   auto t2 = std::chrono::high_resolution_clock::now();
   auto duration =
@@ -80,8 +80,8 @@ int main() {
 
   t1 = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < 10000; ++i) {
-    lat = generate_random_double(-ngpt::DPI, ngpt::DPI);
-    ngpt::core::meridian_arc_length_impl2(a, f, lat);
+    lat = generate_random_double(-dso::DPI, dso::DPI);
+    dso::core::meridian_arc_length_impl2(a, f, lat);
   }
   t2 = std::chrono::high_resolution_clock::now();
   duration =
@@ -90,8 +90,8 @@ int main() {
 
   t1 = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < 10000; ++i) {
-    lat = generate_random_double(-ngpt::DPI, ngpt::DPI);
-    ngpt::core::meridian_arc_length_impl3(a, f, lat);
+    lat = generate_random_double(-dso::DPI, dso::DPI);
+    dso::core::meridian_arc_length_impl3(a, f, lat);
   }
   t2 = std::chrono::high_resolution_clock::now();
   duration =

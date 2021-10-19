@@ -10,7 +10,7 @@
 
 #include "ellipsoid.hpp"
 
-namespace ngpt {
+namespace dso {
 
 /// @brief core namespace holds the core of ellipsoid-related functions
 namespace core {
@@ -39,6 +39,6 @@ double meridian_arc_length(double lat, int alg = 0) noexcept {
   }
 }
 
-} // namespace ngpt
+} // dso
 
 #endif

@@ -10,7 +10,7 @@
 /// There are two ways a user can make use of the ellipsoids:
 /// * 1. If the ellipsoid of choice is known at compile time, then the
 ///      template function/traits can be used. A (per-ellipsoid) specialized
-///      traits class (i.e. ngpt::ellipsoid_traits) is used to implement the
+///      traits class (i.e. dso::ellipsoid_traits) is used to implement the
 ///      basic properties of each ellipsoid.
 ///      E.g., it the ellipsoid of choice is GRS80, then:
 ///      double semi_major = ellipsoid_traits<ellipsoid::grs80>::a;
@@ -43,13 +43,13 @@
 #include "ellipsoid_core.hpp"
 #include <type_traits>
 
-namespace ngpt {
+namespace dso {
 
 /// @brief A list of well-known reference ellipsoids.
 ///
 /// For each of these reference ellipsoids, a series of traits (i.e. geometric
 /// characteristics) will be specialized later on, using the template class
-/// ngpt::ellipsoid_traits.
+/// dso::ellipsoid_traits.
 ///
 enum class ellipsoid : char { grs80, wgs84, pz90 };
 
@@ -57,15 +57,15 @@ enum class ellipsoid : char { grs80, wgs84, pz90 };
 ///
 /// A (template class) to hold specialized geometric quantities for each
 /// of the eumerated elements (i.e. reference ellipsoids) in the
-/// ngpt::ellipsoid enum.
-/// I.e., to make any element of ngpt::ellipsoid usable, specialize this
+/// dso::ellipsoid enum.
+/// I.e., to make any element of dso::ellipsoid usable, specialize this
 /// (trait) class.
 ///
 /// @tparam E  The reference ellipsoid to be specialized (i.e. one of
-///            ngpt::ellipsoid).
+///            dso::ellipsoid).
 template <ellipsoid E> struct ellipsoid_traits {};
 
-/// @brief A class to hold traits for the GRS-80 (i.e. ngpt::ellispoid::grs80)
+/// @brief A class to hold traits for the GRS-80 (i.e. dso::ellispoid::grs80)
 /// reference ellipsoid.
 ///
 /// @see https://en.wikipedia.org/wiki/GRS_80
@@ -78,7 +78,7 @@ template <> struct ellipsoid_traits<ellipsoid::grs80> {
   static constexpr const char *n{"GRS80"};
 };
 
-/// @brief A class to hold traits for the WGS-84 (i.e. ngpt::ellispoid::wgs84)
+/// @brief A class to hold traits for the WGS-84 (i.e. dso::ellispoid::wgs84)
 /// reference ellipsoid.
 ///
 /// @see https://en.wikipedia.org/wiki/World_Geodetic_System
@@ -91,7 +91,7 @@ template <> struct ellipsoid_traits<ellipsoid::wgs84> {
   static constexpr const char *n{"WGS84"};
 };
 
-/// @brief A class to hold traits for the PZ-90 (i.e. ngpt::ellispoid::pz90)
+/// @brief A class to hold traits for the PZ-90 (i.e. dso::ellispoid::pz90)
 /// reference ellipsoid.
 ///
 /// @see
@@ -107,22 +107,22 @@ template <> struct ellipsoid_traits<ellipsoid::pz90> {
 
 /// @brief Compute the squared eccentricity.
 ///
-/// @tparam E  The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam E  The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return    Eccentricity squared.
 /// @throw     Does not throw.
 ///
-/// @see ngpt::core::eccentricity_squared
+/// @see dso::core::eccentricity_squared
 template <ellipsoid E> constexpr double eccentricity_squared() noexcept {
   return core::eccentricity_squared(ellipsoid_traits<E>::f);
 }
 
 /// @brief Compute the linear eccentricity.
 ///
-/// @tparam E  The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam E  The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return    linear eccentricity
 /// @throw     Does not throw.
 ///
-/// @see ngpt::core::linear_eccentricity
+/// @see dso::core::linear_eccentricity
 template <ellipsoid E>
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
@@ -135,20 +135,20 @@ constexpr
 
 /// @brief Compute the semi-minor axis (b).
 ///
-/// @tparam E The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam E The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return   Semi-minor axis of the reference ellipsoid in meters.
 ///
-/// @see ngpt::core::semi_minor
+/// @see dso::core::semi_minor
 template <ellipsoid E> constexpr double semi_minor() noexcept {
   return core::semi_minor(ellipsoid_traits<E>::a, ellipsoid_traits<E>::f);
 }
 
 /// @brief Compute the polar radius of curvature (c).
 ///
-/// @tparam E The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam E The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return   Polar radius of curvature of the reference ellipsoid in meters.
 ///
-/// @see ngpt::core::polar_radius_of_curvature
+/// @see dso::core::polar_radius_of_curvature
 template <ellipsoid E> constexpr double polar_radius_of_curvature() noexcept {
   return core::polar_radius_of_curvature(ellipsoid_traits<E>::a,
                                          ellipsoid_traits<E>::f);
@@ -156,10 +156,10 @@ template <ellipsoid E> constexpr double polar_radius_of_curvature() noexcept {
 
 /// @brief Compute the third flattening
 ///
-/// @tparam E The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam E The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return   The third flattening
 ///
-/// @see ngpt::core::third_flattening
+/// @see dso::core::third_flattening
 template <ellipsoid E> constexpr double third_flattening() noexcept {
   return core::third_flattening(ellipsoid_traits<E>::f);
 }
@@ -167,12 +167,12 @@ template <ellipsoid E> constexpr double third_flattening() noexcept {
 /// @brief Compute the geocentric latitude at some geodetic latitude on the
 ///        ellipsoid
 ///
-/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[in] lat The geodetic latitude in radians
 /// @return        The geocentric latitude in radians
 /// @throw     Does not throw.
 ///
-/// @see ngpt::core::geocentric_latitude
+/// @see dso::core::geocentric_latitude
 template <ellipsoid E>
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
@@ -185,12 +185,12 @@ constexpr
 /// @brief Compute the parametric or reduced latitude at some geodetic latitude
 ///        on the ellipsoid
 ///
-/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[in] lat The geodetic latitude in radians
 /// @return        The parametric or reduced latitude in radians
 /// @throw     Does not throw.
 ///
-/// @see ngpt::core::reduced_latitude
+/// @see dso::core::reduced_latitude
 template <ellipsoid E>
 #if defined(__GNUC__) && !defined(__llvm__)
 constexpr
@@ -204,10 +204,10 @@ constexpr
 ///        reference ellipsoid).
 ///
 /// @param[in] lat The latitude in radians.
-/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return        The normal radius of curvature in meters.
 //
-/// @see ngpt::core::N
+/// @see dso::core::N
 template <ellipsoid E> double N(double lat) noexcept {
   return core::N(lat, ellipsoid_traits<E>::a, semi_minor<E>());
 }
@@ -216,10 +216,10 @@ template <ellipsoid E> double N(double lat) noexcept {
 ///        reference ellipsoid).
 ///
 /// @param[in] lat The latitude in radians.
-/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return        The meridional radius of curvature in meters.
 ///
-/// @see ngpt::core::M
+/// @see dso::core::M
 template <ellipsoid E> double M(double lat) noexcept {
   return core::M(lat, ellipsoid_traits<E>::a, semi_minor<E>());
 }
@@ -227,7 +227,7 @@ template <ellipsoid E> double M(double lat) noexcept {
 /// @brief Compute mean earth radius; in geophysics, the International Union of
 ///        Geodesy and Geophysics (IUGG) defines the mean radius (denoted R1)
 ///        to be: \f$ R1 = (2\alpha + b) / 3 \f$
-/// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
 ///
 /// @see https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
@@ -270,13 +270,13 @@ T parallel_arc_length(T lat, T dlon) noexcept {
 /// * flattening, f aka \f$ f = \frac{\alpha - \beta}{\alpha} \f$
 ///
 /// Users can construct the commonly used ellipsoids in Geodesy (grs80,
-/// wgs84 and pz90) via the ngpt::ellipsoid enums, or any other ellipsoid
+/// wgs84 and pz90) via the dso::ellipsoid enums, or any other ellipsoid
 /// of choice, by passing in the fundamental arguments (a and f).
 class Ellipsoid {
 public:
-  /// @brief  Constructor from an ngpt::ellipsoid enum
-  /// @param[in] e An ngpt::ellipsoid; fundamental geometric constants are
-  ///              automatically assigned via the ngpt::ellipsoid_traits
+  /// @brief  Constructor from an dso::ellipsoid enum
+  /// @param[in] e An dso::ellipsoid; fundamental geometric constants are
+  ///              automatically assigned via the dso::ellipsoid_traits
   ///              class.
   explicit constexpr Ellipsoid(ellipsoid e) noexcept : __a(0e0), __f(0e0) {
     switch (e) {
@@ -310,21 +310,21 @@ public:
 
   /// @brief  Get the squared eccentricity \f$ e^2 \f$
   /// @return Eccentricity aquared
-  /// @see ngpt::core::eccentricity_squared
+  /// @see dso::core::eccentricity_squared
   constexpr double eccentricity_squared() const noexcept {
     return core::eccentricity_squared(__f);
   }
 
   /// @brief  Get the semi-minor axis \f$ \beta \f$
   /// @return Semi-minor axis (meters)
-  /// @see ngpt::core::semi_minor
+  /// @see dso::core::semi_minor
   constexpr double semi_minor() const noexcept {
     return core::semi_minor(__a, __f);
   }
 
   /// @brief Get the third flattening \f$ n \f$
   /// @return The third flattening
-  /// @see ngpt::core::third_flattening
+  /// @see dso::core::third_flattening
   constexpr double third_flattening() const noexcept {
     return core::third_flattening(__f);
   }
@@ -348,7 +348,7 @@ public:
   /// @param[in] lat The latitude in radians.
   /// @return        The normal radius of curvature in meters.
   ///
-  /// @see ngpt::core::N
+  /// @see dso::core::N
   double N(double lat) const noexcept {
     return core::N(lat, __a, this->semi_minor());
   }
@@ -358,7 +358,7 @@ public:
   /// @param[in] lat The latitude in radians.
   /// @return        The meridional radius of curvature in meters.
   ///
-  /// @see ngpt::core::M
+  /// @see dso::core::M
   double M(double lat) const noexcept {
     return core::M(lat, __a, this->semi_minor());
   }
@@ -367,7 +367,7 @@ public:
   /// of
   ///        Geodesy and Geophysics (IUGG) defines the mean radius (denoted R1)
   ///        to be: \f$ R1 = (2\alpha + b) / 3 \f$
-  /// @tparam    E   The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+  /// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
   /// @return        The mean earth radius (as defined by IUGG for ellipsoid E)
   ///
   /// @see https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
@@ -377,8 +377,8 @@ public:
 
 private:
   double __a, __f;
-}; // class Ellipsoid
+}; // Ellipsoid
 
-} // namespace ngpt
+} // dso
 
 #endif

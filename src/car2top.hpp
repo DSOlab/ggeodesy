@@ -17,7 +17,7 @@
 #include "car2ell.hpp"
 #include <cmath>
 
-namespace ngpt {
+namespace dso {
 
 namespace core {
 
@@ -76,7 +76,7 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
 
 /// @brief Cartesian to topocentric (vector).
 ///
-/// @tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[in]  xi     Cartesian x-component of point i (meters)
 /// @param[in]  yi     Cartesian y-component of point i (meters)
 /// @param[in]  zi     Cartesian z-component of point i (meters)
@@ -87,7 +87,7 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
 /// @param[out] east   Vector east component (meters)
 /// @param[out] up     Vector up component (meters)
 ///
-/// @see ngpt::core::dcar2top
+/// @see dso::core::dcar2top
 template <ellipsoid E>
 void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
              double &north, double &east, double &up) noexcept {
@@ -109,7 +109,7 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
 
 /// @brief Cartesian to topocentric (vector).
 ///
-/// @tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[in]  xi     Cartesian x-component of point i (meters)
 /// @param[in]  yi     Cartesian y-component of point i (meters)
 /// @param[in]  zi     Cartesian z-component of point i (meters)
@@ -121,7 +121,7 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
 /// @param[out] up     Vector up component (meters)
 /// @throw             Does not throw.
 ///
-/// @see ngpt::core::dcar2top
+/// @see dso::core::dcar2top
 template <ellipsoid E>
 void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
               double &north, double &east, double &up) noexcept {
@@ -139,12 +139,12 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
 /// @param[in]  xj     Cartesian x-component of point j (meters)
 /// @param[in]  yj     Cartesian y-component of point j (meters)
 /// @param[in]  zj     Cartesian z-component of point j (meters)
-/// @param[in]  e      reference ellipsoid (ngpt::Ellipsoid)
+/// @param[in]  e      reference ellipsoid (dso::Ellipsoid)
 /// @param[out] north  Vector north component (meters)
 /// @param[out] east   Vector east component (meters)
 /// @param[out] up     Vector up component (meters)
 ///
-/// @see ngpt::core::dcar2top
+/// @see dso::core::dcar2top
 void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
              const Ellipsoid &e, double &north, double &east,
              double &up) noexcept {
@@ -172,12 +172,12 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
 /// @param[in]  dx     x-component of \f$\Delta x\f$ vector (meters)
 /// @param[in]  dy     y-component of \f$\Delta y\f$ vector (meters)
 /// @param[in]  dz     z-component of \f$\Delta z\f$ vector (meters)
-/// @param[in]  e      the reference ellipsoid (ngpt::Ellipsoid)
+/// @param[in]  e      the reference ellipsoid (dso::Ellipsoid)
 /// @param[out] north  Vector north component (meters)
 /// @param[out] east   Vector east component (meters)
 /// @param[out] up     Vector up component (meters)
 ///
-/// @see ngpt::core::dcar2top
+/// @see dso::core::dcar2top
 void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
               const Ellipsoid &e, double &north, double &east,
               double &up) noexcept {
@@ -187,6 +187,6 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
                  up);
 }
 
-} // namespace ngpt
+} // dso
 
 #endif

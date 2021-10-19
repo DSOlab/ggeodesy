@@ -5,8 +5,8 @@
 #include <cmath>
 #include <stdexcept>
 
-using ngpt::D2PI;
-using ngpt::DPI;
+using dso::D2PI;
+using dso::DPI;
 
 /// @brief arrange lat1 and lat2 such that:
 ///        phi1 <= 0 and phi1 <= phi2 <= -phi1
@@ -56,7 +56,7 @@ void arrange_lats_boost(double lat1, double lat2, double &phi1, double& phi2) no
   return;
 }
 
-double ngpt::core::inverse_karney(double lat1, double lon1, double lat2,
+double dso::core::inverse_karney(double lat1, double lon1, double lat2,
                                     double lon2, double semi_major,
                                     double flattening, double semi_minor,
                                     double &a12, double &a21
@@ -80,8 +80,8 @@ double ngpt::core::inverse_karney(double lat1, double lon1, double lat2,
 #endif
 
   // solve the astroid problem
-  const double beta1 = ngpt::core::reduced_latitude(lat1, f);
-  const double beta2 = ngpt::core::reduced_latitude(lat2, f);
+  const double beta1 = dso::core::reduced_latitude(lat1, f);
+  const double beta2 = dso::core::reduced_latitude(lat2, f);
   const double cosbeta1 = std::cos(beta1);
   const double delta = f*a*DPI*cosbeta1*cosbeta1;
   const double x = (l12 - DPI)*(a*cosbeta1)/delta;

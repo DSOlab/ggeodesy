@@ -11,16 +11,16 @@ double generate_random_double(double lower_bound, double upper_bound) noexcept {
 }
 
 // infinitesimal element of the meridian m = M(φ) * dφ
-template <ngpt::ellipsoid E>
+template <dso::ellipsoid E>
 double m_rad2meters(double dlat, double lat) noexcept {
-  auto M = ngpt::M<E>(lat);
+  auto M = dso::M<E>(lat);
   return M * dlat;
 }
 
 // infinitesimal element of the parallel m = N *cos(φ) *dlon
-template <ngpt::ellipsoid E>
+template <dso::ellipsoid E>
 double p_rad2meters(double dlon, double lat) noexcept {
-  auto N = ngpt::N<E>(lat);
+  auto N = dso::N<E>(lat);
   return N * std::cos(lat) * dlon;
 }
 

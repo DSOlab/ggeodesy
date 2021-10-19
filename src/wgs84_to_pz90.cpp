@@ -4,9 +4,9 @@
 
 #include "geodesy.hpp"
 
-void ngpt::pz90_to_wgs84(const double *xwgs, double *xpz, int pts,
+void dso::pz90_to_wgs84(const double *xwgs, double *xpz, int pts,
                          int selection) {
-  auto prms = ngpt::pz2wgs_parameters[selection];
+  auto prms = dso::pz2wgs_parameters[selection];
   // angles to rad*1e9
   double r1 = prms.r1 * 4.847309743e0;
   double r2 = prms.r2 * 4.847309743e0;

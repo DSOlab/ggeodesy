@@ -8,14 +8,14 @@
 #include <cassert>
 
 /// @brief Compute the haversine function.
-double ngpt::core::haversine_angle(double angle) noexcept {
+double dso::core::haversine_angle(double angle) noexcept {
   const double sinHalfTheta{std::sin(angle / 2e0)};
   return sinHalfTheta * sinHalfTheta;
 }
 
 /// @brief Compute great circle distance between two points on a sphere of
 ///        radius R
-double ngpt::core::great_circle_distance_cosines(double lat1, double lon1,
+double dso::core::great_circle_distance_cosines(double lat1, double lon1,
                                                  double lat2, double lon2,
                                                  double R) noexcept {
   const double sinf1 = std::sin(lat1);
@@ -31,7 +31,7 @@ double ngpt::core::great_circle_distance_cosines(double lat1, double lon1,
 
 /// @brief Compute great circle distance between two points on a sphere of
 ///        radius R
-double ngpt::core::great_circle_distance_haversine(double lat1, double lon1,
+double dso::core::great_circle_distance_haversine(double lat1, double lon1,
                                                    double lat2, double lon2,
                                                    double R) noexcept {
   const double h{haversine_angle(lat2 - lat1) +
@@ -42,7 +42,7 @@ double ngpt::core::great_circle_distance_haversine(double lat1, double lon1,
 
 /// @brief Compute great circle distance between two points on a sphere of
 ///        radius R
-double ngpt::core::great_circle_distance_vincenty(double lat1, double lon1,
+double dso::core::great_circle_distance_vincenty(double lat1, double lon1,
                                                   double lat2, double lon2,
                                                   double R) noexcept {
   const double sinf1 = std::sin(lat1);
@@ -62,7 +62,7 @@ double ngpt::core::great_circle_distance_vincenty(double lat1, double lon1,
 
 /// @brief Compute great circle distance between two points on a sphere of
 ///        radius R
-double ngpt::core::great_circle_distance_chordl(double lat1, double lon1,
+double dso::core::great_circle_distance_chordl(double lat1, double lon1,
                                                 double lat2, double lon2,
                                                 double R) noexcept {
   const double sinf1 = std::sin(lat1);
@@ -85,7 +85,7 @@ double ngpt::core::great_circle_distance_chordl(double lat1, double lon1,
 
 /// @brief Compute great circle distance between two points on a sphere of
 ///        radius R
-double ngpt::core::great_circle_distance_pythagoras(double lat1, double lon1,
+double dso::core::great_circle_distance_pythagoras(double lat1, double lon1,
                                                     double lat2, double lon2,
                                                     double R) noexcept {
   const double fm = (lat1 + lat2) / 2e0;
@@ -96,11 +96,11 @@ double ngpt::core::great_circle_distance_pythagoras(double lat1, double lon1,
 
 /// @brief Compute great circle distance between two points on a sphere of
 ///        radius R
-double ngpt::core::great_circle_distance_polar(double lat1, double lon1,
+double dso::core::great_circle_distance_polar(double lat1, double lon1,
                                                double lat2, double lon2,
                                                double R) noexcept {
-  const double theta1 = ngpt::DPI - lat1;
-  const double theta2 = ngpt::DPI - lat2;
+  const double theta1 = dso::DPI - lat1;
+  const double theta2 = dso::DPI - lat2;
   return R * std::sqrt(theta1 * theta1 + theta2 * theta2 -
                        2e0 * theta1 * theta2 * std::cos(lon2 - lon1));
 }

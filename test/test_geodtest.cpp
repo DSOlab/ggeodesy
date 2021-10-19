@@ -10,7 +10,7 @@
 #include <iostream>
 #include <random>
 
-using namespace ngpt;
+using namespace dso;
 
 /// constants for wgs84 ellipsoid
 constexpr double A = ellipsoid_traits<ellipsoid::wgs84>::a,
@@ -38,14 +38,14 @@ struct TestLine {
   void test_vincenty_direct(bool print = true) const {
     double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
-    az2 = ngpt::core::direct_vincenty2(ar[0], ar[1], ar[2], ar[6], A, F, B,
+    az2 = dso::core::direct_vincenty2(ar[0], ar[1], ar[2], ar[6], A, F, B,
                                        lat2, lon2, 1e-15);
     if (print) {
       printf("\nInput:  lat=%+8.3f lon=%+8.3f Az=%+8.3f S=%8.1f",
-             ngpt::rad2deg(ar[0]), ngpt::rad2deg(ar[1]), ngpt::rad2deg(ar[2]),
+             dso::rad2deg(ar[0]), dso::rad2deg(ar[1]), dso::rad2deg(ar[2]),
              ar[6] / 1000);
-      printf("\nOutput: lon=%+8.3f should be %+8.3f", ngpt::rad2deg(lon2),
-             ngpt::rad2deg(ar[4]));
+      printf("\nOutput: lon=%+8.3f should be %+8.3f", dso::rad2deg(lon2),
+             dso::rad2deg(ar[4]));
     }
     if ((err_lat = std::abs(rad2sec(ar[3] - lat2))) > max_error_lat) {
       max_error_lat = err_lat;
@@ -76,7 +76,7 @@ struct TestLine {
     double s12, a12, a21;
     double err_lat, err_lon, err_az;
     try {
-      s12 = ngpt::core::inverse_vincenty(ar[0], ar[1], ar[3], ar[4], A, F, B,
+      s12 = dso::core::inverse_vincenty(ar[0], ar[1], ar[3], ar[4], A, F, B,
                                          a12, a21, 1e-12);
       if ((err_lat = std::abs(a12 - ar[2])) > max_error_lat) {
         max_error_lat = err_lat;
@@ -89,17 +89,17 @@ struct TestLine {
       }
       /*printf("\n From point (%5.1f, %5.1f) to (%5.1f, %5.1f) computed S:
          %15.5f given S: %15.5f, Azimouth: %15.10f given Az: %15.10f",
-          ngpt::rad2deg(ar[0]), ngpt::rad2deg(ar[1]), ngpt::rad2deg(ar[3]),
-          ngpt::rad2deg(ar[4]), s12, ar[6], ngpt::rad2deg(a12),
-         ngpt::rad2deg(ar[2]));*/
+          dso::rad2deg(ar[0]), dso::rad2deg(ar[1]), dso::rad2deg(ar[3]),
+          dso::rad2deg(ar[4]), s12, ar[6], dso::rad2deg(a12),
+         dso::rad2deg(ar[2]));*/
       acc_error_lat += err_lat;
       acc_error_lon += err_lon;
       acc_error_az += err_az;
     } catch (std::out_of_range &e) {
       /*printf("\n[ERROR] Vincenty-Inverse failed to converge!");
       printf("\n        From point (%5.1f, %5.1f) to (%5.1f, %5.1f)",
-          ngpt::rad2deg(ar[0]), ngpt::rad2deg(ar[1]), ngpt::rad2deg(ar[3]),
-          ngpt::rad2deg(ar[4]));*/
+          dso::rad2deg(ar[0]), dso::rad2deg(ar[1]), dso::rad2deg(ar[3]),
+          dso::rad2deg(ar[4]));*/
       ++failed_converges;
     }
 

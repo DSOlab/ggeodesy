@@ -15,7 +15,7 @@
 /// points. They have been widely used in geodesy because they are accurate to
 /// within 0.5 mm (0.020 in) on the Earth ellipsoid.
 ///
-/// Core function/algorithm implementations are nested in the ngpt::core
+/// Core function/algorithm implementations are nested in the dso::core
 /// namespace. Users can access the core functions via ngpt functions that
 /// either take ellpsoid parameters as compile-time constants (aka template
 /// implementations) or runtime parameters (where an Ellipsoid instance is
@@ -34,7 +34,7 @@
 
 #include "ellipsoid.hpp"
 
-namespace ngpt {
+namespace dso {
 
 namespace core {
 
@@ -69,7 +69,7 @@ double direct_vincenty2(double lat1, double lon1, double a1, double s,
 
 /// @brief Compute the inverse Vincenty formula.
 ///
-/// @tparam     E           ngpt::ellipsoid enum
+/// @tparam     E           dso::ellipsoid enum
 /// @param[in]  lat1        Latitude of point 1 (radians)
 /// @param[in]  lon1        Longtitude of point 1 (radians)
 /// @param[in]  lat2        Latitude of point 2 (radians)
@@ -81,7 +81,7 @@ double direct_vincenty2(double lat1, double lon1, double a1, double s,
 /// @return      Ellipsoidal (along the geodesic) distance between the two
 ///              points (meters).
 ///
-/// @see ngpt::core::inverse_vincenty
+/// @see dso::core::inverse_vincenty
 template <ellipsoid E = ellipsoid::wgs84>
 double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
                         double &a12, double &a21,
@@ -107,7 +107,7 @@ double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 /// @return      Ellipsoidal (along the geodesic) distance between the two
 ///              points (meters).
 ///
-/// @see ngpt::core::inverse_vincenty
+/// @see dso::core::inverse_vincenty
 /*double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
                         double &a12, double &a21, const Ellipsoid &e,
                         double convergence_limit = 1e-12) {
@@ -120,7 +120,7 @@ double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 
 /// @brief Direct Vincenty formula.
 ///
-/// @tparam     E           ngpt::ellpsoid enum
+/// @tparam     E           dso::ellpsoid enum
 /// @param[in]  lat1        Latitude of point 1 (radians)
 /// @param[in]  lon1        Longtitude of point 1 (radians)
 /// @param[in]  a1          Azimouth from point 1 to point 2 (radians)
@@ -132,7 +132,7 @@ double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
 ///                         corresponds to approximately 0.06mm
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
-/// @see ngpt::core::direct_vincenty
+/// @see dso::core::direct_vincenty
 template <ellipsoid E = ellipsoid::wgs84>
 double direct_vincenty(double lat1, double lon1, double a1, double s,
                        double &lat2, double &lon2,
@@ -158,7 +158,7 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
 ///                         corresponds to approximately 0.06mm
 /// @return     Azimouth from point 2 to point 1 (radians)
 ///
-/// @see ngpt::core::direct_vincenty
+/// @see dso::core::direct_vincenty
 /*double direct_vincenty(double lat1, double lon1, double a1, double s,
                        double &lat2, double &lon2, const Ellipsoid &e,
                        double convergence_limit = 1e-12) {
@@ -169,6 +169,6 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
                                 convergence_limit);
 }*/
 
-} // namespace ngpt
+} // dso
 
 #endif

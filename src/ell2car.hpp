@@ -10,14 +10,14 @@
 #include "ellipsoid.hpp"
 #include <cmath>
 
-namespace ngpt {
+namespace dso {
 
 /// @brief Ellipsoidal to cartesian coordinates.
 ///
 /// Transform (geocentric) cartesian coordinates (on the ellipsoid) to
 /// ellipsoidal coordinates. Units are meters and radians.
 ///
-/// @tparam      E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam      E      The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[in]   phi    Ellipsoidal latitude (radians)
 /// @param[in]   lambda Ellipsoidal longtitude (radians)
 /// @param[in]   h      Ellipsoidal height (meters)
@@ -30,10 +30,10 @@ template <ellipsoid E>
 void ell2car(double phi, double lambda, double h, double &x, double &y,
              double &z) noexcept {
   // Eccentricity squared.
-  constexpr double e2{ngpt::eccentricity_squared<E>()};
+  constexpr double e2{dso::eccentricity_squared<E>()};
 
   // Radius of curvature in the prime vertical.
-  const double N{ngpt::N<E>(phi)};
+  const double N{dso::N<E>(phi)};
 
   // Trigonometric numbers.
   const double sinf{std::sin(phi)};
@@ -58,7 +58,7 @@ void ell2car(double phi, double lambda, double h, double &x, double &y,
 /// @param[in]   phi    Ellipsoidal latitude (radians)
 /// @param[in]   lambda Ellipsoidal longtitude (radians)
 /// @param[in]   h      Ellipsoidal height (meters)
-/// @param[in]   e      The reference ellipsoid (ngpt::Ellipsoid)
+/// @param[in]   e      The reference ellipsoid (dso::Ellipsoid)
 /// @param[out]  x      Cartesian x-component (meters)
 /// @param[out]  y      Cartesian y-component (meters)
 /// @param[out]  z      Cartesian z-component (meters)
@@ -86,6 +86,6 @@ void ell2car(double phi, double lambda, double h, const Ellipsoid &e, double &x,
   return;
 }
 
-} // namespace ngpt
+} // dso
 
 #endif

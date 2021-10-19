@@ -14,7 +14,7 @@
 #include <iostream>
 #endif
 
-namespace ngpt {
+namespace dso {
 
 namespace core {
 
@@ -131,7 +131,7 @@ void car2ell(double x, double y, double z, double semi_major, double flattening,
     h = (p * cp + absz * s1 - semi_major * std::sqrt(ep2 * s12 + cp2)) /
         std::sqrt(s12 + cp2);
   } else { // Special case: pole.
-    phi = ngpt::DPI / 2e0;
+    phi = dso::DPI / 2e0;
     h = absz - aep;
   }
 
@@ -147,7 +147,7 @@ void car2ell(double x, double y, double z, double semi_major, double flattening,
 
 /// @brief Cartesian to ellipsoidal.
 ///
-/// @tparam     E      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[in]  x      Cartesian x-component, meters.
 /// @param[in]  y      Cartesian y-component, meters.
 /// @param[in]  z      Cartesian z-component, meters.
@@ -155,7 +155,7 @@ void car2ell(double x, double y, double z, double semi_major, double flattening,
 /// @param[out] lambda Ellipsoidal longtitude, radians.
 /// @param[out] h      Ellipsoidal height, meters.
 ///
-/// @see  ngpt::core::car2ell
+/// @see  dso::core::car2ell
 template <ellipsoid E>
 void car2ell(double x, double y, double z, double &phi, double &lambda,
              double &h) noexcept {
@@ -170,12 +170,12 @@ void car2ell(double x, double y, double z, double &phi, double &lambda,
 /// @param[in]  x      Cartesian x-component, meters.
 /// @param[in]  y      Cartesian y-component, meters.
 /// @param[in]  z      Cartesian z-component, meters.
-/// @param[in]  e      An ngpt::Ellipsoid instance
+/// @param[in]  e      An dso::Ellipsoid instance
 /// @param[out] phi    Ellipsoidal latitude, radians.
 /// @param[out] lambda Ellipsoidal longtitude, radians.
 /// @param[out] h      Ellipsoidal height, meters.
 ///
-/// @see  ngpt::core::car2ell
+/// @see  dso::core::car2ell
 void car2ell(double x, double y, double z, const Ellipsoid &e, double &phi,
              double &lambda, double &h) noexcept {
   double semi_major{e.semi_major()};
@@ -189,17 +189,17 @@ void car2ell(double x, double y, double z, const Ellipsoid &e, double &phi,
 /// @param[in]  x      Cartesian x-component, meters.
 /// @param[in]  y      Cartesian y-component, meters.
 /// @param[in]  z      Cartesian z-component, meters.
-/// @param[in]  e      The reference ellipsoid (i.e. one of ngpt::ellipsoid).
+/// @param[in]  e      The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[out] phi    Ellipsoidal latitude, radians.
 /// @param[out] lambda Ellipsoidal longtitude, radians.
 /// @param[out] h      Ellipsoidal height, meters.
 ///
-/// @see  ngpt::core::car2ell
+/// @see  dso::core::car2ell
 void car2ell(double x, double y, double z, ellipsoid e, double &phi,
              double &lambda, double &h) noexcept {
   car2ell(x, y, z, Ellipsoid(e), phi, lambda, h);
 }
 
-} // namespace ngpt
+} // dso 
 
 #endif

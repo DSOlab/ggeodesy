@@ -27,7 +27,7 @@ constexpr double prec{1e-10};
 constexpr double min_prec{1e-4};
 constexpr double max_prec{1e-15};
 
-using namespace ngpt;
+using namespace dso;
 
 int main() {
   /// Points on ellipsoid.
