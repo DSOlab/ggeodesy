@@ -6,7 +6,7 @@
 #include <random>
 
 int main() {
-  double angle_radians, angle_degrees, seconds, theta;
+  double angle_radians, angle_degrees, seconds;
   int deg, min, sign;
 
   // test hexicondal degrees sign

@@ -151,6 +151,7 @@ constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec,
 ///  assert(a1==a2);
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
+inline
 constexpr T hexd2decd(int deg, int min, T sec, int sign = 1) noexcept {
   T angle{static_cast<T>(std::abs(deg)) +
           (static_cast<T>(min) + sec / 60e0) / 60e0};

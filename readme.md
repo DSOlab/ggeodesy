@@ -9,8 +9,13 @@ geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
 
 ## Compilation / Installation
 
-> This software is meant to be implemented on Unix-type OS's. No effort will be
-> undertaken for compatibility with other OS types.
+> Since December 2021, the build system has been changed from [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) 
+> to [scons](https://scons.org/). Users can still build using the Autotools system, but 
+> we advise changing to scons, as the former will be considered obsolete in the near
+> future.
+
+This software is meant to be implemented on Unix-type OS's. No effort will be
+undertaken for compatibility with other OS types.
 
 Also *note that the library is still at development phase so users need to configure the project before compiling*.
 
@@ -18,6 +23,16 @@ Also *note that the library is still at development phase so users need to confi
 
 Clone, prepare build and make!
 
+To buid the project just use [scons](https://scons.org/):
+```
+scons [OPTIONS]
+```
+in the top-level directory. The optional `[OPTIONS]` argument, can be any/multiple of:
+ * `debug=1` to trigger a `DEBUG` build, 
+ * `boost=1` to trigger a build including [boost geometry](https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html) comparisson/test programs
+
+
+#### Build using [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) __(obsolete)__
 ```bash
 $> git clone https://github.com/xanthospap/ggeodesy.git && cd ggeodesy
 $> ./install_setup.py -c production
@@ -26,7 +41,7 @@ $> ./configure
 $> make && sudo make install
 ```
 
-### Choosing C++ Standard
+### Choosing C++ Standard __(obsolete)__
 
 Source code is ISO C++17 but also __compatible with C++14__. 
 Compilation should be trivial using any C++ compiler
@@ -49,10 +64,13 @@ ggeodesy against the ones implemented in
 (boost/geometry)[https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html].
 To compile these, you will need the respective developement files. Installing boost is 
 usually pretty trivial; relevant documentation can be found on the (boost webpage)[https://www.boost.org/].
-Once you have downloaded `boost/geometry` you can include the [boost](boost) source code 
-in the build process via the flag `--include-boost` in the [install_setup.py](#install-setup-script) script.
 
-### install setup script
+Once you have downloaded `boost/geometry` you can include the [boost](boost) source code 
+in the build process via 
+* __obsolete__ the flag `--include-boost` in the [install_setup.py](#install-setup-script) script.
+* `scons boost=1`
+
+### install setup script __(obsolete)__
 
 We provide a python script ([install_setup.py](install_setup.py)) to assist the 
 creation/editing of the needed Makefile.am's; this way you most probably do not need to 
@@ -66,7 +84,7 @@ For most users, just running `install_setup.py -c production` should do just fin
 setup a build enviroment using the default options aka the C++17 standard, a production compilation 
 mode and exclude source code depending on boost.
 
-###  Compilation
+###  Compilation __(obsolete)__
 
 For the following, `ROOTDIR` will be the root directory of this repository,
 aka the directory under which `/src`, `/test` and `/doc` folders live.
@@ -101,8 +119,8 @@ After a succesefull installation, users should have:
 1. all library header files in `/usr/local/include/ggeodesy/`
 2. the library (both a static and shared) in `/usr/local/lib/`
 
-To run a validity check, just run: `make check` at the root directory. Hopefully, 
-you 'll see all checks passing!
+~~To run a validity check, just run: `make check` at the root directory. Hopefully, 
+you 'll see all checks passing!~~
 
 Link, include and have fun!
 

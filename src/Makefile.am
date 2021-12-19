@@ -1,14 +1,14 @@
 ##
-##  The library will be called: (lib)"ggeodesy".
+##  The library will be called: (lib)"geodesy".
 ## ----------------------------------------------
 ##
-lib_LTLIBRARIES = libggeodesy.la
+lib_LTLIBRARIES = libgeodesy.la
 
 ##
 ##  Only use the following flags for debuging purposes.
 ## ----------------------------------------------------
 ##
-libggeodesy_la_CXXFLAGS = \
+libgeodesy_la_CXXFLAGS = \
 -std=c++17 \
 -g \
 -pg \
@@ -45,7 +45,7 @@ trnsfdtls.hpp
 ##  Source files (distributed).
 ## ----------------------------
 ##
-dist_libggeodesy_la_SOURCES = \
+dist_libgeodesy_la_SOURCES = \
 top2daz.cpp \
 top2car.cpp \
 vincenty_direct.cpp \

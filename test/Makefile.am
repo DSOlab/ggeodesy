@@ -32,40 +32,40 @@ MCXXFLAGS = \
 
 transform_SOURCES   = crd_transform_ex.cpp
 transform_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-transform_LDADD     = $(top_srcdir)/src/libggeodesy.la
+transform_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testEllipsoid_SOURCES   = test_ellipsoid.cpp
 testEllipsoid_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testEllipsoid_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testEllipsoid_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testUnits_SOURCES   = test_units.cpp
 testUnits_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
-testUnits_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testUnits_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testAngleNormalization_SOURCES   = test_angle_normalization.cc
 testAngleNormalization_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testAngleNormalization_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testAngleNormalization_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testTransformations_SOURCES   = test_transformations.cpp
 testTransformations_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
-testTransformations_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testTransformations_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testMeridianArc_SOURCES   = test_meridian_arc.cpp
 testMeridianArc_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
-testMeridianArc_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testMeridianArc_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testSphericalEarth_SOURCES   = test_spherical_earth.cpp
 testSphericalEarth_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src -I.
-testSphericalEarth_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testSphericalEarth_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testGeodTest_SOURCES   = test_geodtest.cpp
 testGeodTest_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testGeodTest_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testGeodTest_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testKarney_SOURCES   = test_karney.cpp
 testKarney_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testKarney_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testKarney_LDADD     = $(top_srcdir)/src/libgeodesy.la
 
 testLatitudes_SOURCES   = test_latitudes.cpp
 testLatitudes_CXXFLAGS  = $(MCXXFLAGS) -I$(top_srcdir)/src
-testLatitudes_LDADD     = $(top_srcdir)/src/libggeodesy.la
+testLatitudes_LDADD     = $(top_srcdir)/src/libgeodesy.la

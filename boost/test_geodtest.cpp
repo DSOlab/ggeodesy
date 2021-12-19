@@ -91,7 +91,7 @@ struct TestLine {
         lat2, deg2rad(err_lon / 3600e0));
   }
   void test_boostv_direct() const {
-    double lat2, lon2, az2;
+    //double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
     result_drc =
         vincenty_direct_type::apply(ar[1], ar[0], ar[6], ar[2], spheroid);
@@ -113,7 +113,7 @@ struct TestLine {
         result_drc.lat2, deg2rad(err_lon / 3600e0));
   }
   void test_boostk_direct() const {
-    double lat2, lon2, az2;
+    //double lat2, lon2, az2;
     double err_lat, err_lon, err_az;
     result_drc = karney_direct_type::apply(rad2deg(ar[1]), rad2deg(ar[0]),
                                            ar[6], rad2deg(ar[2]), spheroid);

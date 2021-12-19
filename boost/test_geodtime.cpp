@@ -162,7 +162,7 @@ auto test_boost_vincenty(const std::vector<TestLine> &vec, double *maxer,
          maxer_lon = std::numeric_limits<double>::min(),
          maxer_raz = std::numeric_limits<double>::min();
   double meaner_lat = 0e0, meaner_lon = 0e0, meaner_raz = 0e0;
-  double az2, lat2, lon2, err_lat, err_lon, err_az;
+  double /*az2, lat2, lon2,*/ err_lat, err_lon, err_az;
   auto start = high_resolution_clock::now();
   for (const auto &dataset : vec) {
     result_drc = vincenty_direct_type::apply(
@@ -197,7 +197,7 @@ auto test_boost_karney(const std::vector<TestLine> &cvec, double *maxer,
          maxer_lon = std::numeric_limits<double>::min(),
          maxer_raz = std::numeric_limits<double>::min();
   double meaner_lat = 0e0, meaner_lon = 0e0, meaner_raz = 0e0;
-  double az2, lat2, lon2, err_lat, err_lon, err_az;
+  double /*az2, lat2, lon2,*/ err_lat, err_lon, err_az;
   auto vec = cvec;
   for (auto &dataset : vec) {
     for (int i = 0; i < 6; i++)
