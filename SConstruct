@@ -43,8 +43,9 @@ env = denv.Clone() if int(debug) else penv.Clone()
 vlib = env.SharedLibrary(source=lib_src_files, target=lib_name, CPPPATH=['.'], SHLIBVERSION=lib_version)
 
 ## Build ....
-env.Alias(target='install', source=env.Install(dir=os.path.join(prefix, 'lib'), source=vlib))
+#env.Alias(target='install', source=env.Install(dir=os.path.join(prefix, 'lib'), source=vlib))
 env.Alias(target='install', source=env.Install(dir=os.path.join(prefix, 'include', inc_dir), source=hdr_src_files))
+env.Alias(target='install', source=env.InstallVersionedLib(dir=os.path.join(prefix, 'lib'), source=vlib))
 
 ## Tests ...
 tests_sources = glob.glob(r"test/*.cpp")

@@ -21,4 +21,3 @@ defore_script:
 script:
   - scons
   - scons debug=1
-  - scons boost=1
