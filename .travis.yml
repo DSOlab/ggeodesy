@@ -10,11 +10,7 @@ before_install:
 
 defore_script:
   - git clone https://github.com/xanthospap/ggdatetime.git && cd ggdatetime
-  - mv src/Makefile.am.production src/Makefile.am
-  - autoreconf -if
-  - ./configure
-  - make
-  - sudo make install
+  - sudo scons install
   - cd ../
   - sudo ldconfig
 
