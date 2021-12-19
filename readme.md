@@ -5,7 +5,7 @@
 ## Introduction
 
 This is a C++ library meant to provide implementations of the most commonly used
-geodetic calculations. The whole library is wrapped around the `ngpt` namespace.
+geodetic calculations. The whole library is wrapped around the `dso` namespace.
 
 ## Compilation / Installation
 
@@ -21,7 +21,7 @@ Also *note that the library is still at development phase so users need to confi
 
 ### TL;DR
 
-Clone, prepare build and make!
+First off, clone the project.
 
 To buid the project just use [scons](https://scons.org/):
 ```
@@ -30,6 +30,11 @@ scons [OPTIONS]
 in the top-level directory. The optional `[OPTIONS]` argument, can be any/multiple of:
  * `debug=1` to trigger a `DEBUG` build, 
  * `boost=1` to trigger a build including [boost geometry](https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html) comparisson/test programs
+
+Installation is trivial, use:
+```
+sudo scons install
+```
 
 
 #### Build using [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) __(obsolete)__
