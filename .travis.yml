@@ -8,6 +8,16 @@ before_install:
   - sudo apt-get install -y scons
   - sudo apt-get install -y libboost-all-dev
 
+defore_script:
+  - git clone https://github.com/xanthospap/ggdatetime.git && cd ggdatetime
+  - mv src/Makefile.am.production src/Makefile.am
+  - autoreconf -if
+  - ./configure
+  - make
+  - sudo make install
+  - cd ../
+  - sudo ldconfig
+
 script:
   - scons
   - scons debug=1
