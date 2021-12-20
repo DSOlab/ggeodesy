@@ -61,4 +61,4 @@ if boostg:
   for bsource in boost_sources:
     btarget = bsource.replace('_', '-').replace('.cpp', '.out')
     env.Program(target=btarget, source=bsource, CPPPATH='src/',
-                LIBS=vlib+['ggdatetime'], LIBPATH='.')
+                LIBS=vlib+['datetime'], LIBPATH='.')
