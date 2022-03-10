@@ -39,6 +39,14 @@ template <typename T> constexpr T rad2sec(T radians) noexcept {
   return (radians * RAD2DEG) * 3600e0;
 }
 
+/// @brief Convert seconds (of degree) to radians.
+/// @tparam    T       Any floating type
+/// @param[in] seconds Angle in seconds of degree
+/// @return            The (input) angle in radians
+template <typename T> constexpr T sec2rad(T seconds) noexcept {
+  return (seconds / 3600e0) * DEG2RAD;
+}
+
 /// @brief Normalize angle.
 ///
 /// Normalize an angle in the interval [lower, upper).
