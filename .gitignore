@@ -5,6 +5,9 @@
 # Compiled Python files
 *.pyc
 
+# No more Python folder ...
+geodpy/
+
 # Keep .local files local
 *.local
 
