@@ -1,6 +1,4 @@
-///
 /// @file vincenty.hpp
-///
 /// @brief Implementation of Vincenty's formulae and other algorithms to
 ///        compute great circle/godesic quantities.
 /// Vincenty's formulae are two related iterative methods used in geodesy to
@@ -14,13 +12,11 @@
 /// method computes the geographical distance and azimuth between two given
 /// points. They have been widely used in geodesy because they are accurate to
 /// within 0.5 mm (0.020 in) on the Earth ellipsoid.
-///
 /// Core function/algorithm implementations are nested in the dso::core
 /// namespace. Users can access the core functions via ngpt functions that
 /// either take ellpsoid parameters as compile-time constants (aka template
 /// implementations) or runtime parameters (where an Ellipsoid instance is
 /// needed).
-///
 /// @see
 /// https://adl1995.github.io/inaccuracy-in-boost-geometry-geodesic-algorithms-for-nearly-antipodal-points.html
 ///
@@ -50,8 +46,8 @@ double inverse_vincenty(double lat1, double lon1, double lat2, double lon2,
                         double &a12, double &a21,
                         double convergence_limit = 1e-12);
 double inverse_karney(double lat1, double lon1, double lat2, double lon2,
-                        double semi_major, double flattening, double semi_minor,
-                        double &a12, double &a21);
+                      double semi_major, double flattening, double semi_minor,
+                      double &a12, double &a21);
 
 /// @brief Direct Vincenty formula.
 double direct_vincenty(double lat1, double lon1, double a1, double s,
@@ -169,6 +165,6 @@ double direct_vincenty(double lat1, double lon1, double a1, double s,
                                 convergence_limit);
 }*/
 
-} // dso
+} // namespace dso
 
 #endif

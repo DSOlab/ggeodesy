@@ -1,8 +1,5 @@
-///
 /// @file car2ell.hpp
-///
 /// @brief Transformation of ellipsoidal to cartesian coordinates.
-///
 
 #ifndef __CARTESIAN_TO_ELLIPSOIDAL__
 #define __CARTESIAN_TO_ELLIPSOIDAL__
@@ -200,6 +197,6 @@ void car2ell(double x, double y, double z, ellipsoid e, double &phi,
   car2ell(x, y, z, Ellipsoid(e), phi, lambda, h);
 }
 
-} // dso 
+} // namespace dso
 
 #endif

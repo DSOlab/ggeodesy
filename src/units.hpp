@@ -1,9 +1,6 @@
-///
 /// @file units.hpp
-///
 /// @brief A list of frequently used geodetic functions for unit conversion,
 ///        mostly targeted on angular units.
-///
 
 #ifndef __NGPT_GEODESY_UNITS_HPP__
 #define __NGPT_GEODESY_UNITS_HPP__
@@ -71,9 +68,9 @@ T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
   // but will fail for e.g. -\pi to \pi
   if (lower >= 0e0)
     return std::fmod(angle + upper, upper);
-    // angle -= D2PI * std::floor((angle + DPI) / D2PI);
-    // return angle;
-    // return std::atan2(std::sin(angle), std::cos(angle));
+  // angle -= D2PI * std::floor((angle + DPI) / D2PI);
+  // return angle;
+  // return std::atan2(std::sin(angle), std::cos(angle));
 
   double res{angle};
   if (angle > upper || angle == lower)
@@ -159,8 +156,7 @@ constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec,
 ///  assert(a1==a2);
 template <typename T,
           typename = std::enable_if_t<std::is_floating_point<T>::value>>
-inline
-constexpr T hexd2decd(int deg, int min, T sec, int sign = 1) noexcept {
+inline constexpr T hexd2decd(int deg, int min, T sec, int sign = 1) noexcept {
   T angle{static_cast<T>(std::abs(deg)) +
           (static_cast<T>(min) + sec / 60e0) / 60e0};
   return std::copysign(angle, (T)sign);
@@ -226,6 +222,6 @@ constexpr void rad2hexd(T radians, int &deg, int &min, T &sec,
   return decd2hexd(rad2deg(radians), deg, min, sec, sign);
 }
 
-} // dso
+} // namespace dso
 
 #endif

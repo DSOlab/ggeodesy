@@ -1,8 +1,5 @@
-///
 /// @file ell2car.hpp
-///
 /// @brief Transform ellipsoidal to cartesian coordinates.
-///
 
 #ifndef __ELLIPSOIDAL_TO_CARTESIAN__
 #define __ELLIPSOIDAL_TO_CARTESIAN__
@@ -86,6 +83,6 @@ void ell2car(double phi, double lambda, double h, const Ellipsoid &e, double &x,
   return;
 }
 
-} // dso
+} // namespace dso
 
 #endif

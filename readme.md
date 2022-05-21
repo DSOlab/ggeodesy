@@ -9,15 +9,9 @@ geodetic calculations. The whole library is wrapped around the `dso` namespace.
 
 ## Compilation / Installation
 
-> Since December 2021, the build system has been changed from [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) 
-> to [scons](https://scons.org/). Users can still build using the Autotools system, but 
-> we advise changing to scons, as the former will be considered obsolete in the near
-> future.
-
-This software is meant to be implemented on Unix-type OS's. No effort will be
-undertaken for compatibility with other OS types.
-
-Also *note that the library is still at development phase so users need to configure the project before compiling*.
+> Since December 2021, the build system has been changed from 
+> [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) 
+> to [scons](https://scons.org/). 
 
 ### TL;DR
 
@@ -36,117 +30,43 @@ Installation is trivial, use:
 sudo scons install
 ```
 
-
-#### Build using [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) __(obsolete)__
-```bash
-$> git clone https://github.com/xanthospap/ggeodesy.git && cd ggeodesy
-$> ./install_setup.py -c production
-$> autoreconf -if
-$> ./configure
-$> make && sudo make install
-```
-
-### Choosing C++ Standard __(obsolete)__
-
-Source code is ISO C++17 but also __compatible with C++14__. 
-Compilation should be trivial using any C++ compiler
-[supporting the c++17](https://en.wikipedia.org/wiki/C%2B%2B17#Compiler_support) 
-or the [c++14](https://en.wikipedia.org/wiki/C%2B%2B14#Compiler_support)
-standard (option `-std=c++17` or -std=c++14` in gcc and clang). By default, the 
-project build files use the C++17 standard; to specify a different one, you can either 
-  * change the standard flag (`-std=c++17`) in every Makefile.am file, in the directories 
-    `src`, `test` and optionally `boost`, or
-  * [set the flag](#install-setup-script) when invoking the `install_setup.py` script (e.g. for C++14,
-    `./install_setup.py -s 14`)
-
-Apart from C++17 and C++14 no other standard has been tested; should you want another, 
-chances are you should probably adapt the source code.
-
 ### testing against boost/geometry
 
 The folder [boost](boost) includes source code for testing the algorithms in 
 ggeodesy against the ones implemented in 
 (boost/geometry)[https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html].
-To compile these, you will need the respective developement files. Installing boost is 
-usually pretty trivial; relevant documentation can be found on the (boost webpage)[https://www.boost.org/].
+To compile these, you will need the respective developement files. Installing 
+boost is usually pretty trivial; relevant documentation can be found on the 
+(boost webpage)[https://www.boost.org/].
 
-Once you have downloaded `boost/geometry` you can include the [boost](boost) source code 
-in the build process via 
-* __obsolete__ the flag `--include-boost` in the [install_setup.py](#install-setup-script) script.
-* `scons boost=1`
+Once you have downloaded `boost/geometry` you can include the [boost](boost) 
+source code in the build process via `scons boost=1`
 
-### install setup script __(obsolete)__
-
-We provide a python script ([install_setup.py](install_setup.py)) to assist the 
-creation/editing of the needed Makefile.am's; this way you most probably do not need to 
-mess up with any Makefiles. The script has a help message (just pass the `-h` option) 
-where you can see all applicable switches. The basic options are:
-  * choose between a __debug__ or a __production__ build,
-  * [choose a C++ standard](#chossing_c++_standard),
-  * include [boost tests and examples](#testing_against_boost/geometry)
-
-For most users, just running `install_setup.py -c production` should do just fine. This will 
-setup a build enviroment using the default options aka the C++17 standard, a production compilation 
-mode and exclude source code depending on boost.
-
-###  Compilation __(obsolete)__
-
-For the following, `ROOTDIR` will be the root directory of this repository,
-aka the directory under which `/src`, `/test` and `/doc` folders live.
-
-~~**If you do not need the DEBUG version** (which most probably you don't), create the `Makefile.am` templates. This means that you
-should rename [Makefile.am.production](src/Makefile.am.production) and [Makefile.am.production](test/Makefile.am.production) to
-`src/Makefile.am` and `test/Makefile.am` respectively, that is:~~
-
-To prepare the required files for compilation (that is the `Makefile.am` in each 
-of the relevant folders) you need to run the script [install_setup.py](install_setup.py). 
-You can use the `-h` switch to see the help message, but in most cases the 
-command `./install_setup.py -c production` will suffice.
-
-If needed (that is you are not running the script from `ROOTDIR`) specify the 
-`ROOTDIR` path via the `-d` switch.
-
-Then run Autotools and compile:
-
-```bash
-autoreconf -if
-./configure
-make
-sudo make install
-```
 
 ## Verify & Test
 
-~~In the `ggeodesy/test` folder you should be able to see a list of executables; run `ggeodesy/test/testGeodesy` to validate the library.~~
-
-After a succesefull installation, users should have:
-
-1. all library header files in `/usr/local/include/ggeodesy/`
-2. the library (both a static and shared) in `/usr/local/lib/`
-
-~~To run a validity check, just run: `make check` at the root directory. Hopefully, 
-you 'll see all checks passing!~~
-
-Link, include and have fun!
+TODO
 
 ## Accuracy/Precision and Floating Point Numbers Considerations
 
 For testing purposes, we need to compare (floating point) results, aka check if 
-two floating point numbers are __equal__. But what does equal mean? Well, in this case, 
-for most of the test programs we define the floating point comparisson (when comparing 
-numbers other than zero) as:
+two floating point numbers are __equal__. But what does equal mean? Well, in 
+this case, for most of the test programs we define the floating point 
+comparisson (when comparing numbers other than zero) as:
 
 ```
 diff = abs(a - b)
 diff < max(abs(a), abs(b)) * tolerance or diff < tolerance
 ```
 
-where __tolerance__ is defined as: `std::numeric_limits<double>::epsilon()`. That is, 
-we use a tolerance value proportional to max(a,b) when comparing two (floating point) numbers.
+where __tolerance__ is defined as: `std::numeric_limits<double>::epsilon()`. 
+That is, we use a tolerance value proportional to max(a,b) when comparing two 
+(floating point) numbers.
 (see also [this SO thread](https://stackoverflow.com/questions/17333/what-is-the-most-effective-way-for-float-and-double-comparison), 
 and [this also](https://stackoverflow.com/questions/48133572/what-can-stdnumeric-limitsdoubleepsilon-be-used-for)).
 
-This comparisson function is defined in the [test_help.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_help.hpp) 
+This comparisson function is defined in the 
+[test_help.hpp](https://github.com/xanthospap/ggeodesy/blob/master/test/test_help.hpp) 
 file and used throughout the test/check programs.
 
 ## The Library
@@ -265,7 +185,7 @@ function (template) `infinitesimal_meridian_arc`.
 
 ### Namespaces
 
-The whole of the library is wrapped around the `ngpt` namespace
+The whole of the library is wrapped around the `dso` namespace
 
 ### Linking
 

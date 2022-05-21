@@ -1,6 +1,4 @@
-///
 /// @file ellipsoid.hpp
-///
 /// @brief Definition and basic setup of an ellipsoid (kinda) class.
 ///
 /// This file defines a list of frequently used (referennce) Ellipsoids in
@@ -379,6 +377,6 @@ private:
   double __a, __f;
 }; // Ellipsoid
 
-} // dso
+} // namespace dso
 
 #endif

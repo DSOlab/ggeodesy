@@ -1,7 +1,5 @@
 /// @file spherical_crd.hpp
-///
 /// @brief Definition and functions for spherical coordinates
-///
 /// Any spherical coordinate triplet ( r, θ, φ) specifies a single point of
 /// three-dimensional space. On the other hand, every point has infinitely many
 /// equivalent spherical coordinates. One can add or subtract any number of
@@ -10,7 +8,6 @@
 /// contexts, to allow negative radial distances, with the convention that
 /// (−r, θ, φ) is equivalent to (r, θ, φ) for any r, θ, and φ. Moreover,
 /// (r, −θ, φ) is equivalent to (r, θ, φ+180).
-///
 /// If it is necessary to define a unique set of spherical coordinates for
 /// each point, one must restrict their ranges. A common choice is
 /// * r >= 0,
@@ -43,5 +40,5 @@ void cart2spherical(double x, double y, double z, double &r, double &phi,
   return;
 }
 
-} // dso
+} // namespace dso
 #endif

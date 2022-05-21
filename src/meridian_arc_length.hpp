@@ -1,8 +1,5 @@
-///
 /// @file meridian_arc_length.hpp
-///
 /// @brief Algorithms for computation of meridian arc length
-///
 /// @see https://en.wikipedia.org/wiki/Meridian_arc
 
 #ifndef __MERIDIAN_ARC_LENGTH_HPP__
@@ -39,6 +36,6 @@ double meridian_arc_length(double lat, int alg = 0) noexcept {
   }
 }
 
-} // dso
+} // namespace dso
 
 #endif

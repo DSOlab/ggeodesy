@@ -1,8 +1,5 @@
-///
 /// @file geodesy.hpp
-///
 /// @brief A list of frequently used geodetic functions.
-///
 /// @see http://www.movable-type.co.uk/scripts/latlong.html
 
 #ifndef __NGPT_GEODESY_HPP__
@@ -135,6 +132,6 @@ constexpr struct {
 void pz90_to_wgs84(const double *xwgs, double *xpz, int pts = 1,
                    int selection = 0);
 
-} // dso
+} // namespace dso
 
 #endif

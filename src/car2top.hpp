@@ -1,15 +1,11 @@
-///
 /// @file car2top.hpp
-///
 /// @brief Transformation of cartesian to topocentric vector.
-///
 /// The functions here have (in general) two forms, depending on how the user
 /// passes in the cartesian geocentric vector \f$\Delta\f$x; that is, users can
 /// pass in two points (named i and j with their x, y and z components), or pass
 /// in the vector directly (as dx, dy and dz). Note that in this last case, we
 /// also need to know the coordinates of the first/starting point (i), cause
 /// this is the central point for the topocentric system.
-///
 
 #ifndef __CARTESIAN_TO_TOPOCENTRIC__
 #define __CARTESIAN_TO_TOPOCENTRIC__
@@ -187,6 +183,6 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
                  up);
 }
 
-} // dso
+} // namespace dso
 
 #endif

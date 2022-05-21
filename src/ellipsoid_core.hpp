@@ -1,8 +1,5 @@
-///
 /// @file ellipsoid_core.hpp
-///
 /// @brief Core function of ellipsoidal geometry
-///
 /// [1] H. Moritz, GEODETIC REFERENCE SYSTEM 1980,
 /// https://geodesy.geology.ohio-state.edu/course/refpapers/00740128.pdf
 
@@ -172,8 +169,8 @@ inline
   return std::atan((1e0 - f) * std::tan(lat));
 }
 
-} // core
+} // namespace core
 
-} // dso
+} // namespace dso
 
 #endif

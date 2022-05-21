@@ -1,6 +1,4 @@
-///
 /// @file great_circle.hpp
-///
 /// @brief Algorithms to compute great-circle distance or orthodromic distance
 ///        between two points on the surface of a sphere, measured along the
 ///        surface of the sphere.
@@ -14,7 +12,6 @@
 ///        find \f$\Delta\sigma\f$, the central angle between them. Once we know
 ///        \f$\Delta\sigma\f$, the actual arc length d on a sphere of radius r
 ///        can be trivially computed as d = r * \f$\Delta\sigma\f$
-///
 /// @see   https://en.wikipedia.org/wiki/Great-circle_distance
 /// @todo
 
@@ -153,8 +150,8 @@ double great_circle_distance_pythagoras(double lat1, double lon1, double lat2,
 /// see https://www.movable-type.co.uk/scripts/latlong.html
 double great_circle_distance_polar(double lat1, double lon1, double lat2,
                                    double lon2, double R) noexcept;
-} // core
+} // namespace core
 
-} // dso
+} // namespace dso
 
 #endif

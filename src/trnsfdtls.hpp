@@ -1,8 +1,5 @@
-///
 /// @file trnsfdtls.hpp
-///
 /// @brief Computational details for coordinate transformations.
-///
 
 #ifndef __NGPT_TRNSFDTLS_HPP__
 #define __NGPT_TRNSFDTLS_HPP__
@@ -46,8 +43,8 @@ void car2top_matrix(double sinf, double sinl, double cosf, double cosl,
 ///
 void car2top_cov_matrix(double sin2f, double sin2l, double cos2f, double cos2l,
                         double *coef) noexcept;
-} // core
+} // namespace core
 
-} // dso
+} // namespace dso
 
 #endif
