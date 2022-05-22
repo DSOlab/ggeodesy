@@ -38,3 +38,9 @@ bit faster.
 
 Note however that the results are heavily dependent on the compiler; here i 
 test using the GNU compiler (g++) and the clang (clang++).
+
+To run the tests, just type:
+```
+$> build_angle_normalization_tests.sh
+$> test_tests.sh
+```

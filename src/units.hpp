@@ -12,6 +12,14 @@
 
 namespace dso {
 
+enum class AngleUnit : char {Radians, Degrees};
+template<AngleUnit U> struct AngleUnitTraits {
+  static constexpr double full_circle() {return 2e0 * M_PI;}
+};
+template<> struct AngleUnitTraits<AngleUnit::Degrees> {
+  static constexpr double full_circle() {return 360e0;}
+};
+
 /// @brief Convert degrees to radians.
 /// @tparam    T       Any floating type
 /// @param[in] degrees Angle in decimal degrees
@@ -42,6 +50,23 @@ template <typename T> constexpr T rad2sec(T radians) noexcept {
 /// @return            The (input) angle in radians
 template <typename T> constexpr T sec2rad(T seconds) noexcept {
   return (seconds / 3600e0) * DEG2RAD;
+}
+
+/// @brief Normalize angle in the range [0, 2π]/[0,360]
+/// For more information, see 
+/// https://github.com/xanthospap/ggeodesy/tree/master/angle_normalization
+/// @tparam T floating type, float, double, ...
+/// @tparam U Units of input angle, AngleUnits::Radians, or 
+///           AngleUnits::Degrees
+/// @param[in] a Angle in units of U
+/// @return Normalized angle in the range 0 to 1-cycle, in units of U
+template <typename T, AngleUnit U = AngleUnit::Radians,
+          typename = std::enable_if_t<std::is_floating_point<T>::value>>
+T norm_angle(double a) noexcept {
+  constexpr const double circle = AngleUnitTraits<U>::full_circle();
+  a = std::fmod(a, circle);
+  const double r[] = {a, a + circle};
+  return r[a < 0e0];
 }
 
 /// @brief Normalize angle.
