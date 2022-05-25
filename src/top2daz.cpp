@@ -1,13 +1,12 @@
-///
 /// @file top2daz.cpp
 ///
 /// @brief Compute azimouth, zenith and distance from a topocentric vector.
 ///
 /// @see
 /// http://www.navipedia.net/index.php/Transformations_between_ECEF_and_ENU_coordinates
-///
 
 #include "geodesy.hpp"
+#include "units.hpp"
 #include <cmath>
 #include <stdexcept>
 
@@ -22,15 +21,10 @@ void dso::top2daz(double north, double east, double up, double &distance,
     throw std::runtime_error("[ERROR] geodesy::top2daz -> Zero Division !!");
   }
 
-  // azimouth
-  double a{std::atan2(east, north)};
+  // azimouth in [0,2π]
+  azimouth = norm_angle<double, AngleUnit::Radians>(std::atan2(east, north));
 
-  // normalize to range [0-2pi)
-  azimouth = std::fmod(a, dso::D2PI);
-  if (azimouth < 0e0)
-    azimouth += dso::D2PI;
-
-  // zenith angle [0-pi)
+  // zenith angle [0-π]
   zenith = std::acos(up / distance);
 
   // finished
