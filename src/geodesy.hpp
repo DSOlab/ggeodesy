@@ -32,6 +32,34 @@ namespace dso {
 void top2daz(double north, double east, double up, double &distance,
              double &azimouth, double &zenith);
 
+/// @brief Compute distance, azimouth and elevation from topocentric vector
+/// @param[in] enu Vector of size >= 3, containing East, North and Up 
+///                 coordinates in [m]
+/// @param[out] distance  The distance/norm of the topocentric vector [m]
+/// @param[out] azimouth  The azimouth between the two points (in the 
+///                       topocentric frame) in [rad]. Range [0,2π]
+/// @param[out] elevation The elevation between the two points of the vector
+///                       in [rad]. Range [0, π]
+void top2dae(const double *enu, double &distance, double &azimouth,
+                 double &elevation);
+
+/// @brief Compute distance, azimouth and elevation from topocentric vector and
+///        their partial derivatives w.r.t the topocentic RF
+/// @param[in] enu Vector of size >= 3, containing East, North and Up 
+///                 coordinates in [m]
+/// @param[out] distance  The distance/norm of the topocentric vector [m]
+/// @param[out] azimouth  The azimouth between the two points (in the 
+///                       topocentric frame) in [rad]. Range [0,2π]
+/// @param[out] elevation The elevation between the two points of the vector
+///                       in [rad]. Range [0, π]
+/// @param[out] dAdr      Partials of the Azimouth, w.r.t the [e,n,u] (unit)
+///                       vectors
+/// @param[out] dedr      Partials of the Elevation, w.r.t the [e,n,u] (unit)
+///                       vectors
+/// @see Satellite Orbits: Models, Methods and Applications, ch 7.4
+void top2dae(const double *enu, double &distance, double &azimouth,
+                  double &elevation, double *dAdr, double *dEdr);
+
 /// @brief Topocentric vector to a geocentric, cartesian vector
 ///
 /// Given a vector expressed in a local, topocentric system (i.e. given the
