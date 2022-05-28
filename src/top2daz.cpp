@@ -10,7 +10,7 @@
 #include <cmath>
 #include <stdexcept>
 
-void dso::top2daz(double north, double east, double up, double &distance,
+void dso::top2daz(double east, double north, double up, double &distance,
                    double &azimouth, double &zenith) {
 
   // spatial distance of vector

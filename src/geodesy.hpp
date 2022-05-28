@@ -29,7 +29,7 @@ namespace dso {
 ///
 /// @see "Physical Geodesy", pg. 210
 ///
-void top2daz(double north, double east, double up, double &distance,
+void top2daz(double east, double north, double up, double &distance,
              double &azimouth, double &zenith);
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector
@@ -77,7 +77,7 @@ void top2dae(const double *enu, double &distance, double &azimouth,
 ///
 /// @see "Physical Geodesy", pg. 210
 ///
-void top2car(double north, double east, double up, double lat, double lon,
+void top2car(double east, double north, double up, double lat, double lon,
              double &dx, double &dy, double &dz) noexcept;
 
 /// @brief Bearing (i.e. forward azimouth) of great circle between two points
