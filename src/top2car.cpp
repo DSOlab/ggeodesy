@@ -1,10 +1,9 @@
 /// @file top2car.cpp
-
 #include "geodesy.hpp"
 #include <cmath>
 
-void dso::top2car(double east, double north, double up, double lat, double lon,
-                   double &dx, double &dy, double &dz) noexcept {
+void dso::top2car(double east, double north, double up, double lon, double lat,
+                  double &dx, double &dy, double &dz) noexcept {
   const double slon = std::sin(lon);
   const double clon = std::cos(lon);
   const double slat = std::sin(lat);

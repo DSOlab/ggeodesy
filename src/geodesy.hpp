@@ -6,6 +6,7 @@
 #define __NGPT_GEODESY_HPP__
 
 #include "geoconst.hpp"
+#include "matvec/matvec.hpp"
 #include <cassert>
 #include <cmath>
 #include <stdexcept>
@@ -31,6 +32,11 @@ namespace dso {
 ///
 void top2daz(double east, double north, double up, double &distance,
              double &azimouth, double &zenith);
+inline
+void top2daz(const Vector3 &enu, double &distance, double &azimouth,
+             double &zenith) {
+  return top2daz(enu.x(), enu.y(), enu.z(), distance, azimouth, zenith);
+}
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector
 /// @param[in] enu Vector of size >= 3, containing East, North and Up 
@@ -40,8 +46,8 @@ void top2daz(double east, double north, double up, double &distance,
 ///                       topocentric frame) in [rad]. Range [0,2π]
 /// @param[out] elevation The elevation between the two points of the vector
 ///                       in [rad]. Range [0, π]
-void top2dae(const double *enu, double &distance, double &azimouth,
-                 double &elevation);
+void top2dae(const Vector3 &enu, double &distance, double &azimouth,
+             double &elevation);
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector and
 ///        their partial derivatives w.r.t the topocentic RF
@@ -57,8 +63,8 @@ void top2dae(const double *enu, double &distance, double &azimouth,
 /// @param[out] dedr      Partials of the Elevation, w.r.t the [e,n,u] (unit)
 ///                       vectors
 /// @see Satellite Orbits: Models, Methods and Applications, ch 7.4
-void top2dae(const double *enu, double &distance, double &azimouth,
-                  double &elevation, double *dAdr, double *dEdr);
+void top2dae(const Vector3 &enu, double &distance, double &azimouth,
+             double &elevation, Vector3 &dAdr, Vector3 &dEdr);
 
 /// @brief Topocentric vector to a geocentric, cartesian vector
 ///
@@ -77,8 +83,12 @@ void top2dae(const double *enu, double &distance, double &azimouth,
 ///
 /// @see "Physical Geodesy", pg. 210
 ///
-void top2car(double east, double north, double up, double lat, double lon,
+void top2car(double east, double north, double up, double lon, double lat,
              double &dx, double &dy, double &dz) noexcept;
+inline
+void top2car(const Vector3 &enu, double lat, double lon, Vector3 &dr) noexcept {
+  return top2car(enu.x(), enu.y(), enu.z(), lon, lat, dr.x(), dr.y(), dr.z());
+}
 
 /// @brief Bearing (i.e. forward azimouth) of great circle between two points
 /// on the sphere.

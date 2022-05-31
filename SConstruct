@@ -52,7 +52,7 @@ tests_sources = glob.glob(r"test/*.cpp")
 env.Append(RPATH=root_dir)
 for tsource in tests_sources:
   ttarget = tsource.replace('_', '-').replace('.cpp', '.out')
-  env.Program(target=ttarget, source=tsource, CPPPATH='src/', LIBS=vlib+['datetime'], LIBPATH='.')
+  env.Program(target=ttarget, source=tsource, CPPPATH='src/', LIBS=vlib+['datetime', 'matvec'], LIBPATH='.')
 
 ## Boost test executables
 if boostg:
@@ -61,4 +61,4 @@ if boostg:
   for bsource in boost_sources:
     btarget = bsource.replace('_', '-').replace('.cpp', '.out')
     env.Program(target=btarget, source=bsource, CPPPATH='src/',
-                LIBS=vlib+['datetime'], LIBPATH='.')
+                LIBS=vlib+['datetime', 'matvec'], LIBPATH='.')
