@@ -11,6 +11,7 @@
 #define __CARTESIAN_TO_TOPOCENTRIC__
 
 #include "car2ell.hpp"
+#include "matvec/matvec.hpp"
 #include <cmath>
 
 namespace dso {
@@ -68,6 +69,28 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
   return;
 }
 
+Vector3 dcar2top(const Vector3 &r, const Vector3 &dr, double semi_major,
+                 double flattening) noexcept {
+
+  // Cartesian to ellipsoidal for reference point.
+  const Vector3 lfh = core::car2ell(r, semi_major, flattening);
+
+  // Trigonometric numbers.
+  const double cosf{std::cos(lfh.y())};
+  const double sinf{std::sin(lfh.y())};
+  const double sinl{std::sin(lfh.x())};
+  const double cosl{std::cos(lfh.x())};
+
+  // Topocentric vector.
+  const double north =
+      -sinf * cosl * dr.x() - sinf * sinl * dr.y() + cosf * dr.z();
+  const double east = -sinl * dr.x() + cosl * dr.y();
+  const double up = cosf * cosl * dr.x() + cosf * sinl * dr.y() + sinf * dr.z();
+
+  // Finished.
+  return Vector3({east, north, up});
+}
+
 } // namespace core
 
 /// @brief Cartesian to topocentric (vector).
@@ -102,6 +125,17 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
   // Finished.
   return;
 }
+template <ellipsoid E>
+Vector3 car2top(const Vector3 &xyz_i, const Vector3 &xyz_j) noexcept {
+  constexpr double semi_major{ellipsoid_traits<E>::a};
+  constexpr double flattening{ellipsoid_traits<E>::f};
+
+  // Catresian vector.
+  const Vector3 dr = xyz_j - xyz_i;
+
+  // transform to topocentric
+  return core::dcar2top(xyz_i, dr, semi_major, flattening);
+}
 
 /// @brief Cartesian to topocentric (vector).
 ///
@@ -125,6 +159,12 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
   constexpr double flattening{ellipsoid_traits<E>::f};
   core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,
                  up);
+}
+template <ellipsoid E>
+Vector3 dcar2top(const Vector3 &xyz_i, const Vector3 &dr) noexcept {
+  constexpr double semi_major{ellipsoid_traits<E>::a};
+  constexpr double flattening{ellipsoid_traits<E>::f};
+  return core::dcar2top(xyz_i, dr, semi_major, flattening);
 }
 
 /// @brief Cartesian to topocentric (vector).
@@ -159,6 +199,14 @@ void car2top(double xi, double yi, double zi, double xj, double yj, double zj,
   // Finished.
   return;
 }
+Vector3 car2top(const Vector3 &xyz_i, const Vector3 &xyz_j,
+                const Ellipsoid &e) noexcept {
+  const double semi_major{e.semi_major()};
+  const double flattening{e.flattening()};
+
+  // transform to topocentric
+  return core::dcar2top(xyz_i, (xyz_j - xyz_i), semi_major, flattening);
+}
 
 /// @brief Cartesian to topocentric (vector).
 ///
@@ -181,6 +229,12 @@ void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
   const double flattening{e.flattening()};
   core::dcar2top(xi, yi, zi, dx, dy, dz, semi_major, flattening, north, east,
                  up);
+}
+Vector3 dcar2top(const Vector3 &xyz_i, const Vector3 &dr,
+                 const Ellipsoid &e) noexcept {
+  const double semi_major{e.semi_major()};
+  const double flattening{e.flattening()};
+  return core::dcar2top(xyz_i, dr, semi_major, flattening);
 }
 
 } // namespace dso
