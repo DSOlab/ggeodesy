@@ -118,6 +118,10 @@ Mat3x3 topocentric_matrix(double lambda, double phi) noexcept {
   return Mat3x3({d00,d01,d02,d10,d11,d12,d20,d21,d22});
 }
 
+Mat3x3 topocentric_matrix(const Vector3 &flh) noexcept {
+  return topocentric_matrix(flh.x(), flh.y());
+}
+
 /// @brief Cartesian to topocentric (vector).
 ///
 /// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).

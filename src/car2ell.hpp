@@ -6,13 +6,19 @@
 
 #include "ellipsoid.hpp"
 #include "geoconst.hpp"
-#include "matvec/matvec.hpp"
 #include <cmath>
-#ifdef DEBUG
-#include <iostream>
+#ifdef USE_EIGEN
+#include "eigen3/Eigen/Dense"
+#else
+#include "matvec/matvec.hpp"
 #endif
 
 namespace dso {
+#ifdef USE_EIGEN
+  using VECTOR3 = Eigen::Matrix<double, 3, 1>;
+#else
+  using VECTOR3 = Vector3;
+#endif
 
 namespace core {
 
@@ -140,11 +146,12 @@ void car2ell(double x, double y, double z, double semi_major, double flattening,
   // Finished.
   return;
 }
-dso::Vector3 car2ell(const dso::Vector3 &xyz, double semi_major,
+//dso::Vector3 car2ell(const dso::Vector3 &xyz, double semi_major,
+VECTOR3 car2ell(const VECTOR3 &xyz, double semi_major,
                      double flattening) noexcept {
-  const double x = xyz.x();
-  const double y = xyz.y();
-  const double z = xyz.z();
+  const double x = xyz(0);
+  const double y = xyz(1);
+  const double z = xyz(2);
 
   // Functions of ellipsoid parameters.
   const double aeps2{semi_major * semi_major * 1e-32};
@@ -236,7 +243,7 @@ void car2ell(double x, double y, double z, double &phi, double &lambda,
 }
 
 template <ellipsoid E>
-Vector3 car2ell(const Vector3 &xyz) noexcept {
+VECTOR3 car2ell(const VECTOR3 &xyz) noexcept {
   constexpr double semi_major{ellipsoid_traits<E>::a};
   constexpr double flattening{ellipsoid_traits<E>::f};
   return core::car2ell(xyz, semi_major, flattening);
@@ -281,7 +288,7 @@ void car2ell(double x, double y, double z, ellipsoid e, double &phi,
              double &lambda, double &h) noexcept {
   car2ell(x, y, z, Ellipsoid(e), phi, lambda, h);
 }
-Vector3 car2ell(const Vector3 &xyz, ellipsoid e) noexcept {
+VECTOR3 car2ell(const VECTOR3 &xyz, ellipsoid e) noexcept {
   return car2ell(xyz, Ellipsoid(e));
 }
 
