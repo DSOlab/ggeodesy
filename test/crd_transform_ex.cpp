@@ -1,13 +1,20 @@
-#include "car2ell.hpp"
-#include "car2top.hpp"
-#include "ellipsoid.hpp"
 #include "geodesy.hpp"
 #include "units.hpp"
 #include <cassert>
-#include <stdio.h>
+#include <cstdio>
+#include <cmath>
 
 struct Point {
   double x, y, z;
+  Point(double ix=0e0, double iy=0e0, double iz=0e0) : x(ix),y(iy),z(iz){};
+  Point(const dso::VECTOR3 &v) noexcept : x(v(0)), y(v(1)), z(v(2)) {};
+  dso::VECTOR3 vec() const noexcept {
+    dso::VECTOR3 vec;
+    vec(0) = x;
+    vec(1) = y;
+    vec(2) = z;
+    return vec;
+  }
 };
 
 // distance between two points
@@ -51,20 +58,20 @@ int main() {
          "are:");
   //  P3 is the [dx,dy,dz] vector
   Point p3{p2.x - p1.x, p2.y - p1.y, p2.z - p1.z};
-  //  P4 will hold the topocentric vector, [north, east, up]
-  Point p4;
   //  Transform P2-P1 to a topocentric vector around P1; store results in P4
   //  Note that here we pass both points (p1 and P2) to the function.
-  car2top<ellipsoid::grs80>(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p4.x, p4.y,
-                            p4.z);
+  auto pvec = car2top<ellipsoid::grs80>(p1.vec(), p2.vec());
+  //  P4 will hold the topocentric vector, [north, east, up]
+  Point p4(pvec);
+
   //  However, since we already have the [dx,dy,dz] vector, we could transform
   //+ it directly to topocentric; i.e. instead of using:
   //+ car2top<ellipsoid::grs80>(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p4.x, p4.y,
   // p4.z);
   //+ we could have used:
-  Point p4_2;
-  dcar2top<ellipsoid::grs80>(p1.x, p1.y, p1.z, p3.x, p3.y, p3.z, p4_2.x, p4_2.y,
-                             p4_2.z);
+  pvec = dcar2top<ellipsoid::grs80>(p1.vec(), p3.vec());
+  Point p4_2(pvec);
+
   // Now verify that both functions give the same results
   assert(std::abs(p4_2.x - p4.x) < prec && std::abs(p4_2.y - p4.y) < prec &&
          std::abs(p4_2.z - p4.z) < prec);
@@ -118,14 +125,14 @@ int main() {
   printf("\nknow the coordinates (actually latitude and longtitude of the");
   printf("\nreference point. Hence, actually compute the cartesian components");
   printf("\nof the second, ending point");
-  Point p5, // ellipsoidal coordinates of p1
-      p6;   // cartesian coordinates of p2
   //  Get ellipsoidal coordinates (lat, lon, height) of P1 and store them to
   //+ P5
-  car2ell<ellipsoid::grs80>(p1.x, p1.y, p1.z, p5.x, p5.y, p5.z);
+  pvec = car2ell<ellipsoid::grs80>(p1.vec());
+  Point p5(pvec); // ellipsoidal coordinates of p1
   //  Transform the topocentric vector p3 = [north, east, up] to a geocentric
   //+ cartesian one, with P1 as reference point fot the local coordinate sys.
-  top2car(p4.x, p4.y, p4.z, p5.x, p5.y, p6.x, p6.y, p6.z);
+  pvec = top2car(p4.vec(), p5.vec());
+  Point p6(pvec); // cartesian coordinates of p2
   printf("\n| φ |   |%+15.10f| | δx |    |%+15.10f|", rad2deg(p5.x), p6.x);
   printf("\n| λ | = |%+15.10f| | δy | =  |%+15.10f|", rad2deg(p5.y), p6.y);
   printf("\n| h |A  |%+14.5f | | δz |AB  |%+15.10f|", p5.z, p6.z);

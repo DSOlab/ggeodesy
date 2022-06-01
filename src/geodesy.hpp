@@ -6,13 +6,106 @@
 #define __NGPT_GEODESY_HPP__
 
 #include "geoconst.hpp"
+#include "ellipsoid.hpp"
+#ifdef USE_EIGEN
+#include "eigen3/Eigen/Dense"
+#else
 #include "matvec/matvec.hpp"
+#endif
 #include <cassert>
 #include <cmath>
 #include <stdexcept>
 #include <type_traits>
 
 namespace dso {
+
+#ifdef USE_EIGEN
+using VECTOR3 = Eigen::Matrix<double, 3, 1>;
+using MATRIX3x3 = Eigen::Matrix<double, 3, 3>;
+#else
+using VECTOR3 = Vector3;
+using MATRIX3x3 = Mat3x3;
+#endif
+
+/// @brief Given the geodetic coordinates of a reference point, return the
+///        matrix that turns any vector from the ference point to point P to 
+///        topocentric coordinates (e,n,u)
+MATRIX3x3 topocentric_matrix(double lambda, double phi) noexcept;
+
+inline
+MATRIX3x3 topocentric_matrix(const VECTOR3 &lfh) noexcept {
+  return topocentric_matrix(lfh(0), lfh(1));
+}
+
+/// @brief Ellipsoidal to cartesian coordinates.
+///
+/// Transform (geocentric) cartesian coordinates (on the ellipsoid) to
+/// ellipsoidal coordinates. Units are meters and radians.
+///
+/// @tparam      E      The reference ellipsoid (i.e. one of dso::ellipsoid).
+/// @param[in]   phi    Ellipsoidal latitude (radians)
+/// @param[in]   lambda Ellipsoidal longtitude (radians)
+/// @param[in]   h      Ellipsoidal height (meters)
+/// @param[out]  x      Cartesian x-component (meters)
+/// @param[out]  y      Cartesian y-component (meters)
+/// @param[out]  z      Cartesian z-component (meters)
+/// @throw              Does not throw.
+///
+template <ellipsoid E>
+void ell2car(double lambda, double phi, double h, double &x, double &y,
+             double &z) noexcept {
+  // Eccentricity squared.
+  constexpr double e2{dso::eccentricity_squared<E>()};
+
+  // Radius of curvature in the prime vertical.
+  const double N{dso::N<E>(phi)};
+
+  // Trigonometric numbers.
+  const double sinf{std::sin(phi)};
+  const double cosf{std::cos(phi)};
+  const double sinl{std::sin(lambda)};
+  const double cosl{std::cos(lambda)};
+
+  // Compute geocentric rectangular coordinates.
+  x = (N + h) * cosf * cosl;
+  y = (N + h) * cosf * sinl;
+  z = ((1e0 - e2) * N + h) * sinf;
+
+  // Finished.
+  return;
+}
+
+template <ellipsoid E>
+VECTOR3 ell2car(const VECTOR3 &lfh) noexcept {
+  // Eccentricity squared.
+  constexpr double e2{dso::eccentricity_squared<E>()};
+
+  // Radius of curvature in the prime vertical.
+  const double N{dso::N<E>(lfh(1))};
+
+  // Trigonometric numbers.
+  const double sinf{std::sin(lfh(1))};
+  const double cosf{std::cos(lfh(1))};
+  const double sinl{std::sin(lfh(0))};
+  const double cosl{std::cos(lfh(0))};
+
+  // Compute geocentric rectangular coordinates.
+  const double x = (N + lfh(2)) * cosf * cosl;
+  const double y = (N + lfh(2)) * cosf * sinl;
+  const double z = ((1e0 - e2) * N + lfh(2)) * sinf;
+
+  // Finished.
+  #ifdef USE_EIGEN
+  const double data[] = {x,y,z};
+  Eigen::Map<VECTOR3>(data,3);
+#else
+  return VECTOR3({x,y,z});
+#endif
+}
+
+void ell2car(double phi, double lambda, double h, const Ellipsoid &e, double &x,
+             double &y, double &z) noexcept;
+VECTOR3 ell2car(const VECTOR3 &lfh, const Ellipsoid &e) noexcept;
 
 /// @brief Topocentric vector to azimouth, zenith and distance.
 ///
@@ -32,10 +125,11 @@ namespace dso {
 ///
 void top2daz(double east, double north, double up, double &distance,
              double &azimouth, double &zenith);
+
 inline
-void top2daz(const Vector3 &enu, double &distance, double &azimouth,
+void top2daz(const VECTOR3 &enu, double &distance, double &azimouth,
              double &zenith) {
-  return top2daz(enu.x(), enu.y(), enu.z(), distance, azimouth, zenith);
+  return top2daz(enu(0), enu(1), enu(2), distance, azimouth, zenith);
 }
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector
@@ -46,7 +140,7 @@ void top2daz(const Vector3 &enu, double &distance, double &azimouth,
 ///                       topocentric frame) in [rad]. Range [0,2π]
 /// @param[out] elevation The elevation between the two points of the vector
 ///                       in [rad]. Range [0, π]
-void top2dae(const Vector3 &enu, double &distance, double &azimouth,
+void top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
              double &elevation);
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector and
@@ -63,8 +157,8 @@ void top2dae(const Vector3 &enu, double &distance, double &azimouth,
 /// @param[out] dedr      Partials of the Elevation, w.r.t the [e,n,u] (unit)
 ///                       vectors
 /// @see Satellite Orbits: Models, Methods and Applications, ch 7.4
-void top2dae(const Vector3 &enu, double &distance, double &azimouth,
-             double &elevation, Vector3 &dAdr, Vector3 &dEdr);
+void top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
+             double &elevation, VECTOR3 &dAdr, VECTOR3 &dEdr);
 
 /// @brief Topocentric vector to a geocentric, cartesian vector
 ///
@@ -86,8 +180,12 @@ void top2dae(const Vector3 &enu, double &distance, double &azimouth,
 void top2car(double east, double north, double up, double lon, double lat,
              double &dx, double &dy, double &dz) noexcept;
 inline
-void top2car(const Vector3 &enu, double lat, double lon, Vector3 &dr) noexcept {
-  return top2car(enu.x(), enu.y(), enu.z(), lon, lat, dr.x(), dr.y(), dr.z());
+VECTOR3 top2car(const VECTOR3 &enu, double lon, double lat) noexcept {
+  return topocentric_matrix(lon, lat) * enu;
+}
+inline 
+VECTOR3 top2car(const VECTOR3 &enu, const VECTOR3 &lfh) noexcept {
+  return top2car(enu, lfh(0), lfh(1));
 }
 
 /// @brief Bearing (i.e. forward azimouth) of great circle between two points
@@ -119,6 +217,156 @@ T bearing(T lat1, T lon1, T lat2, T lon2) noexcept {
   const double angle = std::atan2(nom, denom);
   // normalize to [0-2pi)
   return std::fmod(angle + D2PI, D2PI);
+}
+
+namespace core {
+/// @brief Cartesian to topocentric (vector).
+///
+/// Transform a vector expressed in cartesian, geocentric coordinates to the
+/// topocentric, local system around point i. This function depends on the
+/// reference ellipsoid. All units in meters/radians. The function will
+/// transform the (geocentric) vector \f$\vec{\Delta X}\f$ to the local
+/// topocentric reference frame around point \f$\vec{X}_i\f$.
+///
+/// @param[in]  xi     Cartesian x-component of point i (meters)
+/// @param[in]  yi     Cartesian y-component of point i (meters)
+/// @param[in]  zi     Cartesian z-component of point i (meters)
+/// @param[in]  dx     x-component of \f$\Delta x\f$ vector (meters)
+/// @param[in]  dy     y-component of \f$\Delta y\f$ vector (meters)
+/// @param[in]  dz     z-component of \f$\Delta z\f$ vector (meters)
+/// @param[in]  semi_major  The semi-major axis of the ref. ellipsoid
+/// @param[in]  flattening  The flattening of the ref. ellipsoid
+/// @param[out] north  Vector north component (meters)
+/// @param[out] east   Vector east component (meters)
+/// @param[out] up     Vector up component (meters)
+/// @throw             Does not throw.
+///
+/// @note The ellispoid is needed to transform the cartesian coordinates of
+///       the (reference) point i to ellispoidal coordinates.
+///
+/// @see "Physical Geodesy", pg. 209
+///
+void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
+              double semi_major, double flattening, double &north, double &east,
+              double &up) noexcept;
+VECTOR3 dcar2top(const VECTOR3 &r, const VECTOR3 &dr, double semi_major,
+                 double flattening) noexcept;
+void car2ell(double x, double y, double z, double semi_major, double flattening,
+             double &phi, double &lambda, double &h) noexcept;
+} // namespace core
+
+VECTOR3 car2ell(const VECTOR3 &xyz, double semi_major,
+                     double flattening) noexcept;
+
+template <ellipsoid E>
+VECTOR3 car2ell(const VECTOR3 &xyz) noexcept {
+  constexpr double semi_major{ellipsoid_traits<E>::a};
+  constexpr double flattening{ellipsoid_traits<E>::f};
+  return car2ell(xyz, semi_major, flattening);
+}
+
+inline
+VECTOR3 car2ell(const VECTOR3 &xyz, const Ellipsoid &e) noexcept {
+  double semi_major{e.semi_major()};
+  double flattening{e.flattening()};
+  return car2ell(xyz, semi_major, flattening);
+}
+
+inline
+VECTOR3 car2ell(const VECTOR3 &xyz, ellipsoid e) noexcept {
+  return car2ell(xyz, Ellipsoid(e));
+}
+
+/// @brief Cartesian to topocentric (vector).
+///
+/// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).
+/// @param[in]  xi     Cartesian x-component of point i (meters)
+/// @param[in]  yi     Cartesian y-component of point i (meters)
+/// @param[in]  zi     Cartesian z-component of point i (meters)
+/// @param[in]  xj     Cartesian x-component of point j (meters)
+/// @param[in]  yj     Cartesian y-component of point j (meters)
+/// @param[in]  zj     Cartesian z-component of point j (meters)
+/// @param[out] north  Vector north component (meters)
+/// @param[out] east   Vector east component (meters)
+/// @param[out] up     Vector up component (meters)
+///
+/// @see dso::core::dcar2top
+template <ellipsoid E>
+VECTOR3 car2top(const VECTOR3 &xyz_i, const VECTOR3 &xyz_j) noexcept {
+  constexpr double semi_major{ellipsoid_traits<E>::a};
+  constexpr double flattening{ellipsoid_traits<E>::f};
+
+  // Catresian vector.
+  const VECTOR3 dr = xyz_j - xyz_i;
+
+  // transform to topocentric
+  return core::dcar2top(xyz_i, dr, semi_major, flattening);
+}
+
+/// @brief Cartesian to topocentric (vector).
+///
+/// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).
+/// @param[in]  xi     Cartesian x-component of point i (meters)
+/// @param[in]  yi     Cartesian y-component of point i (meters)
+/// @param[in]  zi     Cartesian z-component of point i (meters)
+/// @param[in]  dx     x-component of \f$\Delta x\f$ vector (meters)
+/// @param[in]  dy     y-component of \f$\Delta y\f$ vector (meters)
+/// @param[in]  dz     z-component of \f$\Delta z\f$ vector (meters)
+/// @param[out] north  Vector north component (meters)
+/// @param[out] east   Vector east component (meters)
+/// @param[out] up     Vector up component (meters)
+/// @throw             Does not throw.
+///
+/// @see dso::core::dcar2top
+template <ellipsoid E>
+VECTOR3 dcar2top(const VECTOR3 &xyz_i, const VECTOR3 &dr) noexcept {
+  constexpr double semi_major{ellipsoid_traits<E>::a};
+  constexpr double flattening{ellipsoid_traits<E>::f};
+  return core::dcar2top(xyz_i, dr, semi_major, flattening);
+}
+
+/// @brief Cartesian to topocentric (vector).
+///
+/// @param[in]  xi     Cartesian x-component of point i (meters)
+/// @param[in]  yi     Cartesian y-component of point i (meters)
+/// @param[in]  zi     Cartesian z-component of point i (meters)
+/// @param[in]  xj     Cartesian x-component of point j (meters)
+/// @param[in]  yj     Cartesian y-component of point j (meters)
+/// @param[in]  zj     Cartesian z-component of point j (meters)
+/// @param[in]  e      reference ellipsoid (dso::Ellipsoid)
+/// @param[out] north  Vector north component (meters)
+/// @param[out] east   Vector east component (meters)
+/// @param[out] up     Vector up component (meters)
+///
+/// @see dso::core::dcar2top
+inline
+VECTOR3 car2top(const VECTOR3 &xyz_i, const VECTOR3 &xyz_j,
+                const Ellipsoid &e) noexcept {
+  const double semi_major{e.semi_major()};
+  const double flattening{e.flattening()};
+
+  // transform to topocentric
+  return core::dcar2top(xyz_i, (xyz_j - xyz_i), semi_major, flattening);
+}
+
+/// @brief Cartesian to topocentric (vector).
+///
+/// @param[in]  xi     Cartesian x-component of point i (meters)
+/// @param[in]  yi     Cartesian y-component of point i (meters)
+/// @param[in]  zi     Cartesian z-component of point i (meters)
+/// @param[in]  dx     x-component of \f$\Delta x\f$ vector (meters)
+/// @param[in]  dy     y-component of \f$\Delta y\f$ vector (meters)
+/// @param[in]  dz     z-component of \f$\Delta z\f$ vector (meters)
+/// @param[in]  e      the reference ellipsoid (dso::Ellipsoid)
+/// @param[out] north  Vector north component (meters)
+/// @param[out] east   Vector east component (meters)
+/// @param[out] up     Vector up component (meters)
+inline
+VECTOR3 dcar2top(const VECTOR3 &xyz_i, const VECTOR3 &dr,
+                 const Ellipsoid &e) noexcept {
+  const double semi_major{e.semi_major()};
+  const double flattening{e.flattening()};
+  return core::dcar2top(xyz_i, dr, semi_major, flattening);
 }
 
 /// @brief Transformation parameters for PZ-90 to WGS84 reference frames

@@ -35,6 +35,7 @@ penv = Environment(CXXFLAGS='-std=c++17 -Wall -Wextra -Werror -pedantic -W -Wsha
 ## Command line arguments ...
 debug = ARGUMENTS.get('debug', 0)
 boostg = ARGUMENTS.get('boost', 0)
+eigen = ARGUMENTS.get('eigen', 0)
 
 ## Construct the build enviroment
 env = denv.Clone() if int(debug) else penv.Clone()
@@ -47,12 +48,17 @@ vlib = env.SharedLibrary(source=lib_src_files, target=lib_name, CPPPATH=['.'], S
 env.Alias(target='install', source=env.Install(dir=os.path.join(prefix, 'include', inc_dir), source=hdr_src_files))
 env.Alias(target='install', source=env.InstallVersionedLib(dir=os.path.join(prefix, 'lib'), source=vlib))
 
+if eigen:
+    math_lib = ''
+else:
+    math_lib = 'matvec'
+
 ## Tests ...
 tests_sources = glob.glob(r"test/*.cpp")
 env.Append(RPATH=root_dir)
 for tsource in tests_sources:
   ttarget = tsource.replace('_', '-').replace('.cpp', '.out')
-  env.Program(target=ttarget, source=tsource, CPPPATH='src/', LIBS=vlib+['datetime', 'matvec'], LIBPATH='.')
+  env.Program(target=ttarget, source=tsource, CPPPATH='src/', LIBS=vlib+['datetime', math_lib], LIBPATH='.')
 
 ## Boost test executables
 if boostg:
@@ -61,4 +67,4 @@ if boostg:
   for bsource in boost_sources:
     btarget = bsource.replace('_', '-').replace('.cpp', '.out')
     env.Program(target=btarget, source=bsource, CPPPATH='src/',
-                LIBS=vlib+['datetime', 'matvec'], LIBPATH='.')
+                LIBS=vlib+['datetime', math_lib], LIBPATH='.')

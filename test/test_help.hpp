@@ -1,3 +1,6 @@
+#ifndef __GEODESY_HELP_HEADER_HPP__
+#define __GEODESY_HELP_HEADER_HPP__
+
 #include "ellipsoid.hpp"
 #include <cassert>
 #include <iostream>
@@ -44,3 +47,5 @@ bool approxEqual2(TReal a, TReal b, unsigned int interval_size = 1) noexcept {
 
   return min_a <= b && max_a >= b;
 }
+
+#endif

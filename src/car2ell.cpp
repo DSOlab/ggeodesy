@@ -1,64 +1,9 @@
-/// @file car2ell.hpp
+/// @file car2ell.cpp
 /// @brief Transformation of ellipsoidal to cartesian coordinates.
 
-#ifndef __CARTESIAN_TO_ELLIPSOIDAL__
-#define __CARTESIAN_TO_ELLIPSOIDAL__
+#include "geodesy.hpp"
 
-#include "ellipsoid.hpp"
-#include "geoconst.hpp"
-#include <cmath>
-#ifdef USE_EIGEN
-#include "eigen3/Eigen/Dense"
-#else
-#include "matvec/matvec.hpp"
-#endif
-
-namespace dso {
-#ifdef USE_EIGEN
-  using VECTOR3 = Eigen::Matrix<double, 3, 1>;
-#else
-  using VECTOR3 = Vector3;
-#endif
-
-namespace core {
-
-/* obsolete
- * this is an iterative algorithm, it usually convergse after 5 to 6 iterations
- * and the precision is no better than the car2ell algorithm. Marking it as
- * obsolete
-void car2ell_iterate(
-    double x, double y, double z, double semi_major_ell, double flattening_ell,
-    double &phi, double &lambda, double &hgt,
-    double tolerance = std::numeric_limits<double>::epsilon()) noexcept {
-#ifdef DEBUG
-  int iterations = 0;
-#endif
-  const double b {core::semi_minor(semi_major_ell, flattening_ell)};
-  const double a = semi_major_ell;
-  const double e2 = core::eccentricity_squared(flattening_ell);
-  const double rho = std::sqrt(x * x + y * y);
-  const double zdivrho = z / rho;
-  double lat1 = std::atan2(zdivrho, 1e0 - e2);
-  double N, coef, lat0, diff(10e0);
-  while (diff > std::abs(lat1) * tolerance) {
-    lat0 = lat1;
-    N = core::N(lat0, a, b);
-    hgt = rho / std::cos(lat0) - N;
-    coef = 1e0 - e2 * (N / (N + hgt));
-    lat1 = std::atan2(zdivrho, coef);
-#ifdef DEBUG
-    ++iterations;
-#endif
-    diff = std::abs(lat0 - lat1);
-  }
-  phi = lat1;
-  lambda = std::atan2(y, x);
-#ifdef DEBUG
-  std::cout << "\n[DEBUG] car2ell_iterate #iterations: " << iterations;
-#endif
-  return;
-}
-*/
+using dso::VECTOR3;
 
 /// @brief Cartesian to ellipsoidal.
 ///
@@ -80,7 +25,7 @@ void car2ell_iterate(
 /// @see Fukushima, T., "Transformation from Cartesian to geodetic coordinates
 ///      accelerated by Halley's method", J. Geodesy (2006), 79(12): 689-693
 ///
-void car2ell(double x, double y, double z, double semi_major, double flattening,
+void dso::core::car2ell(double x, double y, double z, double semi_major, double flattening,
              double &phi, double &lambda, double &h) noexcept {
   // Functions of ellipsoid parameters.
   const double aeps2{semi_major * semi_major * 1e-32};
@@ -146,8 +91,8 @@ void car2ell(double x, double y, double z, double semi_major, double flattening,
   // Finished.
   return;
 }
-//dso::Vector3 car2ell(const dso::Vector3 &xyz, double semi_major,
-VECTOR3 car2ell(const VECTOR3 &xyz, double semi_major,
+
+VECTOR3 dso::car2ell(const VECTOR3 &xyz, double semi_major,
                      double flattening) noexcept {
   const double x = xyz(0);
   const double y = xyz(1);
@@ -181,30 +126,30 @@ VECTOR3 car2ell(const VECTOR3 &xyz, double semi_major,
 
   if (p2 > aeps2) { // Continue unless at the poles
     // Compute distance from polar axis.
-    double p{std::sqrt(p2)};
+    const double p{std::sqrt(p2)};
     // Normalize.
-    double s0{absz / semi_major};
-    double pn{p / semi_major};
-    double zp{ep * s0};
+    const double s0{absz / semi_major};
+    const double pn{p / semi_major};
+    const double zp{ep * s0};
     // Prepare Newton correction factors.
-    double c0{ep * pn};
-    double c02{c0 * c0};
-    double c03{c02 * c0};
-    double s02{s0 * s0};
-    double s03{s02 * s0};
-    double a02{c02 + s02};
-    double a0{std::sqrt(a02)};
-    double a03{a02 * a0};
-    double d0{zp * a03 + e2 * s03};
-    double f0{pn * a03 - e2 * c03};
+    const double c0{ep * pn};
+    const double c02{c0 * c0};
+    const double c03{c02 * c0};
+    const double s02{s0 * s0};
+    const double s03{s02 * s0};
+    const double a02{c02 + s02};
+    const double a0{std::sqrt(a02)};
+    const double a03{a02 * a0};
+    const double d0{zp * a03 + e2 * s03};
+    const double f0{pn * a03 - e2 * c03};
     // Prepare Halley correction factor.
-    double b0{e4t * s02 * c02 * pn * (a0 - ep)};
-    double s1{d0 * f0 - b0 * s0};
-    double cp{ep * (f0 * f0 - b0 * c0)};
+    const double b0{e4t * s02 * c02 * pn * (a0 - ep)};
+    const double s1{d0 * f0 - b0 * s0};
+    const double cp{ep * (f0 * f0 - b0 * c0)};
     // Evaluate latitude and height.
     phi = ::atan(s1 / cp);
-    double s12{s1 * s1};
-    double cp2{cp * cp};
+    const double s12{s1 * s1};
+    const double cp2{cp * cp};
     hgt = (p * cp + absz * s1 - semi_major * std::sqrt(ep2 * s12 + cp2)) /
           std::sqrt(s12 + cp2);
   } else { // Special case: pole.
@@ -217,10 +162,13 @@ VECTOR3 car2ell(const VECTOR3 &xyz, double semi_major,
     phi = -phi;
 
   // Finished.
+  #ifdef USE_EIGEN
+  double data[] = {lambda, phi, hgt};
+  return Eigen::Map<VECTOR3>(data,3);
+#else
   return Vector3({lambda, phi, hgt});
+#endif
 }
-
-} // namespace core
 
 /// @brief Cartesian to ellipsoidal.
 ///
@@ -233,21 +181,14 @@ VECTOR3 car2ell(const VECTOR3 &xyz, double semi_major,
 /// @param[out] h      Ellipsoidal height, meters.
 ///
 /// @see  dso::core::car2ell
-template <ellipsoid E>
-void car2ell(double x, double y, double z, double &phi, double &lambda,
-             double &h) noexcept {
-  constexpr double semi_major{ellipsoid_traits<E>::a};
-  constexpr double flattening{ellipsoid_traits<E>::f};
-  core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
-  return;
-}
-
-template <ellipsoid E>
-VECTOR3 car2ell(const VECTOR3 &xyz) noexcept {
-  constexpr double semi_major{ellipsoid_traits<E>::a};
-  constexpr double flattening{ellipsoid_traits<E>::f};
-  return core::car2ell(xyz, semi_major, flattening);
-}
+//template <ellipsoid E>
+//void car2ell(double x, double y, double z, double &phi, double &lambda,
+//             double &h) noexcept {
+//  constexpr double semi_major{ellipsoid_traits<E>::a};
+//  constexpr double flattening{ellipsoid_traits<E>::f};
+//  core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
+//  return;
+//}
 
 /// @brief Cartesian to ellipsoidal.
 ///
@@ -260,18 +201,13 @@ VECTOR3 car2ell(const VECTOR3 &xyz) noexcept {
 /// @param[out] h      Ellipsoidal height, meters.
 ///
 /// @see  dso::core::car2ell
-void car2ell(double x, double y, double z, const Ellipsoid &e, double &phi,
-             double &lambda, double &h) noexcept {
-  double semi_major{e.semi_major()};
-  double flattening{e.flattening()};
-  core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
-  return;
-}
-Vector3 car2ell(const Vector3 &xyz, const Ellipsoid &e) noexcept {
-  double semi_major{e.semi_major()};
-  double flattening{e.flattening()};
-  return core::car2ell(xyz, semi_major, flattening);
-}
+//void car2ell(double x, double y, double z, const Ellipsoid &e, double &phi,
+//             double &lambda, double &h) noexcept {
+//  double semi_major{e.semi_major()};
+//  double flattening{e.flattening()};
+//  core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
+//  return;
+//}
 
 /// @brief Cartesian to ellipsoidal.
 ///
@@ -284,14 +220,7 @@ Vector3 car2ell(const Vector3 &xyz, const Ellipsoid &e) noexcept {
 /// @param[out] h      Ellipsoidal height, meters.
 ///
 /// @see  dso::core::car2ell
-void car2ell(double x, double y, double z, ellipsoid e, double &phi,
-             double &lambda, double &h) noexcept {
-  car2ell(x, y, z, Ellipsoid(e), phi, lambda, h);
-}
-VECTOR3 car2ell(const VECTOR3 &xyz, ellipsoid e) noexcept {
-  return car2ell(xyz, Ellipsoid(e));
-}
-
-} // namespace dso
-
-#endif
+//void car2ell(double x, double y, double z, ellipsoid e, double &phi,
+//             double &lambda, double &h) noexcept {
+//  car2ell(x, y, z, Ellipsoid(e), phi, lambda, h);
+//}

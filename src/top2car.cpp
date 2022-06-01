@@ -2,6 +2,8 @@
 #include "geodesy.hpp"
 #include <cmath>
 
+using dso::VECTOR3;
+
 void dso::top2car(double east, double north, double up, double lon, double lat,
                   double &dx, double &dy, double &dz) noexcept {
   const double slon = std::sin(lon);
