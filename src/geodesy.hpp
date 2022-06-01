@@ -5,8 +5,8 @@
 #ifndef __NGPT_GEODESY_HPP__
 #define __NGPT_GEODESY_HPP__
 
-#include "geoconst.hpp"
 #include "ellipsoid.hpp"
+#include "geoconst.hpp"
 #ifdef USE_EIGEN
 #include "eigen3/Eigen/Dense"
 #else
@@ -28,12 +28,11 @@ using MATRIX3x3 = Mat3x3;
 #endif
 
 /// @brief Given the geodetic coordinates of a reference point, return the
-///        matrix that turns any vector from the ference point to point P to 
+///        matrix that turns any vector from the ference point to point P to
 ///        topocentric coordinates (e,n,u)
 MATRIX3x3 topocentric_matrix(double lambda, double phi) noexcept;
 
-inline
-MATRIX3x3 topocentric_matrix(const VECTOR3 &lfh) noexcept {
+inline MATRIX3x3 topocentric_matrix(const VECTOR3 &lfh) noexcept {
   return topocentric_matrix(lfh(0), lfh(1));
 }
 
@@ -75,8 +74,7 @@ void ell2car(double lambda, double phi, double h, double &x, double &y,
   return;
 }
 
-template <ellipsoid E>
-VECTOR3 ell2car(const VECTOR3 &lfh) noexcept {
+template <ellipsoid E> VECTOR3 ell2car(const VECTOR3 &lfh) noexcept {
   // Eccentricity squared.
   constexpr double e2{dso::eccentricity_squared<E>()};
 
@@ -94,16 +92,16 @@ VECTOR3 ell2car(const VECTOR3 &lfh) noexcept {
   const double y = (N + lfh(2)) * cosf * sinl;
   const double z = ((1e0 - e2) * N + lfh(2)) * sinf;
 
-  // Finished.
-  #ifdef USE_EIGEN
-  const double data[] = {x,y,z};
-  Eigen::Map<VECTOR3>(data,3);
+// Finished.
+#ifdef USE_EIGEN
+  const double data[] = {x, y, z};
+  Eigen::Map<VECTOR3>(data, 3);
 #else
-  return VECTOR3({x,y,z});
+  return VECTOR3({x, y, z});
 #endif
 }
 
-void ell2car(double phi, double lambda, double h, const Ellipsoid &e, double &x,
+void ell2car(double lambda, double phi, double h, const Ellipsoid &e, double &x,
              double &y, double &z) noexcept;
 VECTOR3 ell2car(const VECTOR3 &lfh, const Ellipsoid &e) noexcept;
 
@@ -126,17 +124,16 @@ VECTOR3 ell2car(const VECTOR3 &lfh, const Ellipsoid &e) noexcept;
 void top2daz(double east, double north, double up, double &distance,
              double &azimouth, double &zenith);
 
-inline
-void top2daz(const VECTOR3 &enu, double &distance, double &azimouth,
-             double &zenith) {
+inline void top2daz(const VECTOR3 &enu, double &distance, double &azimouth,
+                    double &zenith) {
   return top2daz(enu(0), enu(1), enu(2), distance, azimouth, zenith);
 }
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector
-/// @param[in] enu Vector of size >= 3, containing East, North and Up 
+/// @param[in] enu Vector of size >= 3, containing East, North and Up
 ///                 coordinates in [m]
 /// @param[out] distance  The distance/norm of the topocentric vector [m]
-/// @param[out] azimouth  The azimouth between the two points (in the 
+/// @param[out] azimouth  The azimouth between the two points (in the
 ///                       topocentric frame) in [rad]. Range [0,2π]
 /// @param[out] elevation The elevation between the two points of the vector
 ///                       in [rad]. Range [0, π]
@@ -145,10 +142,10 @@ void top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector and
 ///        their partial derivatives w.r.t the topocentic RF
-/// @param[in] enu Vector of size >= 3, containing East, North and Up 
+/// @param[in] enu Vector of size >= 3, containing East, North and Up
 ///                 coordinates in [m]
 /// @param[out] distance  The distance/norm of the topocentric vector [m]
-/// @param[out] azimouth  The azimouth between the two points (in the 
+/// @param[out] azimouth  The azimouth between the two points (in the
 ///                       topocentric frame) in [rad]. Range [0,2π]
 /// @param[out] elevation The elevation between the two points of the vector
 ///                       in [rad]. Range [0, π]
@@ -179,12 +176,10 @@ void top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
 ///
 void top2car(double east, double north, double up, double lon, double lat,
              double &dx, double &dy, double &dz) noexcept;
-inline
-VECTOR3 top2car(const VECTOR3 &enu, double lon, double lat) noexcept {
+inline VECTOR3 top2car(const VECTOR3 &enu, double lon, double lat) noexcept {
   return topocentric_matrix(lon, lat) * enu;
 }
-inline 
-VECTOR3 top2car(const VECTOR3 &enu, const VECTOR3 &lfh) noexcept {
+inline VECTOR3 top2car(const VECTOR3 &enu, const VECTOR3 &lfh) noexcept {
   return top2car(enu, lfh(0), lfh(1));
 }
 
@@ -247,33 +242,30 @@ namespace core {
 /// @see "Physical Geodesy", pg. 209
 ///
 void dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
-              double semi_major, double flattening, double &north, double &east,
+              double semi_major, double flattening, double &east, double &north,
               double &up) noexcept;
 VECTOR3 dcar2top(const VECTOR3 &r, const VECTOR3 &dr, double semi_major,
                  double flattening) noexcept;
 void car2ell(double x, double y, double z, double semi_major, double flattening,
-             double &phi, double &lambda, double &h) noexcept;
+             double &lambda, double &phi, double &h) noexcept;
 } // namespace core
 
 VECTOR3 car2ell(const VECTOR3 &xyz, double semi_major,
-                     double flattening) noexcept;
+                double flattening) noexcept;
 
-template <ellipsoid E>
-VECTOR3 car2ell(const VECTOR3 &xyz) noexcept {
+template <ellipsoid E> VECTOR3 car2ell(const VECTOR3 &xyz) noexcept {
   constexpr double semi_major{ellipsoid_traits<E>::a};
   constexpr double flattening{ellipsoid_traits<E>::f};
   return car2ell(xyz, semi_major, flattening);
 }
 
-inline
-VECTOR3 car2ell(const VECTOR3 &xyz, const Ellipsoid &e) noexcept {
+inline VECTOR3 car2ell(const VECTOR3 &xyz, const Ellipsoid &e) noexcept {
   double semi_major{e.semi_major()};
   double flattening{e.flattening()};
   return car2ell(xyz, semi_major, flattening);
 }
 
-inline
-VECTOR3 car2ell(const VECTOR3 &xyz, ellipsoid e) noexcept {
+inline VECTOR3 car2ell(const VECTOR3 &xyz, ellipsoid e) noexcept {
   return car2ell(xyz, Ellipsoid(e));
 }
 
@@ -339,9 +331,8 @@ VECTOR3 dcar2top(const VECTOR3 &xyz_i, const VECTOR3 &dr) noexcept {
 /// @param[out] up     Vector up component (meters)
 ///
 /// @see dso::core::dcar2top
-inline
-VECTOR3 car2top(const VECTOR3 &xyz_i, const VECTOR3 &xyz_j,
-                const Ellipsoid &e) noexcept {
+inline VECTOR3 car2top(const VECTOR3 &xyz_i, const VECTOR3 &xyz_j,
+                       const Ellipsoid &e) noexcept {
   const double semi_major{e.semi_major()};
   const double flattening{e.flattening()};
 
@@ -361,9 +352,8 @@ VECTOR3 car2top(const VECTOR3 &xyz_i, const VECTOR3 &xyz_j,
 /// @param[out] north  Vector north component (meters)
 /// @param[out] east   Vector east component (meters)
 /// @param[out] up     Vector up component (meters)
-inline
-VECTOR3 dcar2top(const VECTOR3 &xyz_i, const VECTOR3 &dr,
-                 const Ellipsoid &e) noexcept {
+inline VECTOR3 dcar2top(const VECTOR3 &xyz_i, const VECTOR3 &dr,
+                        const Ellipsoid &e) noexcept {
   const double semi_major{e.semi_major()};
   const double flattening{e.flattening()};
   return core::dcar2top(xyz_i, dr, semi_major, flattening);

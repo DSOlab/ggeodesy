@@ -26,7 +26,7 @@ using dso::VECTOR3;
 ///      accelerated by Halley's method", J. Geodesy (2006), 79(12): 689-693
 ///
 void dso::core::car2ell(double x, double y, double z, double semi_major, double flattening,
-             double &phi, double &lambda, double &h) noexcept {
+             double &lambda, double &phi, double &h) noexcept {
   // Functions of ellipsoid parameters.
   const double aeps2{semi_major * semi_major * 1e-32};
   const double e2{(2.0e0 - flattening) * flattening};
@@ -169,58 +169,3 @@ VECTOR3 dso::car2ell(const VECTOR3 &xyz, double semi_major,
   return Vector3({lambda, phi, hgt});
 #endif
 }
-
-/// @brief Cartesian to ellipsoidal.
-///
-/// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).
-/// @param[in]  x      Cartesian x-component, meters.
-/// @param[in]  y      Cartesian y-component, meters.
-/// @param[in]  z      Cartesian z-component, meters.
-/// @param[out] phi    Ellipsoidal latitude, radians.
-/// @param[out] lambda Ellipsoidal longtitude, radians.
-/// @param[out] h      Ellipsoidal height, meters.
-///
-/// @see  dso::core::car2ell
-//template <ellipsoid E>
-//void car2ell(double x, double y, double z, double &phi, double &lambda,
-//             double &h) noexcept {
-//  constexpr double semi_major{ellipsoid_traits<E>::a};
-//  constexpr double flattening{ellipsoid_traits<E>::f};
-//  core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
-//  return;
-//}
-
-/// @brief Cartesian to ellipsoidal.
-///
-/// @param[in]  x      Cartesian x-component, meters.
-/// @param[in]  y      Cartesian y-component, meters.
-/// @param[in]  z      Cartesian z-component, meters.
-/// @param[in]  e      An dso::Ellipsoid instance
-/// @param[out] phi    Ellipsoidal latitude, radians.
-/// @param[out] lambda Ellipsoidal longtitude, radians.
-/// @param[out] h      Ellipsoidal height, meters.
-///
-/// @see  dso::core::car2ell
-//void car2ell(double x, double y, double z, const Ellipsoid &e, double &phi,
-//             double &lambda, double &h) noexcept {
-//  double semi_major{e.semi_major()};
-//  double flattening{e.flattening()};
-//  core::car2ell(x, y, z, semi_major, flattening, phi, lambda, h);
-//  return;
-//}
-
-/// @brief Cartesian to ellipsoidal.
-///
-/// @param[in]  x      Cartesian x-component, meters.
-/// @param[in]  y      Cartesian y-component, meters.
-/// @param[in]  z      Cartesian z-component, meters.
-/// @param[in]  e      The reference ellipsoid (i.e. one of dso::ellipsoid).
-/// @param[out] phi    Ellipsoidal latitude, radians.
-/// @param[out] lambda Ellipsoidal longtitude, radians.
-/// @param[out] h      Ellipsoidal height, meters.
-///
-/// @see  dso::core::car2ell
-//void car2ell(double x, double y, double z, ellipsoid e, double &phi,
-//             double &lambda, double &h) noexcept {
-//  car2ell(x, y, z, Ellipsoid(e), phi, lambda, h);
-//}

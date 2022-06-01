@@ -150,8 +150,8 @@ double great_circle_distance_pythagoras(double lat1, double lon1, double lat2,
 /// see https://www.movable-type.co.uk/scripts/latlong.html
 double great_circle_distance_polar(double lat1, double lon1, double lat2,
                                    double lon2, double R) noexcept;
-} // namespace core
+} // core
 
-} // namespace dso
+} // dso
 
 #endif

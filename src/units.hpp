@@ -12,12 +12,12 @@
 
 namespace dso {
 
-enum class AngleUnit : char {Radians, Degrees};
-template<AngleUnit U> struct AngleUnitTraits {
-  static constexpr double full_circle() {return 2e0 * M_PI;}
+enum class AngleUnit : char { Radians, Degrees };
+template <AngleUnit U> struct AngleUnitTraits {
+  static constexpr double full_circle() { return 2e0 * M_PI; }
 };
-template<> struct AngleUnitTraits<AngleUnit::Degrees> {
-  static constexpr double full_circle() {return 360e0;}
+template <> struct AngleUnitTraits<AngleUnit::Degrees> {
+  static constexpr double full_circle() { return 360e0; }
 };
 
 /// @brief Convert degrees to radians.
@@ -53,10 +53,10 @@ template <typename T> constexpr T sec2rad(T seconds) noexcept {
 }
 
 /// @brief Normalize angle in the range [0, 2π]/[0,360]
-/// For more information, see 
+/// For more information, see
 /// https://github.com/xanthospap/ggeodesy/tree/master/angle_normalization
 /// @tparam T floating type, float, double, ...
-/// @tparam U Units of input angle, AngleUnits::Radians, or 
+/// @tparam U Units of input angle, AngleUnits::Radians, or
 ///           AngleUnits::Degrees
 /// @param[in] a Angle in units of U
 /// @return Normalized angle in the range 0 to 1-cycle, in units of U

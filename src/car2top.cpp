@@ -4,7 +4,7 @@ using dso::MATRIX3x3;
 using dso::VECTOR3;
 
 void dso::core::dcar2top(double xi, double yi, double zi, double dx, double dy, double dz,
-              double semi_major, double flattening, double &north, double &east,
+              double semi_major, double flattening, double &east, double &north,
               double &up) noexcept {
 
   // Ellipsoidal coordinates of reference point.

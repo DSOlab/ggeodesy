@@ -17,7 +17,7 @@ using dso::VECTOR3;
 /// @param[out]  y      Cartesian y-component (meters)
 /// @param[out]  z      Cartesian z-component (meters)
 /// @throw              Does not throw.
-void ell2car(double phi, double lambda, double h, const dso::Ellipsoid &e, double &x,
+void ell2car(double lambda, double phi, double h, const dso::Ellipsoid &e, double &x,
              double &y, double &z) noexcept {
   // Eccentricity squared.
   double e2{e.eccentricity_squared()};

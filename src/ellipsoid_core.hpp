@@ -169,8 +169,8 @@ inline
   return std::atan((1e0 - f) * std::tan(lat));
 }
 
-} // namespace core
+} // core
 
-} // namespace dso
+} // dso
 
 #endif
