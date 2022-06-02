@@ -60,8 +60,8 @@ VECTOR3 dso::ell2car(const VECTOR3 &lfh, const dso::Ellipsoid &e) noexcept {
 
   // Finished.
   #ifdef USE_EIGEN
-  const double data[] = {x,y,z};
-  Eigen::Map<VECTOR3>(data,3);
+  /*const*/ double data[] = {x,y,z};
+  return Eigen::Map<VECTOR3>(data,3);
 #else
   return VECTOR3({x,y,z});
 #endif

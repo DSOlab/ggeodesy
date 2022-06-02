@@ -94,7 +94,7 @@ template <ellipsoid E> VECTOR3 ell2car(const VECTOR3 &lfh) noexcept {
 
 // Finished.
 #ifdef USE_EIGEN
-  const double data[] = {x, y, z};
+  /*const*/ double data[] = {x, y, z};
   return Eigen::Map<VECTOR3>(data, 3);
 #else
   return VECTOR3({x, y, z});

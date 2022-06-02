@@ -32,7 +32,7 @@ VECTOR3 dso::core::dcar2top(const VECTOR3 &r, const VECTOR3 &dr, double semi_maj
                  double flattening) noexcept {
 
   // Cartesian to ellipsoidal for reference point.
-  const VECTOR3 lfh = car2ell(r, semi_major, flattening);
+  const VECTOR3 lfh = dso::car2ell(r, semi_major, flattening);
 
   // Trigonometric numbers.
   //const double cosf{std::cos(lfh.y())};
