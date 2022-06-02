@@ -8,7 +8,7 @@
 #include "ellipsoid.hpp"
 #include "geoconst.hpp"
 #ifdef USE_EIGEN
-#include "eigen3/Eigen/Dense"
+#include "eigen3/Eigen/Eigen"
 #else
 #include "matvec/matvec.hpp"
 #endif
