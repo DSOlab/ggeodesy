@@ -2,6 +2,7 @@
 *.trs
 *.os
 .sconsign.dblite
+*.obsolete
 
 # Compiled Python files
 *.pyc

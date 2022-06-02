@@ -50,6 +50,7 @@ env.Alias(target='install', source=env.InstallVersionedLib(dir=os.path.join(pref
 
 if eigen:
     math_lib = ''
+    env.Append(CXXFLAGS=' -DUSE_EIGEN')
 else:
     math_lib = 'matvec'
 
