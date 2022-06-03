@@ -13,6 +13,7 @@ geodetic calculations. The whole library is wrapped around the `dso` namespace.
 > [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) 
 > to [scons](https://scons.org/). 
 
+
 ### TL;DR
 
 First off, clone the project.
@@ -23,7 +24,13 @@ scons [OPTIONS]
 ```
 in the top-level directory. The optional `[OPTIONS]` argument, can be any/multiple of:
  * `debug=1` to trigger a `DEBUG` build, 
- * `boost=1` to trigger a build including [boost geometry](https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html) comparisson/test programs
+ * `boost=1` to trigger a build including [boost geometry](https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html) 
+    comparisson/test programs
+ * `eigen=1` to use [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) 
+    library for vector/matrix operations. **Note that because the library uses extensively 
+    template code, if you include `ggeodesy` header files in another project you should 
+    also include the `-DUSE_EIGEN` compilation flag when building the dependent project**
+
 
 Installation is trivial, use:
 ```
@@ -72,6 +79,15 @@ file and used throughout the test/check programs.
 ## The Library
 
 Here is a list of the provided utilities:
+
+### General Notes
+
+In general, when refering to coordinate arrays/vector, the elements are in the 
+following order:
+
+  * for cartesian vector `[x, y, z]`
+  * for ellipsoidal/geodetic (longitude, latitude, height) `[longitude, latitude, height]`
+  * topocentric `[east, north, up]`
 
 ### Radians, Degrees and Relevant Transformations
 
