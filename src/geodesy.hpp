@@ -121,12 +121,12 @@ VECTOR3 ell2car(const VECTOR3 &lfh, const Ellipsoid &e) noexcept;
 ///
 /// @see "Physical Geodesy", pg. 210
 ///
-void top2daz(double east, double north, double up, double &distance,
+double top2daz(double east, double north, double up,
              double &azimouth, double &zenith);
 
-inline void top2daz(const VECTOR3 &enu, double &distance, double &azimouth,
+inline double top2daz(const VECTOR3 &enu,double &azimouth,
                     double &zenith) {
-  return top2daz(enu(0), enu(1), enu(2), distance, azimouth, zenith);
+  return top2daz(enu(0), enu(1), enu(2), azimouth, zenith);
 }
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector
@@ -137,7 +137,7 @@ inline void top2daz(const VECTOR3 &enu, double &distance, double &azimouth,
 ///                       topocentric frame) in [rad]. Range [0,2π]
 /// @param[out] elevation The elevation between the two points of the vector
 ///                       in [rad]. Range [0, π]
-void top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
+double top2dae(const VECTOR3 &enu, double &azimouth,
              double &elevation);
 
 /// @brief Compute distance, azimouth and elevation from topocentric vector and
@@ -154,7 +154,7 @@ void top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
 /// @param[out] dedr      Partials of the Elevation, w.r.t the [e,n,u] (unit)
 ///                       vectors
 /// @see Satellite Orbits: Models, Methods and Applications, ch 7.4
-void top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
+double top2dae(const VECTOR3 &enu, double &azimouth,
              double &elevation, VECTOR3 &dAdr, VECTOR3 &dEdr);
 
 /// @brief Topocentric vector to a geocentric, cartesian vector

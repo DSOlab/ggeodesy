@@ -3,7 +3,7 @@
 
 using dso::VECTOR3;
 
-void dso::top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
+double dso::top2dae(const VECTOR3 &enu, double &azimouth,
                   double &elevation) {
   const double e = enu(0);
   const double n = enu(1);
@@ -19,11 +19,10 @@ void dso::top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
   elevation = std::atan(u / rho);
 
   // distance
-  distance = rho;
-  return;
+  return enu.norm();
 }
 
-void dso::top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
+double dso::top2dae(const VECTOR3 &enu, double &azimouth,
                   double &elevation, VECTOR3 &dAdr, VECTOR3 &dEdr) {
   const double e = enu(0);
   const double n = enu(1);
@@ -47,6 +46,5 @@ void dso::top2dae(const VECTOR3 &enu, double &distance, double &azimouth,
   dEdr(2) = 1e0 / rho;
 
   // distance
-  distance = rho;
-  return;
+  return enu.norm();
 }

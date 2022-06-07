@@ -5,11 +5,11 @@
 #include "geodesy.hpp"
 #include "units.hpp"
 
-void dso::top2daz(double east, double north, double up, double &distance,
+double dso::top2daz(double east, double north, double up,
                   double &azimouth, double &zenith) {
 
   // spatial distance of vector
-  distance = std::sqrt(north * north + east * east + up * up);
+  const double distance = std::sqrt(north * north + east * east + up * up);
 
   // check if zero distance or north are zero
   if ((!distance) || (!north)) {
@@ -23,5 +23,5 @@ void dso::top2daz(double east, double north, double up, double &distance,
   zenith = std::acos(up / distance);
 
   // finished
-  return;
+  return distance;
 }
