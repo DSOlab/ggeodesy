@@ -111,7 +111,7 @@ int main() {
   printf("\n\nFrom the topocentric [N, E, U] vector, we can calculate the");
   printf("\ndistance, azimouth and zenith angle between the two points:");
   double dist, azi, zen;
-  top2daz(p4.x, p4.y, p4.z, dist, azi, zen);
+  dist = top2daz(p4.x, p4.y, p4.z, azi, zen);
   printf("\ndistance   = %15.7f (m)", dist);
   printf("\nazimouth   = %15.10f deg.", rad2deg(azi));
   printf("\nzenith ang.= %15.10f deg.", rad2deg(zen));
