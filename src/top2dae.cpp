@@ -41,9 +41,11 @@ double dso::top2dae(const VECTOR3 &enu, double &azimouth,
   dAdr(0) = n / rho2;
   dAdr(1) = -e / rho2;
   dAdr(2) = 0e0;
-  dEdr(0) = -e * u / rho2 / rho;
-  dEdr(1) = -n * u / rho2 / rho;
-  dEdr(2) = 1e0 / rho;
+
+  const double R2 = rho2 + u*u;
+  dEdr(0) = -e * u / rho / R2;
+  dEdr(1) = -n * u / rho / R2;
+  dEdr(2) = rho / R2;
 
   // distance
   return enu.norm();

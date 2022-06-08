@@ -25,7 +25,8 @@ MATRIX3x3 dso::topocentric_matrix(double lambda, double phi) noexcept {
   const double d22 = sf;
 
 #ifdef USE_EIGEN
-  double data[9] = {d00,d01,d02,d10,d11,d12,d20,d21,d22};
+  // double data[9] = {d00,d01,d02,d10,d11,d12,d20,d21,d22};
+  double data[9] = {d00,d10,d20,d01,d11,d21,d02,d12,d22};
   return Eigen::Map<MATRIX3x3>(data,3,3);
 #else
   return MATRIX3x3({d00,d01,d02,d10,d11,d12,d20,d21,d22});

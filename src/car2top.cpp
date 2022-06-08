@@ -34,5 +34,5 @@ VECTOR3 dso::core::dcar2top(const VECTOR3 &r, const VECTOR3 &dr,
 
   // Cartesian to ellipsoidal for reference point.
   const VECTOR3 lfh = dso::car2ell(r, semi_major, flattening);
-  return dso::topocentric_matrix(lfh).transpose() * dr;
+  return dso::topocentric_matrix(lfh) * dr;
 }
