@@ -2,8 +2,6 @@
 /// @brief Transform ellipsoidal to cartesian coordinates.
 #include "geodesy.hpp"
 
-using dso::VECTOR3;
-
 /// @brief Ellipsoidal to cartesian coordinates.
 ///
 /// Transform (geocentric) cartesian coordinates (on the ellipsoid) to
@@ -40,7 +38,7 @@ void ell2car(double lambda, double phi, double h, const dso::Ellipsoid &e, doubl
   return;
 }
 
-VECTOR3 dso::ell2car(const VECTOR3 &lfh, const dso::Ellipsoid &e) noexcept {
+Eigen::Matrix<double,3,1> dso::ell2car(const Eigen::Matrix<double,3,1> &lfh, const dso::Ellipsoid &e) noexcept {
   // Eccentricity squared.
   double e2{e.eccentricity_squared()};
 
@@ -59,10 +57,6 @@ VECTOR3 dso::ell2car(const VECTOR3 &lfh, const dso::Ellipsoid &e) noexcept {
   const double z = ((1e0 - e2) * N + lfh(2)) * sinf;
 
   // Finished.
-  #ifdef USE_EIGEN
   /*const*/ double data[] = {x,y,z};
-  return Eigen::Map<VECTOR3>(data,3);
-#else
-  return VECTOR3({x,y,z});
-#endif
+  return Eigen::Map<Eigen::Matrix<double,3,1>>(data,3);
 }

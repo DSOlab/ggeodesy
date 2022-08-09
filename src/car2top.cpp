@@ -1,9 +1,6 @@
 #include "geodesy.hpp"
 #include <cstdio>
 
-using dso::MATRIX3x3;
-using dso::VECTOR3;
-
 void dso::core::dcar2top(double xi, double yi, double zi, double dx, double dy,
                          double dz, double semi_major, double flattening,
                          double &east, double &north, double &up) noexcept {
@@ -29,10 +26,13 @@ void dso::core::dcar2top(double xi, double yi, double zi, double dx, double dy,
   return;
 }
 
-VECTOR3 dso::core::dcar2top(const VECTOR3 &r, const VECTOR3 &dr,
-                            double semi_major, double flattening) noexcept {
+Eigen::Matrix<double, 3, 1>
+dso::core::dcar2top(const Eigen::Matrix<double, 3, 1> &r,
+                    const Eigen::Matrix<double, 3, 1> &dr, double semi_major,
+                    double flattening) noexcept {
 
   // Cartesian to ellipsoidal for reference point.
-  const VECTOR3 lfh = dso::car2ell(r, semi_major, flattening);
+  const Eigen::Matrix<double, 3, 1> lfh =
+      dso::car2ell(r, semi_major, flattening);
   return dso::topocentric_matrix(lfh) * dr;
 }

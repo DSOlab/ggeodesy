@@ -3,8 +3,6 @@
 
 #include "geodesy.hpp"
 
-using dso::VECTOR3;
-
 /// @brief Cartesian to ellipsoidal.
 ///
 /// Transform cartesian, geocentric coordinates (x, y, z) to ellipsoidal (i.e.
@@ -92,7 +90,7 @@ void dso::core::car2ell(double x, double y, double z, double semi_major, double 
   return;
 }
 
-VECTOR3 dso::car2ell(const VECTOR3 &xyz, double semi_major,
+Eigen::Matrix<double,3,1> dso::car2ell(const Eigen::Matrix<double,3,1> &xyz, double semi_major,
                      double flattening) noexcept {
   const double x = xyz(0);
   const double y = xyz(1);
@@ -162,10 +160,6 @@ VECTOR3 dso::car2ell(const VECTOR3 &xyz, double semi_major,
     phi = -phi;
 
   // Finished.
-  #ifdef USE_EIGEN
   double data[] = {lambda, phi, hgt};
-  return Eigen::Map<VECTOR3>(data,3);
-#else
-  return Vector3({lambda, phi, hgt});
-#endif
+  return Eigen::Map<Eigen::Matrix<double,3,1>>(data,3);
 }
