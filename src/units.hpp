@@ -52,14 +52,15 @@ template <typename T> constexpr T sec2rad(T seconds) noexcept {
   return (seconds / 3600e0) * DEG2RAD;
 }
 
+// TODO should produce identical results to sec2rad
 /// @brief Convert arcseconds (of degree) to radians.
 /// @tparam    T       Any floating type
 /// @param[in] arcsec  Angle in seconds of degree [arcseconds]
 /// @return            The (input) angle in [radians]
-template <typename T> constexpr T arcsec2rad(T arcsec) noexcept {
-  constexpr const double ARCSEC2RAD = M_PI / (60e0*60e0*180e0);
-  return arcsec * ARCSEC2RAD;
-}
+//template <typename T> constexpr T arcsec2rad(T arcsec) noexcept {
+//  constexpr const double ARCSEC2RAD = M_PI / (60e0*60e0*180e0);
+//  return arcsec * ARCSEC2RAD;
+//}
 
 /// @brief Normalize angle in the range [0, 2π]/[0,360]
 /// For more information, see

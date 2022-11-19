@@ -135,11 +135,12 @@ inline
 /// \f$ \theta (\phi) = tan^{-1} ((1-f)^2 tan(\phi)) \f$
 /// The geodetic and geocentric latitudes are equal at the equator and at the
 /// poles but at other latitudes they differ by a few minutes of arc.
-/// @param[in] lat The (geodetic) latitude in radians
-/// @param[in] f   The ellipsoid's flattening
-/// @return        The geocentric latitude at lat in radians
+/// 
+/// @param[in] lat The (geodetic) latitude in [rad]
+/// @param[in] f   The ellipsoid's flattening [-]
+/// @return        The geocentric latitude [rad]
 ///
-/// Reference [3]
+/// Reference Torge, 2001, Eq. 4.11
 inline
 #if defined(__GNUC__) && !defined(__llvm__)
     constexpr
@@ -159,7 +160,7 @@ inline
 /// @param[in] f   The ellipsoid's flattening
 /// @return        The parametric or reduced latitude at lat in radians
 ///
-/// Reference [3]
+/// Reference Torge, 2001, Eq. 4.11
 inline
 #if defined(__GNUC__) && !defined(__llvm__)
     constexpr

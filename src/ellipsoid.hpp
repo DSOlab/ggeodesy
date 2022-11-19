@@ -166,8 +166,8 @@ template <ellipsoid E> constexpr double third_flattening() noexcept {
 ///        ellipsoid
 ///
 /// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
-/// @param[in] lat The geodetic latitude in radians
-/// @return        The geocentric latitude in radians
+/// @param[in] lat The geodetic latitude [rad]
+/// @return        The geocentric latitude [rad]
 /// @throw     Does not throw.
 ///
 /// @see dso::core::geocentric_latitude

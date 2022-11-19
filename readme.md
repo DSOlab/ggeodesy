@@ -222,10 +222,22 @@ Mitsos, danast@mail.ntua.gr
 
 ## References 
 
-<a id="kawase"></a> K. Kawase, A General Formula for Calculating Meridian Arc Length and its Application to Coordinate 
+[1] <a id="kawase"></a> K. Kawase, A General Formula for Calculating Meridian Arc Length and its Application to Coordinate 
 Conversion in the Gauss-Krüger Projection, Bulletin of the Geospatial Information Authority of Japan, Vol.59 December, 2011
 
-<a id="meridian_arc_wiki"></a> Wiki page on [Meridian Arc](https://en.wikipedia.org/wiki/Meridian_arc)
+[2] <a id="meridian_arc_wiki"></a> Wiki page on [Meridian Arc](https://en.wikipedia.org/wiki/Meridian_arc)
 
-<a id="moritz-grs80"></a>H. Moritz, GEODETIC REFERENCE SYSTEM 1980, available
+[3] <a id="moritz-grs80"></a>H. Moritz, GEODETIC REFERENCE SYSTEM 1980, available
 [here](https://geodesy.geology.ohio-state.edu/course/refpapers/00740128.pdf)
+
+[4] Li, X.; Li, H.; Liu, G.; Bian, S.; Jiao, C. Simplified Expansions of Common Latitudes with Geodetic
+Latitude and Geocentric Latitude as Variables. Appl. Sci. 2022, 12, 7818. https://doi.org/10.3390/app12157818
+
+[5] Snyder, J. P. Map projections - A working manual. Professional Paper 1395, U.S. Geological Survey, 1987. doi:10.3133/pp1395.
+
+[6] https://proj.org/operations/conversions/geoc.html
+
+[7] https://www.oc.nps.edu/oc2902w/coord/coordcvt.pdf
+
+[8] W. Torge, Geodesy, De Gruyter; 3rd ed. edition (May 30, 2001)
+
