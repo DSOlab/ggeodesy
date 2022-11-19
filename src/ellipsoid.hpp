@@ -162,13 +162,34 @@ template <ellipsoid E> constexpr double third_flattening() noexcept {
   return core::third_flattening(ellipsoid_traits<E>::f);
 }
 
+/// @brief Compute the normal radius of curvature at a given latitude (on a
+///        reference ellipsoid).
+///
+/// @param[in] lat The latitude in radians.
+/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
+/// @return        The normal radius of curvature in meters.
+//
+/// @see dso::core::N
+template <ellipsoid E> double N(double lat) noexcept {
+  return core::N(lat, ellipsoid_traits<E>::a, semi_minor<E>());
+}
+
+/// @brief Same as above, but also returns the computed trigonometric numbers
+template <ellipsoid E>
+double N(double lat, double &coslat, double &sinlat) noexcept {
+  return core::N(lat, ellipsoid_traits<E>::a, semi_minor<E>(), coslat, sinlat);
+}
+
 /// @brief Compute the geocentric latitude at some geodetic latitude on the
-///        ellipsoid
+///        ellipsoid (that is ellipsoidal height = 0).
 ///
 /// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
 /// @param[in] lat The geodetic latitude [rad]
 /// @return        The geocentric latitude [rad]
 /// @throw     Does not throw.
+///
+/// @note If the point has height != 0 (aka, is not ON the ellipsoid), the use
+///       the version whilch also takes height as input.
 ///
 /// @see dso::core::geocentric_latitude
 template <ellipsoid E>
@@ -178,6 +199,39 @@ constexpr
     double
     geocentric_latitude(double lat) noexcept {
   return core::geocentric_latitude(lat, ellipsoid_traits<E>::f);
+}
+
+/// @brief Compute the geocentric latitude at some geodetic latitude, for a
+///        point with a given ellipsoidal height.
+///
+/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
+/// @param[in] lat The geodetic latitude [rad]
+/// @param[in] h   The ellipsoidal height [m]
+/// @return        The geocentric latitude [rad]
+/// @throw     Does not throw.
+///
+/// @note If the point has height = 0 (aka, is ON the ellipsoid), then use
+///       the version whilch does not take height as input. The two functions, 
+///       converge to more than 1e-15 if you set here h=0e0 as input parameter.
+///       See the test in test/test_ellipsoidal_to_geocentric_latitude.cpp
+///
+/// @see dso::core::geocentric_latitude
+/// @see https://www.mathworks.com/help/aeroblks/geodetictogeocentriclatitude.html
+///      note that in the polar axis distance there is a sin when it should 
+///      have been a cos.
+template <ellipsoid E>
+#if defined(__GNUC__) && !defined(__llvm__)
+constexpr
+#endif
+    double
+    geocentric_latitude(double lat, double h) noexcept {
+  constexpr const double ecc2 = eccentricity_squared<E>();
+  double slat;
+  double clat;
+  const double _N = N<E>(lat, clat, slat);
+  const double rho = (_N + h) * clat;
+  const double z = (_N * (1e0 - ecc2) + h) * slat;
+  return std::atan(z / rho);
 }
 
 /// @brief Compute the parametric or reduced latitude at some geodetic latitude
@@ -196,18 +250,6 @@ constexpr
     double
     reduced_latitude(double lat) noexcept {
   return core::reduced_latitude(lat, ellipsoid_traits<E>::f);
-}
-
-/// @brief Compute the normal radius of curvature at a given latitude (on a
-///        reference ellipsoid).
-///
-/// @param[in] lat The latitude in radians.
-/// @tparam    E   The reference ellipsoid (i.e. one of dso::ellipsoid).
-/// @return        The normal radius of curvature in meters.
-//
-/// @see dso::core::N
-template <ellipsoid E> double N(double lat) noexcept {
-  return core::N(lat, ellipsoid_traits<E>::a, semi_minor<E>());
 }
 
 /// @brief Compute the meridional radii of curvature at a given latitude (on a

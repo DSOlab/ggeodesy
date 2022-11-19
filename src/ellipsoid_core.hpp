@@ -102,6 +102,22 @@ inline
   return (a * a) / den;
 }
 
+/// @brief Same as above, but also returned the computed trigonometric numbers
+///        (for further use)
+inline
+#if defined(__GNUC__) && !defined(__llvm__)
+    constexpr
+#endif
+    double
+    N(double lat, double a, double b, double &cosf, double &sinf) noexcept {
+  cosf=std::cos(lat);
+  sinf=std::sin(lat);
+  const double acosf{a * cosf};
+  const double bsinf{b * sinf};
+  const double den{std::sqrt(acosf * acosf + bsinf * bsinf)};
+  return (a * a) / den;
+}
+
 /// @brief Compute the meridional radii of curvature at a given latitude
 ///        on a reference ellipsoid.
 ///
@@ -127,7 +143,8 @@ inline
   return ((a * b) / tmpd) * ((a * b) / std::sqrt(tmpd));
 }
 
-/// @brief Compute the geocentric latitude
+/// @brief Compute the geocentric latitude, given a geodetic one for a point
+///        on the ellipsoid (aka, h = 0)
 ///
 /// The geocentric latitude is the angle between the equatorial plane and the
 /// radius from the centre to a point on the surface. The relation between the

@@ -271,23 +271,6 @@ car2ell(const Eigen::Matrix<double, 3, 1> &xyz, ellipsoid e) noexcept {
   return car2ell(xyz, Ellipsoid(e));
 }
 
-// TODO the following does not work, why?
-// the function core::geocentric_latitude() produces different results
-/// see https://www.mathworks.com/help/aeroblks/geodetictogeocentriclatitude.html
-//template <ellipsoid E>
-//double
-//ellipsoidal2geocentric_latitude(double lat, double h) noexcept {
-//  const double N = dso::N<E>(lat);
-//  const double slat = std::sin(lat);
-//  // point's distance from the polar axis (ρ)
-//  const double rho = (N+h) * slat;
-//  // distance from the equatorial axis (z)
-//  const double z = (N*(1e0-dso::eccentricity_squared<E>()) + h) * slat;
-//  printf("N=%.3f, rho=%.6f and z=%.6f\n", N, rho, z);
-//  // return the result
-//  return std::atan(z/rho);
-//}
-
 /// @brief Cartesian to topocentric (vector).
 ///
 /// @tparam     E      The reference ellipsoid (i.e. one of dso::ellipsoid).

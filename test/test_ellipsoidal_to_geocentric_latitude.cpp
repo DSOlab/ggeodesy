@@ -1,6 +1,7 @@
 #include "geodesy.hpp"
 #include "units.hpp"
 #include <cstdio>
+#include <cassert>
 
 int main() {
   // angles from [0 to 90]
@@ -17,8 +18,13 @@ int main() {
     const double ellgeo = dso::rad2sec(angrad-geocentric);
     const double redgeo = dso::rad2sec(angrad-reduced);
 
-    printf("%.3f %.12f %.12f %.6f %.6f\n", angle, dso::rad2deg(geocentric),
-           dso::rad2deg(reduced), ellgeo, redgeo);
+    const double geo2 =
+        dso::geocentric_latitude<dso::ellipsoid::grs80>(angrad, 0e0);
+    assert(std::abs(geo2 - geocentric) < 1e-15);
+
+    printf("%.3f %.12f %.12f %.6f %.6f %.6f\n", angle, dso::rad2deg(geocentric),
+           dso::rad2deg(reduced), ellgeo, redgeo,
+           dso::rad2sec(geo2 - geocentric));
 
     angle += .05e0;
   }
