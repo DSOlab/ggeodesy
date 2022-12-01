@@ -256,7 +256,7 @@ Eigen::Matrix<double, 3, 1> car2ell(const Eigen::Matrix<double, 3, 1> &xyz,
 /// The returned vector is: [r, θ, λ]
 /// with r: radius vector, θ polar distance and λ geocentric longitude
 inline Eigen::Matrix<double, 3, 1>
-car2sph(const Eigen::Matrix<double, 3, 1> &xyz, double R) noexcept {
+car2sph(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
   const double r = xyz.norm();
   const double x = xyz(0);
   const double y = xyz(1);
