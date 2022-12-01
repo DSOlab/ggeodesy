@@ -251,6 +251,21 @@ Eigen::Matrix<double, 3, 1> car2ell(const Eigen::Matrix<double, 3, 1> &xyz,
                                     double semi_major,
                                     double flattening) noexcept;
 
+/// @brief Cartesian to Spherical, given the radius
+/// See Physical Geodesy, Section 1.4
+/// The returned vector is: [r, θ, λ]
+/// with r: radius vector, θ polar distance and λ geocentric longitude
+inline Eigen::Matrix<double, 3, 1>
+car2sph(const Eigen::Matrix<double, 3, 1> &xyz, double R) noexcept {
+  const double r = xyz.norm();
+  const double x = xyz(0);
+  const double y = xyz(1);
+  const double z = xyz(2);
+  const double theta = std::atan2(std::sqrt(x * x + y * y), z);
+  const double lambda = std::atan2(y, x);
+  return Eigen::Matrix<double, 3, 1>(r, theta, lambda);
+}
+
 template <ellipsoid E>
 Eigen::Matrix<double, 3, 1>
 car2ell(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
