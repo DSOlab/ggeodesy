@@ -265,6 +265,16 @@ car2sph(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
   const double lambda = std::atan2(y, x);
   return Eigen::Matrix<double, 3, 1>(r, theta, lambda);
 }
+inline Eigen::Matrix<double,3,1>
+sph2car(const Eigen::Matrix<double, 3, 1> &rtl) noexcept {
+  const double r = rtl(0);
+  const double t = rtl(1);
+  const double l = rtl(2);
+  const double st = std::sin(t);
+  return Eigen::Matrix<double, 3, 1>(r * st * std::cos(l), r * st * std::sin(l),
+                                     r * std::cos(t));
+}
+
 
 template <ellipsoid E>
 Eigen::Matrix<double, 3, 1>
