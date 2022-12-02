@@ -283,7 +283,6 @@ sph2car(const Eigen::Matrix<double, 3, 1> &rtl) noexcept {
 inline Eigen::Matrix<double,3,3>
 car2sph_rotation_matrix(const Eigen::Matrix<double, 3, 1> &rtl) noexcept {
   // easy use
-  const double r = rtl(0);  // radial
   const double f = rtl(1);  // geocentric latitude
   const double l = rtl(2);  // longitude
   // trigonometric numbers
@@ -293,10 +292,10 @@ car2sph_rotation_matrix(const Eigen::Matrix<double, 3, 1> &rtl) noexcept {
   const double cel = std::cos(f);
   // rotation matrix, cartesian to spherical, aka 
   // X_(r,φ,λ) = R * X_(x,y,z)
-  return Eigen::Matrix<double,3,3>(
-    cel*caz, -sel*caz, -saz,
-    cel*saz, -sel*saz,  caz,
-    sel,      cel,      0e0);
+  return Eigen::Matrix<double,3,3>{
+    {cel*caz, cel*saz, sel},
+    {-sel*caz, -sel*saz, cel},
+    {-saz, caz, 0e0} };
 }
 
 template <ellipsoid E>
