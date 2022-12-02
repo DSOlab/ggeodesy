@@ -253,8 +253,8 @@ Eigen::Matrix<double, 3, 1> car2ell(const Eigen::Matrix<double, 3, 1> &xyz,
 
 /// @brief Cartesian to Spherical, given the radius
 /// See Physical Geodesy, Section 1.4
-/// The returned vector is: [r, θ, λ]
-/// with r: radius vector, θ polar distance and λ geocentric longitude
+/// The returned vector is: [r, φ, λ]
+/// with r: radius vector, φ geocentric latitude and λ geocentric longitude
 inline Eigen::Matrix<double, 3, 1>
 car2sph(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
   const double r = xyz.norm();
@@ -263,18 +263,41 @@ car2sph(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
   const double z = xyz(2);
   const double theta = std::atan2(std::sqrt(x * x + y * y), z);
   const double lambda = std::atan2(y, x);
-  return Eigen::Matrix<double, 3, 1>(r, theta, lambda);
+  // note, we are returning the geocentric latitude instead of polar distance
+  // aka φ = 90 - θ
+  return Eigen::Matrix<double, 3, 1>(r, DPI/2e0-theta, lambda);
 }
+
+/// The input vector is: [r, φ, λ]
 inline Eigen::Matrix<double,3,1>
 sph2car(const Eigen::Matrix<double, 3, 1> &rtl) noexcept {
   const double r = rtl(0);
-  const double t = rtl(1);
+  const double t = DPI/2e0 - rtl(1); // geocentric latitude to polar distance
   const double l = rtl(2);
   const double st = std::sin(t);
   return Eigen::Matrix<double, 3, 1>(r * st * std::cos(l), r * st * std::sin(l),
                                      r * std::cos(t));
 }
 
+/// see https://www.mathworks.com/help/phased/ref/sph2cartvec.html
+inline Eigen::Matrix<double,3,3>
+car2sph_rotation_matrix(const Eigen::Matrix<double, 3, 1> &rtl) noexcept {
+  // easy use
+  const double r = rtl(0);  // radial
+  const double f = rtl(1);  // geocentric latitude
+  const double l = rtl(2);  // longitude
+  // trigonometric numbers
+  const double saz = std::sin(l);
+  const double caz = std::cos(l);
+  const double sel = std::sin(f);
+  const double cel = std::cos(f);
+  // rotation matrix, cartesian to spherical, aka 
+  // X_(r,φ,λ) = R * X_(x,y,z)
+  return Eigen::Matrix<double,3,3>(
+    cel*caz, -sel*caz, -saz,
+    cel*saz, -sel*saz,  caz,
+    sel,      cel,      0e0);
+}
 
 template <ellipsoid E>
 Eigen::Matrix<double, 3, 1>
