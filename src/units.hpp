@@ -13,9 +13,11 @@
 namespace dso {
 
 enum class AngleUnit : char { Radians, Degrees };
+
 template <AngleUnit U> struct AngleUnitTraits {
   static constexpr double full_circle() { return 2e0 * M_PI; }
 };
+
 template <> struct AngleUnitTraits<AngleUnit::Degrees> {
   static constexpr double full_circle() { return 360e0; }
 };
@@ -79,8 +81,28 @@ T norm_angle(double a) noexcept {
   return r[a < 0e0];
 }
 
+template <typename T, AngleUnit U = AngleUnit::Radians,
+          typename = std::enable_if_t<std::is_floating_point<T>::value>>
+T anp(double a) noexcept { return norm_angle<T,U>(a); }
+
+/// @brief Normalize angle in the range [-π, π]/[-180,180]
+/// @tparam T floating type, float, double, ...
+/// @tparam U Units of input angle, AngleUnits::Radians, or
+///           AngleUnits::Degrees
+/// @param[in] a Angle in units of U
+/// @return Normalized angle in the range -1/2 to 1/2 -cycle, in units of U
+template <typename T, AngleUnit U = AngleUnit::Radians,
+          typename = std::enable_if_t<std::is_floating_point<T>::value>>
+T anpm(double a) noexcept {
+  constexpr const double circle = AngleUnitTraits<U>::full_circle();
+  constexpr const double halfCircle = AngleUnitTraits<U>::full_circle() / 2e0;
+  a = std::fmod(a, circle);
+  const double r[] = {a, a-std::copysign(circle, a)};
+  return r[std::abs(a) >= halfCircle];
+}
+
 /// @brief Normalize angle.
-///
+/// @warning obsolete
 /// Normalize an angle in the interval [lower, upper).
 ///
 /// @tparam    T      Any floating point type for input and results.
