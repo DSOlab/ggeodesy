@@ -17,7 +17,7 @@ double dso::top2daz(double east, double north, double up,
   }
 
   // azimouth in [0,2π]
-  azimouth = norm_angle<double, AngleUnit::Radians>(std::atan2(east, north));
+  azimouth = anp<AngleUnit::Radians>(std::atan2(east, north));
 
   // zenith angle [0-π]
   zenith = std::acos(up / distance);

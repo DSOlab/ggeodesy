@@ -261,11 +261,12 @@ car2sph(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
   const double x = xyz(0);
   const double y = xyz(1);
   const double z = xyz(2);
-  const double theta = std::atan2(std::sqrt(x * x + y * y), z);
+  // const double theta = std::atan2(std::sqrt(x * x + y * y), z);
+  const double phi = std::asin(z/r);
   const double lambda = std::atan2(y, x);
   // note, we are returning the geocentric latitude instead of polar distance
   // aka φ = 90 - θ
-  return Eigen::Matrix<double, 3, 1>(r, DPI/2e0-theta, lambda);
+  return Eigen::Matrix<double, 3, 1>(r, /*DPI/2e0-theta*/phi, lambda);
 }
 
 /// The input vector is: [r, φ, λ]

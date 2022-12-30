@@ -11,7 +11,7 @@ double dso::top2dae(const Eigen::Matrix<double, 3, 1> &enu, double &azimouth,
   const double rho = std::sqrt(rho2);
 
   // azimouth in [0,2π]
-  azimouth = norm_angle<double, dso::AngleUnit::Radians>(std::atan2(e, n));
+  azimouth = norm_angle<dso::AngleUnit::Radians>(std::atan2(e, n));
 
   // elevation angle [0-π]
   elevation = std::atan(u / rho);
@@ -31,7 +31,7 @@ double dso::top2dae(const Eigen::Matrix<double, 3, 1> &enu, double &azimouth,
   const double rho = std::sqrt(rho2);
 
   // azimouth in [0,2π]
-  azimouth = norm_angle<double, dso::AngleUnit::Radians>(std::atan2(e, n));
+  azimouth = norm_angle<dso::AngleUnit::Radians>(std::atan2(e, n));
 
   // elevation angle [0-π]
   elevation = std::atan(u / rho);

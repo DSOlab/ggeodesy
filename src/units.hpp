@@ -23,34 +23,30 @@ template <> struct AngleUnitTraits<AngleUnit::Degrees> {
 };
 
 /// @brief Convert degrees to radians.
-/// @tparam    T       Any floating type
 /// @param[in] degrees Angle in decimal degrees
 /// @return            The (input) angle in radians
-template <typename T> constexpr T deg2rad(T degrees) noexcept {
+inline constexpr double deg2rad(double degrees) noexcept {
   return degrees * DEG2RAD;
 }
 
 /// @brief Convert radians to degrees.
-/// @tparam    T       Any floating type
 /// @param[in] radians Angle in radians
 /// @return            The (input) angle in decimal degrees
-template <typename T> constexpr T rad2deg(T radians) noexcept {
+inline constexpr double rad2deg(double radians) noexcept {
   return radians * RAD2DEG;
 }
 
 /// @brief Convert radians to seconds (of degree).
-/// @tparam    T       Any floating type
 /// @param[in] radians Angle in radians
 /// @return            The (input) angle in seconds (of degrees)
-template <typename T> constexpr T rad2sec(T radians) noexcept {
+inline constexpr double rad2sec(double radians) noexcept {
   return (radians * RAD2DEG) * 3600e0;
 }
 
 /// @brief Convert seconds (of degree) to radians.
-/// @tparam    T       Any floating type
 /// @param[in] seconds Angle in seconds of degree
 /// @return            The (input) angle in radians
-template <typename T> constexpr T sec2rad(T seconds) noexcept {
+inline constexpr double sec2rad(double seconds) noexcept {
   return (seconds / 3600e0) * DEG2RAD;
 }
 
@@ -72,18 +68,16 @@ template <typename T> constexpr T sec2rad(T seconds) noexcept {
 ///           AngleUnits::Degrees
 /// @param[in] a Angle in units of U
 /// @return Normalized angle in the range 0 to 1-cycle, in units of U
-template <typename T, AngleUnit U = AngleUnit::Radians,
-          typename = std::enable_if_t<std::is_floating_point<T>::value>>
-T norm_angle(double a) noexcept {
+template <AngleUnit U = AngleUnit::Radians>
+inline double norm_angle(double a) noexcept {
   constexpr const double circle = AngleUnitTraits<U>::full_circle();
   a = std::fmod(a, circle);
   const double r[] = {a, a + circle};
   return r[a < 0e0];
 }
 
-template <typename T, AngleUnit U = AngleUnit::Radians,
-          typename = std::enable_if_t<std::is_floating_point<T>::value>>
-T anp(double a) noexcept { return norm_angle<T,U>(a); }
+template <AngleUnit U = AngleUnit::Radians>
+inline double anp(double a) noexcept { return norm_angle<U>(a); }
 
 /// @brief Normalize angle in the range [-π, π]/[-180,180]
 /// @tparam T floating type, float, double, ...
@@ -91,9 +85,8 @@ T anp(double a) noexcept { return norm_angle<T,U>(a); }
 ///           AngleUnits::Degrees
 /// @param[in] a Angle in units of U
 /// @return Normalized angle in the range -1/2 to 1/2 -cycle, in units of U
-template <typename T, AngleUnit U = AngleUnit::Radians,
-          typename = std::enable_if_t<std::is_floating_point<T>::value>>
-T anpm(double a) noexcept {
+template <AngleUnit U = AngleUnit::Radians>
+inline double  anpm(double a) noexcept {
   constexpr const double circle = AngleUnitTraits<U>::full_circle();
   constexpr const double halfCircle = AngleUnitTraits<U>::full_circle() / 2e0;
   a = std::fmod(a, circle);
@@ -143,7 +136,6 @@ T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
 
 /// @brief Decimal to hexicondal degrees.
 ///
-/// @tparam     T           Any floating point type for input and results.
 /// @param[in]  decimal_deg The decimal degrees.
 /// @param[out] deg         Integer degrees.
 /// @param[out] min         Integer minutes.
@@ -164,14 +156,13 @@ T normalize_angle(T angle, T lower = 0e0, T upper = D2PI) noexcept {
 ///  dso::decd2hexd(-10e0, deg2, min2, sec2, sgn2);
 ///  assert(deg1==deg2 && (min1==min2 && sec1==sec2));
 ///  assert(sgn1==-sgn2);
-template <typename T,
-          typename = std::enable_if_t<std::is_floating_point<T>::value>>
-constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec,
-                         int &sign) noexcept {
-  T decdeg{std::abs(decimal_deg)};
+inline constexpr void decd2hexd(double decimal_deg, int &deg, int &min,
+                                double &sec, int &sign) noexcept {
+  double decdeg{std::abs(decimal_deg)};
   deg = static_cast<int>(decdeg);
-  min = static_cast<int>((decdeg - static_cast<T>(deg)) * static_cast<T>(60e0));
-  sec = decdeg - (static_cast<T>(deg) + static_cast<T>(min) / 60e0);
+  min = static_cast<int>((decdeg - static_cast<double>(deg)) *
+                         static_cast<double>(60e0));
+  sec = decdeg - (static_cast<double>(deg) + static_cast<double>(min) / 60e0);
   sec *= 3600e0;
 
   sign = static_cast<int>(std::copysign(1e0, decimal_deg));
@@ -180,7 +171,6 @@ constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec,
 
 /// @brief Hexicondal degrees to decimal degrees.
 ///
-/// @tparam     T   Any floating point type for input and results.
 /// @param[in] deg  Integer degrees.
 /// @param[in] min  Integer minutes.
 /// @param[in] sec  The fractional seconds.
@@ -211,17 +201,15 @@ constexpr void decd2hexd(T decimal_deg, int &deg, int &min, T &sec,
 ///  // note the sign of deg parameter is not considered!
 ///  a2 = dso::hexd2decd(-deg1, min1, sec1, sgn1);
 ///  assert(a1==a2);
-template <typename T,
-          typename = std::enable_if_t<std::is_floating_point<T>::value>>
-inline constexpr T hexd2decd(int deg, int min, T sec, int sign = 1) noexcept {
-  T angle{static_cast<T>(std::abs(deg)) +
-          (static_cast<T>(min) + sec / 60e0) / 60e0};
-  return std::copysign(angle, (T)sign);
+inline constexpr double hexd2decd(int deg, int min, double sec,
+                                  int sign = 1) noexcept {
+  double angle{static_cast<double>(std::abs(deg)) +
+               (static_cast<double>(min) + sec / 60e0) / 60e0};
+  return std::copysign(angle, (double)sign);
 }
 
 /// @brief Hexicondal degrees to radians.
 ///
-/// @tparam     T   Any floating point type for input and results.
 /// @param[in] deg  Integer degrees.
 /// @param[in] min  Integer minutes.
 /// @param[in] sec  The fractional seconds.
@@ -248,15 +236,13 @@ inline constexpr T hexd2decd(int deg, int min, T sec, int sign = 1) noexcept {
 ///  // note the sign of deg parameter is not considered!
 ///  a1 = dso::hexd2rad(-deg1, min1, sec1, sgn1);
 ///  assert(a1==-a2);
-template <typename T,
-          typename = std::enable_if_t<std::is_floating_point<T>::value>>
-constexpr T hexd2rad(int deg, int min, T sec, int sign = 1) noexcept {
+inline constexpr double hexd2rad(int deg, int min, double sec,
+                                 int sign = 1) noexcept {
   return deg2rad(hexd2decd(deg, min, sec, sign));
 }
 
 /// @brief Radians to hexicondal degrees.
 ///
-/// @tparam     T           Any floating point type for input and results.
 /// @param[in]  radians     An angle in radians.
 /// @param[out] deg         Integer degrees.
 /// @param[out] min         Integer minutes.
@@ -272,10 +258,8 @@ constexpr T hexd2rad(int deg, int min, T sec, int sign = 1) noexcept {
 ///       deg is zero, then we have a problem cause -0 cannot be (usually)
 ///       represented, so the signs of decimal_deg and deg would not be the
 ///       same!
-template <typename T,
-          typename = std::enable_if_t<std::is_floating_point<T>::value>>
-constexpr void rad2hexd(T radians, int &deg, int &min, T &sec,
-                        int &sign) noexcept {
+inline constexpr void rad2hexd(double radians, int &deg, int &min, double &sec,
+                               int &sign) noexcept {
   return decd2hexd(rad2deg(radians), deg, min, sec, sign);
 }
 
