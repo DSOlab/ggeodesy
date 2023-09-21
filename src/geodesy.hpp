@@ -1,6 +1,7 @@
-/// @file geodesy.hpp
-/// @brief A list of frequently used geodetic functions.
-/// @see http://www.movable-type.co.uk/scripts/latlong.html
+/* @file geodesy.hpp
+ * @brief A list of frequently used geodetic functions.
+ * @see http://www.movable-type.co.uk/scripts/latlong.html
+ */
 
 #ifndef __NGPT_GEODESY_HPP__
 #define __NGPT_GEODESY_HPP__
@@ -8,12 +9,21 @@
 #include "eigen3/Eigen/Eigen"
 #include "ellipsoid.hpp"
 #include "geoconst.hpp"
+#include "units.hpp"
 #include <cassert>
 #include <cmath>
 #include <stdexcept>
 #include <type_traits>
 
 namespace dso {
+
+#ifdef INCLUDE_GEODESY_CHECKS
+inline bool ellipsoidal_ok(double longitude, double latitude) noexcept {
+  return (longitude >= dso::deg2rad(-180e0) &&
+          longitude <= dso::deg2rad(180e0) && latitude >= dso::deg2rad(-90e0) &&
+          latitude <= dso::deg2rad(90e0));
+}
+#endif
 
 /// @brief Given the geodetic coordinates of a reference point, return the
 ///        matrix that turns any vector from the ference point to point P to
@@ -26,73 +36,108 @@ topocentric_matrix(const Eigen::Matrix<double, 3, 1> &lfh) noexcept {
   return topocentric_matrix(lfh(0), lfh(1));
 }
 
-/// @brief Ellipsoidal to cartesian coordinates.
-///
-/// Transform (geocentric) cartesian coordinates (on the ellipsoid) to
-/// ellipsoidal coordinates. Units are meters and radians.
-///
-/// @tparam      E      The reference ellipsoid (i.e. one of dso::ellipsoid).
-/// @param[in]   phi    Ellipsoidal latitude (radians)
-/// @param[in]   lambda Ellipsoidal longtitude (radians)
-/// @param[in]   h      Ellipsoidal height (meters)
-/// @param[out]  x      Cartesian x-component (meters)
-/// @param[out]  y      Cartesian y-component (meters)
-/// @param[out]  z      Cartesian z-component (meters)
-/// @throw              Does not throw.
-///
+/* @brief Geodetic (ellipsoidal) to cartesian coordinates.
+ */
+void ell2car(double lambda, double phi, double h, const Ellipsoid &e, double &x,
+             double &y, double &z) noexcept;
+
+/* @brief Geodetic (ellipsoidal) to cartesian coordinates.
+ *
+ * @tparam      E      The reference ellipsoid (i.e. one of dso::ellipsoid).
+ * @param[in]   lambda Ellipsoidal longtitude in rage (-π, π) [rad]
+ * @param[in]   phi    Geodetic (ellipsoidal) latitude (-π/2, π/2) [rad]
+ * @param[in]   h      Ellipsoidal height [m]
+ * @param[out]  x      Cartesian x-component [m]
+ * @param[out]  y      Cartesian y-component [m]
+ * @param[out]  z      Cartesian z-component [m]
+ */
 template <ellipsoid E>
 void ell2car(double lambda, double phi, double h, double &x, double &y,
              double &z) noexcept {
-  // Eccentricity squared.
-  constexpr double e2{dso::eccentricity_squared<E>()};
+  /* Eccentricity squared. */
+  constexpr const double e2 = dso::eccentricity_squared<E>();
 
-  // Radius of curvature in the prime vertical.
-  const double N{dso::N<E>(phi)};
+  /* Radius of curvature in the prime vertical. */
+  const double N = dso::N<E>(phi);
 
-  // Trigonometric numbers.
-  const double sinf{std::sin(phi)};
-  const double cosf{std::cos(phi)};
-  const double sinl{std::sin(lambda)};
-  const double cosl{std::cos(lambda)};
+  /* Trigonometric numbers. */
+  const double sf = std::sin(phi);
+  const double cf = std::cos(phi);
+  const double sl = std::sin(lambda);
+  const double cl = std::cos(lambda);
 
-  // Compute geocentric rectangular coordinates.
-  x = (N + h) * cosf * cosl;
-  y = (N + h) * cosf * sinl;
-  z = ((1e0 - e2) * N + h) * sinf;
+  /* Compute geocentric rectangular coordinates. */
+  x = (N + h) * cf * cl;
+  y = (N + h) * cf * sl;
+  z = ((1e0 - e2) * N + h) * sf;
 
-  // Finished.
+  /* Finished. */
   return;
 }
 
+/* @brief Ellipsoidal to cartesian coordinates.
+ *
+ * Transform (geocentric) cartesian coordinates (on the ellipsoid) to
+ * ellipsoidal coordinates. Units are meters and radians.
+ *
+ * @tparam      E      The reference ellipsoid (i.e. one of dso::ellipsoid).
+ * @param[in]   lfh    Ellipsoidal coordinates in the order:
+ *                     [longitude, latitude, height] in units of
+ *                     ([rad], [rad], [m])
+ * @param[in]   e      The reference ellipsoid (dso::Ellipsoid)
+ * @return Cartesian vector (X,Y,Z) in [m]
+ */
+inline Eigen::Matrix<double, 3, 1>
+ell2car(const Eigen::Matrix<double, 3, 1> &lfh, const Ellipsoid &e) noexcept {
+  Eigen::Matrix<double, 3, 1> xyz;
+  ell2car(lfh(0), lfh(1), lfh(2), e, xyz(0), xyz(1), xyz(2));
+  return xyz;
+}
+
+/* @brief Geodetic (ellipsoidal) to cartesian coordinates.
+ *
+ * @tparam      E      The reference ellipsoid (i.e. one of dso::ellipsoid).
+ * @param[in]   lfh    Geodetic coordinates in the order: 
+ *                     [longitude, geodetic latitude, height] in units of 
+ *                     ([rad], [rad], [m])
+ * @return Cartesian vector (X,Y,Z) in [m]
+ */
 template <ellipsoid E>
 Eigen::Matrix<double, 3, 1>
 ell2car(const Eigen::Matrix<double, 3, 1> &lfh) noexcept {
-  // Eccentricity squared.
-  constexpr double e2{dso::eccentricity_squared<E>()};
-
-  // Radius of curvature in the prime vertical.
-  const double N{dso::N<E>(lfh(1))};
-
-  // Trigonometric numbers.
-  const double sinf{std::sin(lfh(1))};
-  const double cosf{std::cos(lfh(1))};
-  const double sinl{std::sin(lfh(0))};
-  const double cosl{std::cos(lfh(0))};
-
-  // Compute geocentric rectangular coordinates.
-  const double x = (N + lfh(2)) * cosf * cosl;
-  const double y = (N + lfh(2)) * cosf * sinl;
-  const double z = ((1e0 - e2) * N + lfh(2)) * sinf;
-
-// Finished.
-  /*const*/ double data[] = {x, y, z};
-  return Eigen::Map<Eigen::Matrix<double, 3, 1>>(data, 3);
+  Eigen::Matrix<double, 3, 1> xyz;
+  ell2car<E>(lfh(0), lfh(1), lfh(2), xyz(0), xyz(1), xyz(2));
+  return xyz;
 }
 
-void ell2car(double lambda, double phi, double h, const Ellipsoid &e, double &x,
-             double &y, double &z) noexcept;
-Eigen::Matrix<double, 3, 1> ell2car(const Eigen::Matrix<double, 3, 1> &lfh,
-                                    const Ellipsoid &e) noexcept;
+namespace core {
+void car2ell(double x, double y, double z, double semi_major, double flattening,
+             double &lambda, double &phi, double &h) noexcept;
+
+inline Eigen::Matrix<double, 3, 1>
+car2ell(const Eigen::Matrix<double, 3, 1> &xyz, double semi_major,
+        double flattening) noexcept {
+  Eigen::Matrix<double, 3, 1> llh;
+  core::car2ell(xyz(0), xyz(1), xyz(2), semi_major, flattening, llh(0), llh(1),
+                llh(2));
+  return llh;
+}
+} /* namespace core */
+
+template <ellipsoid E>
+Eigen::Matrix<double, 3, 1>
+car2ell(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
+  constexpr const double semi_major = ellipsoid_traits<E>::a;
+  constexpr const double flattening = ellipsoid_traits<E>::f;
+  return core::car2ell(xyz, semi_major, flattening);
+}
+
+inline Eigen::Matrix<double, 3, 1>
+car2ell(const Eigen::Matrix<double, 3, 1> &xyz, const Ellipsoid &e) noexcept {
+  const double semi_major=e.semi_major();
+  const double flattening=e.flattening();
+  return core::car2ell(xyz, semi_major, flattening);
+}
 
 /// @brief Topocentric vector to azimouth, zenith and distance.
 ///
@@ -242,14 +287,7 @@ Eigen::Matrix<double, 3, 1> dcar2top(const Eigen::Matrix<double, 3, 1> &r,
                                      const Eigen::Matrix<double, 3, 1> &dr,
                                      double semi_major,
                                      double flattening) noexcept;
-void car2ell(double x, double y, double z, double semi_major, double flattening,
-             double &lambda, double &phi, double &h) noexcept;
-
 } // namespace core
-
-Eigen::Matrix<double, 3, 1> car2ell(const Eigen::Matrix<double, 3, 1> &xyz,
-                                    double semi_major,
-                                    double flattening) noexcept;
 
 /// @brief Cartesian to Spherical, given the radius
 /// See Physical Geodesy, Section 1.4
@@ -297,26 +335,6 @@ car2sph_rotation_matrix(const Eigen::Matrix<double, 3, 1> &rtl) noexcept {
     {cel*caz, cel*saz, sel},
     {-sel*caz, -sel*saz, cel},
     {-saz, caz, 0e0} };
-}
-
-template <ellipsoid E>
-Eigen::Matrix<double, 3, 1>
-car2ell(const Eigen::Matrix<double, 3, 1> &xyz) noexcept {
-  constexpr double semi_major{ellipsoid_traits<E>::a};
-  constexpr double flattening{ellipsoid_traits<E>::f};
-  return car2ell(xyz, semi_major, flattening);
-}
-
-inline Eigen::Matrix<double, 3, 1>
-car2ell(const Eigen::Matrix<double, 3, 1> &xyz, const Ellipsoid &e) noexcept {
-  double semi_major{e.semi_major()};
-  double flattening{e.flattening()};
-  return car2ell(xyz, semi_major, flattening);
-}
-
-inline Eigen::Matrix<double, 3, 1>
-car2ell(const Eigen::Matrix<double, 3, 1> &xyz, ellipsoid e) noexcept {
-  return car2ell(xyz, Ellipsoid(e));
 }
 
 /// @brief Cartesian to topocentric (vector).

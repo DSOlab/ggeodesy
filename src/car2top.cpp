@@ -33,6 +33,6 @@ dso::core::dcar2top(const Eigen::Matrix<double, 3, 1> &r,
 
   // Cartesian to ellipsoidal for reference point.
   const Eigen::Matrix<double, 3, 1> lfh =
-      dso::car2ell(r, semi_major, flattening);
+      dso::core::car2ell(r, semi_major, flattening);
   return dso::topocentric_matrix(lfh) * dr;
 }

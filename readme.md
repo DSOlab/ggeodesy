@@ -2,21 +2,16 @@
 
 [![Build Status](https://travis-ci.com/xanthospap/ggeodesy.svg?branch=master)](https://travis-ci.com/xanthospap/ggeodesy)
 
-## Introduction
+# Introduction
 
 This is a C++ library meant to provide implementations of the most commonly used
 geodetic calculations. The whole library is wrapped around the `dso` namespace.
 
-## Compilation / Installation
+# Compilation / Installation
 
 > Since December 2021, the build system has been changed from 
 > [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) 
 > to [scons](https://scons.org/). 
-
-
-### TL;DR
-
-First off, clone the project.
 
 To buid the project just use [scons](https://scons.org/):
 ```
@@ -26,18 +21,39 @@ in the top-level directory. The optional `[OPTIONS]` argument, can be any/multip
  * `debug=1` to trigger a `DEBUG` build, 
  * `boost=1` to trigger a build including [boost geometry](https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html) 
     comparisson/test programs
- * `eigen=1` to use [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) 
-    library for vector/matrix operations. **Note that because the library uses extensively 
-    template code, if you include `ggeodesy` header files in another project you should 
-    also include the `-DUSE_EIGEN` compilation flag when building the dependent project**
-
 
 Installation is trivial, use:
 ```
 sudo scons install
 ```
 
-### testing against boost/geometry
+# The Library
+
+## Coordinate Types
+
+A point $P$ can be defined can be described (in 3-D space) by any of the following 
+coordinate types:
+
+ * **Cartesian**, using $P = (x,y,z)$; unless otherwise stated, in SI units (i.e. meters)
+ * **Geodetic**, using $P= (\labmda , \phi , h)$, $\lambda$ denoting the 
+  longitude in range $-\pi \le \lambda \le \pi$, $\phi$ denoting the geodetic
+  latitude in range $\frac{\pi}{2} \le \phi \le \frac{\pi}{2}$ and $h$ denotes the 
+  ellipsoidal height. Unless otherwise stated, ellipsoidal coordinate sets are 
+  given/derived in **this order** (i.e. $(\lambda, \phi, h)$) in units of radians 
+  and meters. Note that **geodetic** coordinates are based on a reference ellipsoid.
+
+## Coordinate Transformations
+
+To transform between cartesian and ellipsoidal coordinate systems, one needs th 
+define the *Reference Ellispoid* of the ellipsoidal set. In this library, this is 
+performed via a template parameter. The transformation accuracy (see 
+[here](test/unit/test_cartesian_ellipsoidal.cpp)) is about: $7\times 10^{-11} arcsec$ 
+for $\lambda$ and $\phi$ and $3\times 10^{-6}$ millimetre for the height component. 
+In cartesian descripancies, about $3\times 10^{-6}$ millimetre for the $X$,  
+$Y$ and $Z$ components.
+    
+<!--
+## testing against boost/geometry
 
 The folder [boost](boost) includes source code for testing the algorithms in 
 ggeodesy against the ones implemented in 
@@ -49,10 +65,7 @@ boost is usually pretty trivial; relevant documentation can be found on the
 Once you have downloaded `boost/geometry` you can include the [boost](boost) 
 source code in the build process via `scons boost=1`
 
-
 ## Verify & Test
-
-TODO
 
 ## Accuracy/Precision and Floating Point Numbers Considerations
 
@@ -219,6 +232,8 @@ The whole of the library is wrapped around the `dso` namespace
 ## Bugs & Maintanance
 Xanthos, xanthos@mail.ntua.gr
 Mitsos, danast@mail.ntua.gr
+
+-->
 
 ## References 
 

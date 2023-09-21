@@ -1,7 +1,7 @@
 from __future__ import print_function
 import os, sys, glob
 
-## Prefic for install(ed) files
+## Prefix for install(ed) files
 prefix="/usr/local"
 if not os.path.isdir(prefix):
     print('[ERROR] Cannot find \'prefix\' directory, aka {:}; aborting'.format(prefix), file=sys.stderr)
@@ -28,9 +28,9 @@ lib_src_files = glob.glob(r"src/*.cpp")
 hdr_src_files = glob.glob(r"src/*.hpp")
 
 ## Environments ...
-denv = Environment(CXXFLAGS='-std=c++17 -g -pg -Wall -Wextra -Werror -pedantic -W -Wshadow -Winline -Wdisabled-optimization -DDEBUG')
+denv = Environment(CXXFLAGS='-std=c++17 -g -pg -Wall -Wextra -Werror -pedantic -W -Wshadow -Winline -Wdisabled-optimization -DDEBUG -DEIGEN_NO_AUTOMATIC_RESIZING')
 ## g++ complains about failing to inline functions if we use the '-Winline' here ... 
-penv = Environment(CXXFLAGS='-std=c++17 -Wall -Wextra -Werror -pedantic -W -Wshadow -O2 -march=native')
+penv = Environment(CXXFLAGS='-std=c++17 -Wall -Wextra -Werror -pedantic -W -Wshadow -O2 -march=native -DEIGEN_NO_AUTOMATIC_RESIZING')
 
 ## Command line arguments ...
 debug = ARGUMENTS.get('debug', 0)
