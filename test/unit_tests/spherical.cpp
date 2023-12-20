@@ -56,7 +56,7 @@ int main() {
       s.lon() = lon;
       /* spherical to cartesian */
       const auto crt = dso::spherical2cartesian(s);
-      printf("lat=%+.15e lon=%+.15e R=%.15e X=%+.15e Y=%.15e Z=%.15e\n",
+      printf("lat=%+.20e lon=%+.20e R=%.20e X=%+.17e Y=%.17e Z=%.17e\n",
              s.lat(), s.lon(), s.r(), crt.x(), crt.y(), crt.z());
       /* augment latitude */
       lat += 1e-2;
