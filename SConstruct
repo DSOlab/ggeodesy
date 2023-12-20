@@ -21,6 +21,23 @@ num_cpu = int(os.environ.get('NUM_CPU', 2))
 SetOption('num_jobs', num_cpu)
 print("running with -j %s" % GetOption('num_jobs'))
 
+AddOption('--cxx',
+          dest='cxx',
+          type='string',
+          nargs=1,
+          action='store',
+          metavar='CXX',
+          help='C++ Compiler',
+          default=None)
+AddOption('--std',
+          dest='std',
+          type='string',
+          nargs=1,
+          action='store',
+          metavar='STD',
+          help='C++ Standard [11/14/17/20]',
+          default='17')
+
 ## Source files (for lib)
 lib_src_files = glob.glob(r"src/*.cpp")
 
@@ -28,17 +45,23 @@ lib_src_files = glob.glob(r"src/*.cpp")
 hdr_src_files = glob.glob(r"src/*.hpp")
 
 ## Environments ...
-denv = Environment(CXXFLAGS='-std=c++17 -g -pg -Wall -Wextra -Werror -pedantic -W -Wshadow -Winline -Wdisabled-optimization -DDEBUG -DEIGEN_NO_AUTOMATIC_RESIZING')
+denv = Environment(CXXFLAGS='-g -pg -Wall -Wextra -Werror -pedantic -W -Wshadow -Winline -Wdisabled-optimization -DDEBUG -DEIGEN_NO_AUTOMATIC_RESIZING')
 ## g++ complains about failing to inline functions if we use the '-Winline' here ... 
-penv = Environment(CXXFLAGS='-std=c++17 -Wall -Wextra -Werror -pedantic -W -Wshadow -O2 -march=native -DEIGEN_NO_AUTOMATIC_RESIZING')
+penv = Environment(CXXFLAGS='-Wall -Wextra -Werror -pedantic -W -Wshadow -O2 -march=native -DEIGEN_NO_AUTOMATIC_RESIZING')
 
 ## Command line arguments ...
 debug = ARGUMENTS.get('debug', 0)
-boostg = ARGUMENTS.get('boost', 0)
-make_test = ARGUMENTS.get('make-test', 0)
+test  = ARGUMENTS.get('test', 0)
 
 ## Construct the build enviroment
 env = denv.Clone() if int(debug) else penv.Clone()
+
+## What compiler should we be using ?
+if GetOption('cxx') is not None: env['CXX'] = GetOption('cxx')
+
+## Set the C++ standard
+cxxstd = GetOption('std')
+env.Append(CXXFLAGS=' --std=c++{}'.format(cxxstd))
 
 ## (shared) library ...
 vlib = env.SharedLibrary(source=lib_src_files, target=lib_name, CPPPATH=['.'], SHLIBVERSION=lib_version)
@@ -49,18 +72,9 @@ env.Alias(target='install', source=env.Install(dir=os.path.join(prefix, 'include
 env.Alias(target='install', source=env.InstallVersionedLib(dir=os.path.join(prefix, 'lib'), source=vlib))
 
 ## Tests ...
-if make_test:
-  tests_sources = glob.glob(r"test/unit/*.cpp")
+if test:
+  tests_sources = glob.glob(r"test/unit_tests/*.cpp")
   env.Append(RPATH=root_dir)
   for tsource in tests_sources:
-    ttarget = tsource.replace('_', '-').replace('.cpp', '.out')
-    env.Program(target=ttarget, source=tsource, CPPPATH='src/', LIBS=vlib+['datetime'], LIBPATH='.')
-
-## Boost test executables
-if boostg:
-  print('>> note that we\'ll be building boost executables ...')
-  boost_sources = ['boost/test_geodtest.cpp', 'boost/test_geodtime.cpp']
-  for bsource in boost_sources:
-    btarget = bsource.replace('_', '-').replace('.cpp', '.out')
-    env.Program(target=btarget, source=bsource, CPPPATH='src/',
-                LIBS=vlib+['datetime'], LIBPATH='.')
+    ttarget = os.path.join(os.path.dirname(tsource), os.path.basename(tsource).replace('_', '-').replace('.cpp', '.out'))
+    env.Program(target=ttarget, source=tsource, CPPPATH='src/', LIBS=vlib, LIBPATH='.')
