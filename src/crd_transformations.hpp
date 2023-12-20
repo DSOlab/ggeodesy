@@ -90,7 +90,6 @@ template <ellipsoid E>
 void cartesian2geodetic(double x, double y, double z, double &lat, double &lon,
                         double &hgt) noexcept {
   /* Functions of ellipsoid parameters. */
-  constexpr double f = ellipsoid_traits<E>::f;
   constexpr double a = ellipsoid_traits<E>::a;
   constexpr double aeps2 = a * a * 1e-32;
   constexpr double e2 = eccentricity_squared<E>();
