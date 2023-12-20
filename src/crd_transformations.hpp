@@ -10,6 +10,32 @@
 
 namespace dso {
 
+/** @brief Cartesian to spherical (geographic) coordinates.
+ *
+ * @param[in]  x    Cartesian x-component [m]
+ * @param[in]  y    Cartesian y-component [m]
+ * @param[in]  z    Cartesian z-component [m]
+ * @param[out] r    Radius (center of spheriod to point) [m]
+ * @param[out] lat  Geocentric latitude [rad] (i.e. 90[deg]-polar distance)
+ *                  in range [-π/2, π/2)
+ * @param[out] lon  Longitude [rad] in range [-π, π)
+ */
+void cartesian2spherical(double x, double y, double z, double &r, double &glat,
+                         double &lon) noexcept;
+
+/** @brief Spherical (geographic) to Cartesian coordinates.
+ *
+ * @param[in] r    Radius (center of spheriod to point) [m]
+ * @param[in] lat  Geocentric latitude [rad] (i.e. 90[deg]-polar distance)
+ *                 in range [-π/2, π/2)
+ * @param[in] lon  Longitude [rad] in range [-π, π)
+ * @param[out]  x  Cartesian x-component [m]
+ * @param[out]  y  Cartesian y-component [m]
+ * @param[out]  z  Cartesian z-component [m]
+ */
+void spherical2cartesian(double r, double glat, double lon, double &x,
+                         double &y, double &z) noexcept;
+
 /* @brief Geodetic (ellipsoidal) to cartesian coordinates.
  *
  * @tparam      E    The reference ellipsoid (i.e. one of dso::ellipsoid).
