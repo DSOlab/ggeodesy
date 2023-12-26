@@ -162,10 +162,10 @@ void cartesian2geodetic(double x, double y, double z, double &lat, double &lon,
  * the radial direction and defines the tangent plane to the sphere.
  *
  * The resulting matrix from this function, R, can be used in the sense:
- * |δX|        |x|
- * |δY|  = R * |y|
- * |δZ|        |z|
- * where (X, Y, Z) are the coordinates in the Cartesian system and (x,y,z) are 
+ * |δX|        |e|
+ * |δY|  = R * |n|
+ * |δZ|        |u|
+ * where (X, Y, Z) are the coordinates in the Cartesian system and (e,n,u) are 
  * coordinates in the East, North and Up directions; the provided (φ,λ) point 
  * acts as reference point (i.e. origin of ENU system).
  *
