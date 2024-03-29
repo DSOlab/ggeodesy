@@ -1,4 +1,4 @@
-/** @file units.hpp
+/** @file
  * A list of frequently used geodetic functions for unit conversion, mostly 
  * targeting angular units.
  */
@@ -48,6 +48,16 @@ inline constexpr double rad2sec(double radians) noexcept {
 inline constexpr double sec2rad(double seconds) noexcept {
   constexpr const double f = detail::AngleUnitTraits<
       detail::AngleUnit::Seconds>::to_units<detail::AngleUnit::Radians>();
+  return seconds * f;
+}
+
+/** @brief Convert seconds (of time) to radians.
+ *  @param[in] seconds Angle in [sec] of time
+ *  @return The (input) angle in [rad]
+ */
+inline constexpr double hsec2rad(double seconds) noexcept {
+  constexpr const double f = detail::AngleUnitTraits<
+      detail::AngleUnit::SecondsOfHour>::to_units<detail::AngleUnit::Radians>();
   return seconds * f;
 }
 

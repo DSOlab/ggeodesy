@@ -11,7 +11,7 @@ namespace dso {
 
 namespace detail {
 /** Type of angular units */
-enum class AngleUnit : char { Radians, Degrees, Seconds };
+enum class AngleUnit : char { Radians, Degrees, Seconds, Hours, SecondsOfHour };
 
 /** Traits of default angular units (AngleUnit) i.e. AngleUnit::Radians */
 template <AngleUnit U> struct AngleUnitTraits {
@@ -43,6 +43,30 @@ template <> struct AngleUnitTraits<AngleUnit::Seconds> {
   static constexpr double full_circle() { return (double)(360L * 60L * 60L); }
   /** Half a circle in given angular units, i.e. Seconds (of degree) */
   static constexpr double half_circle() { return (double)(180L * 60L * 60L); }
+  /** Factor to convert to some other angular unit */
+  template<AngleUnit T> static constexpr double to_units() noexcept {
+    return AngleUnitTraits<T>::half_circle() / half_circle();
+  }
+};
+
+/** Traits of degrees angular units (AngleUnit) i.e. AngleUnit::Hours */
+template <> struct AngleUnitTraits<AngleUnit::Hours> {
+  /** A full circle in given angular units, i.e. Hours */
+  static constexpr double full_circle() { return (double)(24); }
+  /** Half a circle in given angular units, i.e. Hours (of day) */
+  static constexpr double half_circle() { return (double)(12); }
+  /** Factor to convert to some other angular unit */
+  template<AngleUnit T> static constexpr double to_units() noexcept {
+    return AngleUnitTraits<T>::half_circle() / half_circle();
+  }
+};
+
+/** Traits of degrees angular units (AngleUnit) i.e. AngleUnit::SecondsOfHour */
+template <> struct AngleUnitTraits<AngleUnit::SecondsOfHour> {
+  /** A full circle in given angular units, i.e. Seconds of Hour */
+  static constexpr double full_circle() { return (double)(24*60*60); }
+  /** Half a circle in given angular units, i.e. Seconds of Hour (of day) */
+  static constexpr double half_circle() { return (double)(12*60*60); }
   /** Factor to convert to some other angular unit */
   template<AngleUnit T> static constexpr double to_units() noexcept {
     return AngleUnitTraits<T>::half_circle() / half_circle();
