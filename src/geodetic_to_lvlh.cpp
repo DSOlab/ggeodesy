@@ -1,4 +1,4 @@
-#include "crd_transformations.hpp"
+#include "core/crd_transformations.hpp"
 
 Eigen::Matrix<double,3,3> dso::geodetic2lvlh(double lat, double lon) noexcept {
   const double sphi = std::sin(lat);

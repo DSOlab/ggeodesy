@@ -1,7 +1,6 @@
 /** @file
- *
  * Define a number of classes which are actually wrappers around a 3-D vector 
- * to distinguish between Coordinate types
+ * to distinguish between Coordinate types.
  */
 
 #ifndef __DSO_COORDINATE_TYPE_WRAPPERS_HPP__

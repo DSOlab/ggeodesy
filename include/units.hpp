@@ -6,7 +6,7 @@
 #ifndef __DSO_GEODESY_UNITS_HPP__
 #define __DSO_GEODESY_UNITS_HPP__
 
-#include "geoconst.hpp"
+#include "core/geoconst.hpp"
 #include <cmath>
 
 namespace dso {

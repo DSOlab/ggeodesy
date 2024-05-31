@@ -5,8 +5,8 @@
  *  quantities.
  */
 
-#ifndef __ELLIPSOID_GEOMETRY_CORE_HPP__
-#define __ELLIPSOID_GEOMETRY_CORE_HPP__
+#ifndef __DSO_ELLIPSOID_GEOMETRY_CORE_HPP__
+#define __DSO_ELLIPSOID_GEOMETRY_CORE_HPP__
 
 #include <cmath>
 

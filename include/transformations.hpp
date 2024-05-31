@@ -2,11 +2,11 @@
  * A list of frequently used geodetic functions.
  */
 
-#ifndef __DSO_BASIC_GEODESY_HPP__
-#define __DSO_BASIC_GEODESY_HPP__
+#ifndef __DSO_GEO_COORDINATE_TRANSFORMATIONS_HPP__
+#define __DSO_GEO_COORDINATE_TRANSFORMATIONS_HPP__
 
-#include "crd_transformations.hpp"
-#include "crdtype_warppers.hpp"
+#include "core/crd_transformations.hpp"
+#include "core/crdtype_warppers.hpp"
 
 namespace dso {
 

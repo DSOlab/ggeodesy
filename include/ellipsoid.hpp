@@ -34,7 +34,7 @@
 #ifndef __DSO_REFERENCE_ELLIPSOID_HPP__
 #define __dSO_REFERENCE_ELLIPSOID_HPP__
 
-#include "ellipsoid_core.hpp"
+#include "core/ellipsoid_core.hpp"
 #include <type_traits>
 
 namespace dso {
