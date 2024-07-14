@@ -31,6 +31,10 @@ find_package(Eigen3 3.3 REQUIRED)
 # The library
 add_subdirectory(src)
 
+# The tests
+add_subdirectory(test//unit_tests)
+enable_testing()
+
 add_compile_options(
   -Wall -Wextra -Werror -pedantic -W -Wshadow -march=native -DEIGEN_NO_AUTOMATIC_RESIZING
   $<$<CONFIG:RELEASE>:-O2 -march=native -DEIGEN_NO_AUTOMATIC_RESIZING>
