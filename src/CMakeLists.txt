@@ -18,5 +18,5 @@ target_link_libraries(geodesy PRIVATE Eigen3::Eigen)
 
 # Install as: $PREFIX/geodesy/...
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../include/
-	DESTINATION geodesy
+	DESTINATION include/geodesy
 )
