@@ -16,7 +16,13 @@ target_include_directories(geodesy
 # We need the Eigen-3 library
 target_link_libraries(geodesy PRIVATE Eigen3::Eigen)
 
-# Install as: $PREFIX/geodesy/...
+# Install headers at: $PREFIX/geodesy/...
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../include/
 	DESTINATION include/geodesy
 )
+
+# install library
+install(TARGETS geodesy
+         ARCHIVE DESTINATION lib
+         LIBRARY DESTINATION lib
+         RUNTIME DESTINATION bin)
