@@ -23,6 +23,11 @@ struct CartesianCrd {
   double &x() noexcept { return mv(0); }
   double &y() noexcept { return mv(1); }
   double &z() noexcept { return mv(2); }
+  CartesianCrd() noexcept : mv{} {};
+  explicit CartesianCrd(const detail::Vec3d &vec) noexcept : mv(vec) {};
+  CartesianCrd(double x, double y, double z) noexcept {
+    mv << x, y, z;
+  }
 };
 
 struct CartesianCrdView {
