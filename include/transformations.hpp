@@ -2,8 +2,8 @@
  * A list of frequently used geodetic functions.
  */
 
-#ifndef __DSO_GEO_COORDINATE_TRANSFORMATIONS_HPP__
-#define __DSO_GEO_COORDINATE_TRANSFORMATIONS_HPP__
+#ifndef __DSO_COORDINATE_TRANSFORMATIONS_HPP__
+#define __DSO_COORDINATE_TRANSFORMATIONS_HPP__
 
 #include "ellipsoid.hpp"
 #include "core/crd_transformations.hpp"

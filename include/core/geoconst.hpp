@@ -2,8 +2,8 @@
  * Fundamental constants frequently used within geodetic calculations.
  */
 
-#ifndef __DSO_GEODESY_CONSTS_HPP__
-#define __DSO_GEODESY_CONSTS_HPP__
+#ifndef __DSO_GEODESY_CONSTS_CORE_HPP__
+#define __DSO_GEODESY_CONSTS_CORE_HPP__
 
 #include <cmath>
 

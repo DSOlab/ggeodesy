@@ -2,8 +2,8 @@
  * A list of frequently used coordinate transformation.
  */
 
-#ifndef __DSO_COORDINATE_TRANSFORMATIONS_HPP__
-#define __DSO_COORDINATE_TRANSFORMATIONS_HPP__
+#ifndef __DSO_COORDINATE_TRANSFORMATIONS_CORE_HPP__
+#define __DSO_COORDINATE_TRANSFORMATIONS_CORE_HPP__
 
 #include "geoconst.hpp"
 #include "eigen3/Eigen/Eigen"

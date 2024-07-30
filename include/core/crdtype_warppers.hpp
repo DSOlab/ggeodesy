@@ -3,8 +3,8 @@
  * to distinguish between Coordinate types.
  */
 
-#ifndef __DSO_COORDINATE_TYPE_WRAPPERS_HPP__
-#define __DSO_COORDINATE_TYPE_WRAPPERS_HPP__
+#ifndef __DSO_COORDINATE_TYPE_WRAPPERS_CORE_HPP__
+#define __DSO_COORDINATE_TYPE_WRAPPERS_CORE_HPP__
 
 #include "eigen3/Eigen/Eigen"
 
