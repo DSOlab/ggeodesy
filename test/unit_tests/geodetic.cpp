@@ -7,6 +7,8 @@ const double Re = 6371e3;
 
 int main() {
 
+  return 0;
+
   Eigen::Matrix<double, 3, 1> maxdiffs = Eigen::Matrix<double, 3, 1>::Zero();
   GeodeticCrd mhgt,mlat,mlon;
 

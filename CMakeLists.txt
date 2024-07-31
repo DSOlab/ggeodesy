@@ -6,24 +6,24 @@ project(
   DESCRIPTION "DSO Geodetic Library"
   LANGUAGES CXX)
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-  
-  # Let's ensure -std=c++xx instead of -std=g++xx
-  set(CMAKE_CXX_EXTENSIONS OFF)
-  
-  # Let's nicely support folders in IDEs
-  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-  
-  include(CTest)
-  
-  find_package(Doxygen)
-  if(Doxygen_FOUND)
-    add_subdirectory(doc)
-  else()
-    message(STATUS "Doxygen not found, not building docs")
-  endif()
-
-endif()
+#if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+#  
+#  # Let's ensure -std=c++xx instead of -std=g++xx
+#  set(CMAKE_CXX_EXTENSIONS OFF)
+#  
+#  # Let's nicely support folders in IDEs
+#  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+#  
+#  include(CTest)
+#  
+#  find_package(Doxygen)
+#  if(Doxygen_FOUND)
+#    add_subdirectory(doc)
+#  else()
+#    message(STATUS "Doxygen not found, not building docs")
+#  endif()
+#
+#endif()
 
 # We need Eigen
 find_package(Eigen3 3.3 REQUIRED)

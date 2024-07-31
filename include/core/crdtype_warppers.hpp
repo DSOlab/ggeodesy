@@ -1,5 +1,5 @@
 /** @file
- * Define a number of classes which are actually wrappers around a 3-D vector 
+ * Define a number of classes which are actually wrappers around a 3-D vector
  * to distinguish between Coordinate types.
  */
 
@@ -11,29 +11,33 @@
 namespace dso {
 
 namespace detail {
-  using Vec3d = Eigen::Matrix<double, 3, 1>;
-}/* namespace detail */
+using Vec3d = Eigen::Matrix<double, 3, 1>;
+} /* namespace detail */
 
 struct CartesianCrd {
   /* mv = (X,Y,Z) in [m] */
   detail::Vec3d mv;
+
   double x() const noexcept { return mv(0); }
   double y() const noexcept { return mv(1); }
   double z() const noexcept { return mv(2); }
   double &x() noexcept { return mv(0); }
   double &y() noexcept { return mv(1); }
   double &z() noexcept { return mv(2); }
+
   CartesianCrd() noexcept : mv{} {};
+
   explicit CartesianCrd(const detail::Vec3d &vec) noexcept : mv(vec) {};
-  CartesianCrd(double x, double y, double z) noexcept {
-    mv << x, y, z;
-  }
+  CartesianCrd(double x, double y, double z) noexcept { mv << x, y, z; }
 };
 
 struct CartesianCrdView {
   /* mv = (X,Y,Z) in [m] */
-  detail::Vec3d& mv;
+  detail::Vec3d &mv;
+
   explicit CartesianCrdView(detail::Vec3d &v) noexcept : mv(v) {};
+  explicit CartesianCrdView(CartesianCrd &v) noexcept : mv(v.mv) {};
+
   double x() const noexcept { return mv(0); }
   double y() const noexcept { return mv(1); }
   double z() const noexcept { return mv(2); }
@@ -44,8 +48,13 @@ struct CartesianCrdView {
 
 struct CartesianCrdConstView {
   /* mv = (X,Y,Z) in [m] */
-  const detail::Vec3d& mv;
+  const detail::Vec3d &mv;
+
   explicit CartesianCrdConstView(const detail::Vec3d &v) noexcept : mv(v) {};
+  explicit CartesianCrdConstView(const CartesianCrd &v) noexcept : mv(v.mv) {};
+  explicit CartesianCrdConstView(const CartesianCrdView &v) noexcept
+      : mv(v.mv) {};
+
   double x() const noexcept { return mv(0); }
   double y() const noexcept { return mv(1); }
   double z() const noexcept { return mv(2); }
@@ -59,6 +68,7 @@ struct GeodeticCrd {
    * h Real number
    */
   detail::Vec3d mv;
+
   double lat() const noexcept { return mv(0); }
   double lon() const noexcept { return mv(1); }
   double hgt() const noexcept { return mv(2); }
@@ -74,8 +84,11 @@ struct GeodeticCrdView {
    * -π <= λ < π
    * h Real number
    */
-  detail::Vec3d& mv;
+  detail::Vec3d &mv;
+
   explicit GeodeticCrdView(detail::Vec3d &v) noexcept : mv(v) {};
+  explicit GeodeticCrdView(GeodeticCrd &v) noexcept : mv(v.mv) {};
+
   double lat() const noexcept { return mv(0); }
   double lon() const noexcept { return mv(1); }
   double hgt() const noexcept { return mv(2); }
@@ -91,8 +104,13 @@ struct GeodeticCrdConstView {
    * -π <= λ < π
    * h Real number
    */
-  const detail::Vec3d& mv;
+  const detail::Vec3d &mv;
+
   explicit GeodeticCrdConstView(const detail::Vec3d &v) noexcept : mv(v) {};
+  explicit GeodeticCrdConstView(const GeodeticCrd &v) noexcept : mv(v.mv) {};
+  explicit GeodeticCrdConstView(const GeodeticCrdView &v) noexcept
+      : mv(v.mv) {};
+
   double lat() const noexcept { return mv(0); }
   double lon() const noexcept { return mv(1); }
   double hgt() const noexcept { return mv(2); }
@@ -106,6 +124,7 @@ struct SphericalCrd {
    * r >= 0
    */
   detail::Vec3d mv;
+
   double r() const noexcept { return mv(0); }
   double lat() const noexcept { return mv(1); }
   double lon() const noexcept { return mv(2); }
@@ -121,8 +140,11 @@ struct SphericalCrdView {
    * -π <= λ < π
    * r >= 0
    */
-  detail::Vec3d& mv;
+  detail::Vec3d &mv;
+
   explicit SphericalCrdView(detail::Vec3d &v) noexcept : mv(v) {};
+  explicit SphericalCrdView(SphericalCrd &v) noexcept : mv(v.mv) {};
+
   double r() const noexcept { return mv(0); }
   double lat() const noexcept { return mv(1); }
   double lon() const noexcept { return mv(2); }
@@ -138,48 +160,53 @@ struct SphericalCrdConstView {
    * -π <= λ < π
    * r >= 0
    */
-  const detail::Vec3d& mv;
+  const detail::Vec3d &mv;
+
   explicit SphericalCrdConstView(const detail::Vec3d &v) noexcept : mv(v) {};
+  explicit SphericalCrdConstView(const SphericalCrd &v) noexcept : mv(v.mv) {};
+  explicit SphericalCrdConstView(const SphericalCrdView &v) noexcept
+      : mv(v.mv) {};
+
   double r() const noexcept { return mv(0); }
   double lat() const noexcept { return mv(1); }
   double lon() const noexcept { return mv(2); }
 };
 
-template<typename T> struct CoordinateTypeTraits {};
+template <typename T> struct CoordinateTypeTraits {};
 
-template<>struct CoordinateTypeTraits<CartesianCrd> {
+template <> struct CoordinateTypeTraits<CartesianCrd> {
   static constexpr const int isCartesian = true;
   static constexpr const int isConst = false;
 };
-template<>struct CoordinateTypeTraits<CartesianCrdView> {
+template <> struct CoordinateTypeTraits<CartesianCrdView> {
   static constexpr const int isCartesian = true;
   static constexpr const int isConst = false;
 };
-template<>struct CoordinateTypeTraits<CartesianCrdConstView> {
+template <> struct CoordinateTypeTraits<CartesianCrdConstView> {
   static constexpr const int isCartesian = true;
   static constexpr const int isConst = true;
 };
-template<>struct CoordinateTypeTraits<GeodeticCrd> {
+template <> struct CoordinateTypeTraits<GeodeticCrd> {
   static constexpr const int isGeodetic = true;
   static constexpr const int isConst = false;
 };
-template<>struct CoordinateTypeTraits<GeodeticCrdView> {
+template <> struct CoordinateTypeTraits<GeodeticCrdView> {
   static constexpr const int isGeodetic = true;
   static constexpr const int isConst = false;
 };
-template<>struct CoordinateTypeTraits<GeodeticCrdConstView> {
+template <> struct CoordinateTypeTraits<GeodeticCrdConstView> {
   static constexpr const int isGeodetic = true;
   static constexpr const int isConst = true;
 };
-template<>struct CoordinateTypeTraits<SphericalCrd> {
+template <> struct CoordinateTypeTraits<SphericalCrd> {
   static constexpr const int isSpherical = true;
   static constexpr const int isConst = false;
 };
-template<>struct CoordinateTypeTraits<SphericalCrdView> {
+template <> struct CoordinateTypeTraits<SphericalCrdView> {
   static constexpr const int isSpherical = true;
   static constexpr const int isConst = false;
 };
-template<> struct CoordinateTypeTraits<SphericalCrdConstView> {
+template <> struct CoordinateTypeTraits<SphericalCrdConstView> {
   static constexpr const int isSpherical = true;
   static constexpr const int isConst = true;
 };
