@@ -1,0 +1,55 @@
+---
+title: libgeodesy User's Guide
+author:
+  - name: xanthos
+    affiliation: Dionysos Satellite Observatory, National Technical University of Athens
+bibliography: doc/document/doris.bib
+...
+
+
+[![Build Status](https://travis-ci.com/xanthospap/ggeodesy.svg?branch=master)](https://travis-ci.com/xanthospap/ggeodesy)
+
+# Introduction
+This is a C++ library meant to provide implementations of the most commonly used
+geodetic calculations. The whole library is wrapped around the `dso` namespace.
+
+# Dependancies 
+This library uses the [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) 
+library for basic matrix manipulation and linear algebra.
+
+# Compilation / Installation
+Building the library requires [cmake](https://cmake.org/)
+
+Supposing we are at the top-level directory (i.e. where this readme file is placed), 
+just use:
+
+```
+mkdir build && cd build
+cmake ..
+make
+sudo make install
+```
+
+# The Library
+
+## Coordinate Types
+
+A point $P$ can be defined can be described (in 3-D space) by any of the following 
+coordinate types:
+
+ * **Cartesian**, using $P = (x,y,z)$; unless otherwise stated, in SI units (i.e. meters)
+ * **Geodetic**, using $P= (\lambda , \phi , h)$, $\lambda$ denoting the 
+  longitude in range $-\pi \le \lambda \le \pi$, $\phi$ denoting the geodetic
+  latitude in range $\frac{\pi}{2} \le \phi \le \frac{\pi}{2}$ and $h$ denotes the 
+  ellipsoidal height. Unless otherwise stated, ellipsoidal coordinate sets are 
+  given/derived in **this order** (i.e. $(\lambda, \phi, h)$) in units of radians 
+  and meters. Note that **geodetic** coordinates are based on a reference ellipsoid.
+
+## Coordinate Transformations
+To transform between cartesian and ellipsoidal coordinate systems, one needs th 
+define the *Reference Ellispoid* of the ellipsoidal set. In this library, this is 
+performed via a template parameter. The transformation accuracy (see 
+[here](test/unit/test_cartesian_ellipsoidal.cpp)) is about: $7\times 10^{-11} arcsec$ 
+for $\lambda$ and $\phi$ and $3\times 10^{-6}$ millimetre for the height component. 
+In cartesian descripancies, about $3\times 10^{-6}$ millimetre for the $X$,  
+$Y$ and $Z$ components.

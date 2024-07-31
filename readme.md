@@ -7,24 +7,23 @@
 This is a C++ library meant to provide implementations of the most commonly used
 geodetic calculations. The whole library is wrapped around the `dso` namespace.
 
+# Dependancies 
+
+This library uses the [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) 
+library for basic matrix manipulation and linear algebra.
+
 # Compilation / Installation
 
-> Since December 2021, the build system has been changed from 
-> [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html) 
-> to [scons](https://scons.org/). 
+Building the library requires [cmake](https://cmake.org/)
 
-To buid the project just use [scons](https://scons.org/):
-```
-scons [OPTIONS]
-```
-in the top-level directory. The optional `[OPTIONS]` argument, can be any/multiple of:
- * `debug=1` to trigger a `DEBUG` build, 
- * `boost=1` to trigger a build including [boost geometry](https://www.boost.org/doc/libs/1_74_0/libs/geometry/doc/html/index.html) 
-    comparisson/test programs
+Supposing we are at the top-level directory (i.e. where this readme file is placed), 
+just use:
 
-Installation is trivial, use:
 ```
-sudo scons install
+mkdir build && cd build
+cmake ..
+make
+sudo make install
 ```
 
 # The Library
