@@ -1,5 +1,3 @@
-# geodetic.cpp  spherical.cpp  type_wrappers.cpp
-
 add_executable(geodetic geodetic.cpp)
 add_executable(spherical spherical.cpp)
 add_executable(typeWrappers type_wrappers.cpp)
