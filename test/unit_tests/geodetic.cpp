@@ -38,17 +38,23 @@ int main() {
         /* check diffs */
         if (std::abs(geo.hgt() - s.hgt()) > maxdiffs(0)) {
           maxdiffs(0) = std::abs(geo.hgt() - s.hgt());
+#ifndef REPORT_TEST_DIFFS
           assert(maxdiffs(0) < MAX_DIFF_HGT_MTRS);
+#endif
           mhgt = s;
         }
         if (std::abs(geo.lat() - s.lat()) > maxdiffs(1)) {
           maxdiffs(1) = std::abs(geo.lat() - s.lat());
-          assert(maxdiffs(0) < MAX_DIFF_LAT_RAD);
+#ifndef REPORT_TEST_DIFFS
+          assert(maxdiffs(1) < MAX_DIFF_LAT_RAD);
+#endif
           mlat = s;
         }
         if (std::abs(geo.lon() - s.lon()) > maxdiffs(2)) {
           maxdiffs(2) = std::abs(geo.lon() - s.lon());
-          assert(maxdiffs(0) < MAX_DIFF_LON_RAD);
+#ifndef REPORT_TEST_DIFFS
+          assert(maxdiffs(2) < MAX_DIFF_LON_RAD);
+#endif
           mlon = s;
         }
         /* augment latitude */

@@ -32,7 +32,7 @@
  */
 
 #ifndef __DSO_REFERENCE_ELLIPSOID_HPP__
-#define __dSO_REFERENCE_ELLIPSOID_HPP__
+#define __DSO_REFERENCE_ELLIPSOID_HPP__
 
 #include "core/ellipsoid_core.hpp"
 #include <type_traits>
@@ -89,7 +89,7 @@ template <> struct ellipsoid_traits<ellipsoid::wgs84> {
 /** @brief A class to hold traits for the PZ-90 (i.e. dso::ellispoid::pz90)
  * reference ellipsoid.
  * @see
- * http://www.navipedia.net/index.php/Reference_Frames_in_GNSS#GLONASS_reference_frame_PZ-90 
+ * http://www.navipedia.net/index.php/Reference_Frames_in_GNSS#GLONASS_reference_frame_PZ-90
  */
 template <> struct ellipsoid_traits<ellipsoid::pz90> {
   /** Semi-major axis (m). */
@@ -182,8 +182,9 @@ template <ellipsoid E> double geocentric_latitude(double lat) noexcept {
  * @note If the point has height = 0 (aka, is ON the ellipsoid), then use
  *  the version whilch does not take height as input.
  *
- * @see https://www.mathworks.com/help/aeroblks/geodetictogeocentriclatitude.html
- *      note that in the polar axis distance there is a sin when it should 
+ * @see
+ * https://www.mathworks.com/help/aeroblks/geodetictogeocentriclatitude.html
+ *      note that in the polar axis distance there is a sin when it should
  *      have been a cos.
  */
 template <ellipsoid E>
@@ -204,9 +205,7 @@ double geocentric_latitude(double lat, double h) noexcept {
  * @param[in] lat The geodetic latitude in [rad]
  * @return    The parametric or reduced latitude in [rad]
  */
-template <ellipsoid E>
-    double
-    reduced_latitude(double lat) noexcept {
+template <ellipsoid E> double reduced_latitude(double lat) noexcept {
   return core::reduced_latitude(ellipsoid_traits<E>::f, lat);
 }
 
@@ -239,7 +238,7 @@ template <ellipsoid E> constexpr double mean_earth_radius() noexcept {
  * @see https://en.wikipedia.org/wiki/Meridian_arc
  *
  * @param[in] lat Latitude of the reference point in [rad]
- * @param[in] dlat Lattitude difference, i.e. arc length on the meridian, 
+ * @param[in] dlat Lattitude difference, i.e. arc length on the meridian,
  *            in [rad]
  * @return  Arc length (on meridian) in [m]
  */
@@ -300,7 +299,7 @@ public:
    * @param[in] a The semi-major axis [m]
    * @param[in] f The flattening
    */
-  constexpr Ellipsoid(double a, double f) noexcept : __a(a), __f(f){};
+  constexpr Ellipsoid(double a, double f) noexcept : __a(a), __f(f) {};
 
   /** @brief et the semi-major axis \f$ \alpha \f$ */
   constexpr double semi_major() const noexcept { return __a; }
@@ -325,23 +324,19 @@ public:
 
   /** @brief Compute the geocentric latitude at some (geodetic) latitude */
   double geocentric_latitude(double lat) const noexcept {
-    return core::geocentric_latitude(__f,lat);
+    return core::geocentric_latitude(__f, lat);
   }
 
   /** @brief Compute the reduced latitude at some (geodetic) latitude */
   double reduced_latitude(double lat) const noexcept {
-    return core::reduced_latitude( __f, lat);
+    return core::reduced_latitude(__f, lat);
   }
 
   /** @brief  Compute the normal radius of curvature at a given latitude */
-  double N(double lat) const noexcept {
-    return core::N(__a, __f, lat);
-  }
+  double N(double lat) const noexcept { return core::N(__a, __f, lat); }
 
   /** @brief  Compute the meridional radii of curvature at a given latitude */
-  double M(double lat) const noexcept {
-    return core::M(__a, __f, lat);
-  }
+  double M(double lat) const noexcept { return core::M(__a, __f, lat); }
 
 private:
   double __a, __f;

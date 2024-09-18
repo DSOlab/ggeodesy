@@ -2,7 +2,7 @@
 #include <cmath>
 
 void dso::spherical2cartesian(double r, double glat, double lon, double &x,
-                         double &y, double &z) noexcept {
+                              double &y, double &z) noexcept {
 
   const double sf = std::sin(glat);
   const double cf = std::cos(glat);

@@ -5,9 +5,9 @@
 #ifndef __DSO_COORDINATE_TRANSFORMATIONS_HPP__
 #define __DSO_COORDINATE_TRANSFORMATIONS_HPP__
 
-#include "ellipsoid.hpp"
 #include "core/crd_transformations.hpp"
 #include "core/crdtype_warppers.hpp"
+#include "ellipsoid.hpp"
 
 namespace dso {
 
@@ -23,7 +23,7 @@ namespace dso {
  */
 template <ellipsoid E>
 void geodetic2cartesian(double lat, double lon, double h, double &x, double &y,
-             double &z) noexcept {
+                        double &z) noexcept {
   /* Eccentricity squared. */
   constexpr const double e2 = dso::eccentricity_squared<E>();
 
@@ -69,8 +69,14 @@ void cartesian2geodetic(double x, double y, double z, double &lat, double &lon,
   constexpr double e2 = eccentricity_squared<E>();
   constexpr double e4t = e2 * e2 * 1.5e0;
   constexpr double ep2 = 1.0e0 - e2;
+#if defined(__clang__)
+  /* clang goes pedantic on this! std::sqrt is not constexpr */
+  const double ep = std::sqrt(ep2);
+  const double aep = a * ep;
+#else
   constexpr double ep = std::sqrt(ep2);
   constexpr double aep = a * ep;
+#endif
 
   /* Compute distance from polar axis squared. */
   const double p2 = x * x + y * y;
@@ -124,32 +130,32 @@ void cartesian2geodetic(double x, double y, double z, double &lat, double &lon,
   return;
 }
 
-template<typename C=CartesianCrd>
-inline SphericalCrd cartesian2spherical(const /*CartesianCrd*/C &v) noexcept {
+template <typename C = CartesianCrd>
+inline SphericalCrd cartesian2spherical(const /*CartesianCrd*/ C &v) noexcept {
   static_assert(dso::CoordinateTypeTraits<C>::isCartesian);
   SphericalCrd s;
   cartesian2spherical(v.x(), v.y(), v.z(), s.r(), s.lat(), s.lon());
   return s;
 }
 
-template<typename S=SphericalCrd>
-inline CartesianCrd spherical2cartesian(const /*SphericalCrd*/S &v) noexcept {
+template <typename S = SphericalCrd>
+inline CartesianCrd spherical2cartesian(const /*SphericalCrd*/ S &v) noexcept {
   static_assert(dso::CoordinateTypeTraits<S>::isSpherical);
   CartesianCrd s;
   spherical2cartesian(v.r(), v.lat(), v.lon(), s.x(), s.y(), s.z());
   return s;
 }
 
-template <ellipsoid E, typename G=GeodeticCrd>
-CartesianCrd geodetic2cartesian(const /*GeodeticCrd*/G &v) noexcept {
+template <ellipsoid E, typename G = GeodeticCrd>
+CartesianCrd geodetic2cartesian(const /*GeodeticCrd*/ G &v) noexcept {
   static_assert(dso::CoordinateTypeTraits<G>::isGeodetic);
   CartesianCrd s;
   geodetic2cartesian<E>(v.lat(), v.lon(), v.hgt(), s.x(), s.y(), s.z());
   return s;
 }
 
-template <ellipsoid E, typename C=CartesianCrd>
-GeodeticCrd cartesian2geodetic(const /*CartesianCrd*/C &v) noexcept {
+template <ellipsoid E, typename C = CartesianCrd>
+GeodeticCrd cartesian2geodetic(const /*CartesianCrd*/ C &v) noexcept {
   static_assert(dso::CoordinateTypeTraits<C>::isCartesian);
   GeodeticCrd s;
   cartesian2geodetic<E>(v.x(), v.y(), v.z(), s.lat(), s.lon(), s.hgt());

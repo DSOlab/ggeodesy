@@ -20,7 +20,7 @@ template <AngleUnit U> struct AngleUnitTraits {
   /** half a circle in given angular units (default=Radians) */
   static constexpr double half_circle() { return M_PI; }
   /** Factor to convert to some other angular unit */
-  template<AngleUnit T> static constexpr double to_units() noexcept {
+  template <AngleUnit T> static constexpr double to_units() noexcept {
     return AngleUnitTraits<T>::half_circle() / half_circle();
   }
 };
@@ -32,7 +32,7 @@ template <> struct AngleUnitTraits<AngleUnit::Degrees> {
   /** Half a circle in given angular units, i.e. Degrees */
   static constexpr double half_circle() { return 180e0; }
   /** Factor to convert to some other angular unit */
-  template<AngleUnit T> static constexpr double to_units() noexcept {
+  template <AngleUnit T> static constexpr double to_units() noexcept {
     return AngleUnitTraits<T>::half_circle() / half_circle();
   }
 };
@@ -44,7 +44,7 @@ template <> struct AngleUnitTraits<AngleUnit::Seconds> {
   /** Half a circle in given angular units, i.e. Seconds (of degree) */
   static constexpr double half_circle() { return (double)(180L * 60L * 60L); }
   /** Factor to convert to some other angular unit */
-  template<AngleUnit T> static constexpr double to_units() noexcept {
+  template <AngleUnit T> static constexpr double to_units() noexcept {
     return AngleUnitTraits<T>::half_circle() / half_circle();
   }
 };
@@ -56,7 +56,7 @@ template <> struct AngleUnitTraits<AngleUnit::Hours> {
   /** Half a circle in given angular units, i.e. Hours (of day) */
   static constexpr double half_circle() { return (double)(12); }
   /** Factor to convert to some other angular unit */
-  template<AngleUnit T> static constexpr double to_units() noexcept {
+  template <AngleUnit T> static constexpr double to_units() noexcept {
     return AngleUnitTraits<T>::half_circle() / half_circle();
   }
 };
@@ -64,11 +64,11 @@ template <> struct AngleUnitTraits<AngleUnit::Hours> {
 /** Traits of degrees angular units (AngleUnit) i.e. AngleUnit::SecondsOfHour */
 template <> struct AngleUnitTraits<AngleUnit::SecondsOfHour> {
   /** A full circle in given angular units, i.e. Seconds of Hour */
-  static constexpr double full_circle() { return (double)(24*60*60); }
+  static constexpr double full_circle() { return (double)(24 * 60 * 60); }
   /** Half a circle in given angular units, i.e. Seconds of Hour (of day) */
-  static constexpr double half_circle() { return (double)(12*60*60); }
+  static constexpr double half_circle() { return (double)(12 * 60 * 60); }
   /** Factor to convert to some other angular unit */
-  template<AngleUnit T> static constexpr double to_units() noexcept {
+  template <AngleUnit T> static constexpr double to_units() noexcept {
     return AngleUnitTraits<T>::half_circle() / half_circle();
   }
 };

@@ -1,5 +1,5 @@
 /** @file
- * A list of frequently used geodetic functions for unit conversion, mostly 
+ * A list of frequently used geodetic functions for unit conversion, mostly
  * targeting angular units.
  */
 
@@ -62,7 +62,7 @@ inline constexpr double hsec2rad(double seconds) noexcept {
 }
 
 /** Normalize angle in the range [0, 2π]/[0,360]
- * 
+ *
  * @tparam U Units of input angle, AngleUnits::Radians, or AngleUnits::Degrees
  *         or ...
  * @param[in] a Angle in units of U
@@ -77,7 +77,9 @@ inline double norm_angle(double a) noexcept {
 }
 
 template <detail::AngleUnit U = detail::AngleUnit::Radians>
-inline double anp(double a) noexcept { return norm_angle<U>(a); }
+inline double anp(double a) noexcept {
+  return norm_angle<U>(a);
+}
 
 /** Normalize angle in the range [-1/2 to 1/2) of circle.
  *
@@ -106,11 +108,11 @@ inline double anpm(double a) noexcept {
  *                         hexicondal degrees
  *
  * @note
- * Why use a seperate variable for sign? Well, if we didn't, we could e.g. 
- * make deg positive or negative depending on decimal_deg. BUT, if deg is 
- * zero, then we have a problem cause -0 cannot be (usually) represented, so 
- * the signs of decimal_deg and deg would not be the same! Hence, deg, min 
- * and sec are always >= 0 and the sign of the angle is the sign of sign 
+ * Why use a seperate variable for sign? Well, if we didn't, we could e.g.
+ * make deg positive or negative depending on decimal_deg. BUT, if deg is
+ * zero, then we have a problem cause -0 cannot be (usually) represented, so
+ * the signs of decimal_deg and deg would not be the same! Hence, deg, min
+ * and sec are always >= 0 and the sign of the angle is the sign of sign
  * (variable).
  *
  *  E.g.
@@ -186,11 +188,11 @@ inline constexpr double hexd2decd(int deg, int min, double sec,
  * @note If the angle is negative, only the sign parameter should be negative;
  *  (deg parameter could also be negative; the function will only use its
  *  absolute value, disregarding the sign).
- *  if so the (decimal) degrees returned will also be negative. The parameters 
- *  min and sec are not checked for their sign, they should *ALWAYS* be 
+ *  if so the (decimal) degrees returned will also be negative. The parameters
+ *  min and sec are not checked for their sign, they should *ALWAYS* be
  *  positive.
- *  Why do we need the sign parameter? Well, if deg is zero, but the degrees 
- *  are negative (e.g. -0deg 10min 10.10sec), how could we know the sign? 
+ *  Why do we need the sign parameter? Well, if deg is zero, but the degrees
+ *  are negative (e.g. -0deg 10min 10.10sec), how could we know the sign?
  *  There is no -0; so we need to mark the sign via the sign parameter.
  *
  * E.g.
@@ -217,9 +219,9 @@ inline constexpr double hexd2rad(int deg, int min, double sec,
  *
  * @note In case a negative angle is given, then the (output) degrees are also
  *  going to be negative.
- *  Why use a seperate variable for sign? Well, if we didn't, we could e.g. 
- *  make deg positive or negative depending on decimal_deg. BUT, if deg is 
- *  zero, then we have a problem cause -0 cannot be (usually) represented, so 
+ *  Why use a seperate variable for sign? Well, if we didn't, we could e.g.
+ *  make deg positive or negative depending on decimal_deg. BUT, if deg is
+ *  zero, then we have a problem cause -0 cannot be (usually) represented, so
  *  the signs of decimal_deg and deg would not be the same!
  */
 inline constexpr void rad2hexd(double radians, int &deg, int &min, double &sec,
