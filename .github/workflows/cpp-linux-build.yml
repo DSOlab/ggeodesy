@@ -1,0 +1,32 @@
+name: Linux CI build
+
+on:
+  push:
+    branches: [ "master", "cleanup" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: install (latest) eigen
+      run: sudo apt install libeigen3-dev
+    
+    - name: "prepare build (production/standard), gcc"
+      run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+    - name: "build"
+      run: cmake --build build --target all --config Release -- -j4
+    - name: "Test"
+      run: ctest --test-dir build
+    
+    - name: "prepare build (production/standard), clang++"
+      run: cmake -S . -B build -G "Unix Makefiles" -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release
+    - name: "build"
+      run: cmake --build build --target all --config Release -- -j4
+    - name: "Test"
+      run: ctest --test-dir build
