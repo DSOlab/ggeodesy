@@ -12,7 +12,7 @@ void touch(CartesianCrdView v) noexcept {
 
 int main() {
 
-  Eigen::Matrix<double,3,1> v;
+  Eigen::Matrix<double, 3, 1> v;
   v(0) = 1e0;
   v(1) = 2e0;
   v(2) = 3e0;

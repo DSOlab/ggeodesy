@@ -1,7 +1,7 @@
 #include "transformations.hpp"
 #include "units.hpp"
-#include <cstdio>
 #include <cassert>
+#include <cstdio>
 
 using namespace dso;
 const double Re = 6371e3;

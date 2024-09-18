@@ -1,7 +1,7 @@
 #include "transformations.hpp"
 #include "units.hpp"
-#include <cstdio>
 #include <cassert>
+#include <cstdio>
 
 using namespace dso;
 const double Re = 6371e3;
@@ -15,7 +15,7 @@ constexpr const double MAX_DIFF_LON_RAD = sec2rad(MAX_DIFF_LON_ASEC);
 int main() {
 
   Eigen::Matrix<double, 3, 1> maxdiffs = Eigen::Matrix<double, 3, 1>::Zero();
-  GeodeticCrd mhgt,mlat,mlon;
+  GeodeticCrd mhgt, mlat, mlon;
 
   /* first check internal precision with
    * -180 < lon < 180 and -90 < lat < 90
@@ -71,14 +71,13 @@ int main() {
 #ifdef REPORT_TEST_DIFFS
   printf("Test : Geodetic -> Cartesian -> Geodetic\n");
   printf("Max height diff = %.2e[m]   at (%.3f[deg], %.3f[deg], %.3f[m])\n",
-         maxdiffs(0), rad2deg(mhgt.lat()), rad2deg(mhgt.lon()),
-         mhgt.hgt());
+         maxdiffs(0), rad2deg(mhgt.lat()), rad2deg(mhgt.lon()), mhgt.hgt());
   printf("Max lat    diff = %.2e[sec] at (%.3f[deg], %.3f[deg], %.3f[m])\n",
-         rad2sec(maxdiffs(1)), rad2deg(mlat.lat()),
-         rad2deg(mlat.lon()), mlat.hgt());
+         rad2sec(maxdiffs(1)), rad2deg(mlat.lat()), rad2deg(mlat.lon()),
+         mlat.hgt());
   printf("Max lon    diff = %.2e[sec] at (%.3f[deg], %.3f[deg], %.3f[m])\n",
-         rad2sec(maxdiffs(2)), rad2deg(mlon.lat()),
-         rad2deg(mlon.lon()), mlon.hgt());
+         rad2sec(maxdiffs(2)), rad2deg(mlon.lat()), rad2deg(mlon.lon()),
+         mlon.hgt());
 #endif
 
   return 0;
