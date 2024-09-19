@@ -1,6 +1,7 @@
 # C++ Geodetic Library
 
-[![Build Status](https://travis-ci.com/xanthospap/ggeodesy.svg?branch=master)](https://travis-ci.com/xanthospap/ggeodesy)
+[![clang-format Check](https://github.com/DSOlab/ggeodesy/actions/workflows/clang-format-check.yml/badge.svg)](https://github.com/DSOlab/ggeodesy/actions/workflows/clang-format-check.yml)
+[![Linux CI build](https://github.com/DSOlab/ggeodesy/actions/workflows/cpp-linux-build.yml/badge.svg)](https://github.com/DSOlab/ggeodesy/actions/workflows/cpp-linux-build.yml)
 
 # Introduction
 
