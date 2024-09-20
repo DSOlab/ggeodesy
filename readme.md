@@ -22,10 +22,10 @@ Supposing you are located in the top-level directory:
 ## to build in a folder named "build":
 $> cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 $> cmake --build build --target all --config Release -- -j4
-## Install, system-wide (needs root)
-$> make install
 ## (Optional) run tests
 $> ctest --test-dir build
+## Install, system-wide (needs root)
+$> cd build && sudo make install
 ```
 
 # The Library
