@@ -1,3 +1,7 @@
+# add_compile_options(-Wno-unused-variable)
+add_compile_options(-Wno-unused-but-set-variable)
+add_compile_options(-Wno-unused-variable)
+
 add_executable(geodetic geodetic.cpp)
 add_executable(spherical spherical.cpp)
 add_executable(typeWrappers type_wrappers.cpp)

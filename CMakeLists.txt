@@ -9,10 +9,6 @@ project(
 # We need Eigen
 find_package(Eigen3 3.3 REQUIRED)
 
-include(CTest)
-add_subdirectory(test/unit_tests)
-enable_testing()
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
 set(CMAKE_CXX_EXTENSIONS Off)
@@ -40,6 +36,11 @@ target_include_directories(geodesy PUBLIC
 
 add_subdirectory(src)
 
+# The tests
+include(CTest)
+add_subdirectory(test/unit_tests)
+enable_testing()
+
 # Install headers at: $PREFIX/datetime/...
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
 	DESTINATION include/geodesy
@@ -48,22 +49,25 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
 # install library
 install(TARGETS geodesy
         EXPORT geodesyTargets
-         ARCHIVE DESTINATION lib
-         LIBRARY DESTINATION lib
-         RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
 )
 
 install(EXPORT geodesyTargets
-      FILE geodesyTargets.cmake
-      NAMESPACE dso::
-      DESTINATION lib/cmake/geodesy
+        FILE geodesyTargets.cmake
+        NAMESPACE dso::
+        DESTINATION lib/cmake/geodesy
 )
+
 include(CMakePackageConfigHelpers)
+
 write_basic_package_version_file(
   "geodesyConfigVersion.cmake"
   VERSION ${geodesy_version}
   COMPATIBILITY AnyNewerVersion
-  )
+)
+
 install(FILES "geodesyConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/geodesyConfigVersion.cmake"
-  DESTINATION lib/cmake/dso
-  )
+        DESTINATION lib/cmake/dso
+)
