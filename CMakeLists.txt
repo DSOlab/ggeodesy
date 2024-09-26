@@ -57,7 +57,7 @@ install(TARGETS geodesy
 install(EXPORT geodesyTargets
         FILE geodesyTargets.cmake
         NAMESPACE dso::
-        DESTINATION lib/cmake/geodesy
+        DESTINATION lib/cmake
 )
 
 include(CMakePackageConfigHelpers)
@@ -69,5 +69,5 @@ write_basic_package_version_file(
 )
 
 install(FILES "geodesyConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/geodesyConfigVersion.cmake"
-        DESTINATION lib/cmake/dso
+        DESTINATION lib/cmake
 )
