@@ -3,6 +3,9 @@
 
 #include <cmath>
 #include "eigen3/Eigen/Eigen"
+#ifdef DEBUG
+#include <cstdio>
+#endif
 
 namespace dso {
   /** @brief Compare 3x3 rotation matrices.
@@ -26,7 +29,14 @@ namespace dso {
    */
 inline double rotation_distance(const Eigen::Matrix<double, 3, 3> &P,
                                 const Eigen::Matrix<double, 3, 3> &Q) noexcept {
-  return std::acos((P * Q.transpose()).trace() / 2e0);
+#ifdef DEBUG
+  const double arg = ((P * Q.transpose()).trace() - 1e0) / 2e0;
+  /* watch out for domain error ! */
+  if (std::abs(arg)>1e0) {
+    fprintf(stderr, "[ERROR] Domain error while comparing rotation matrices! arg for arccos is %.15e (traceback: %s)\n", arg, __func__);
+  }
+#endif
+  return std::acos(((P * Q.transpose()).trace() - 1e0) / 2e0);
 }
 } /* namespace dso */
 
