@@ -61,6 +61,16 @@ inline constexpr double hsec2rad(double seconds) noexcept {
   return seconds * f;
 }
 
+/** @brief Convert hours (of time) to radians.
+ *  @param[in] hours Angle in [hours] of time
+ *  @return The (input) angle in [rad]
+ */
+inline constexpr double hours2rad(double hours) noexcept {
+  constexpr const double f = detail::AngleUnitTraits<
+      detail::AngleUnit::Hours>::to_units<detail::AngleUnit::Radians>();
+  return hours * f;
+}
+
 /** Normalize angle in the range [0, 2π]/[0,360]
  *
  * @tparam U Units of input angle, AngleUnits::Radians, or AngleUnits::Degrees
