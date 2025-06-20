@@ -161,6 +161,70 @@ GeodeticCrd cartesian2geodetic(const /*CartesianCrd*/ C &v) noexcept {
   cartesian2geodetic<E>(v.x(), v.y(), v.z(), s.lat(), s.lon(), s.hgt());
   return s;
 }
+
+/** @brief Geocentric inertial state to Satellite Coordinate System, RSW.
+ *
+ * The RSW The system moves with the satellite and is sometimes called the
+ * Gaussian coordinate system and is sometimes given the letters RTN (radial,
+ * transverse, and normal) or LVLH (local vertical, local horizontal). The R
+ * axis always points out from the satellite along the Earth’s radius vector to
+ * the satellite as it moves through the orbit. The S axis points in the
+ * direction of (but not necessarily parallel to) the velocity vector and is
+ * perpendicular to the radius vector—an important additional requirement. The W
+ * axis is normal to the orbital plane. The S axis is usually not aligned with
+ * the velocity vector except for circular orbits or for elliptical orbits at
+ * apogee and perigee. The coordinate system applies to all orbit types.
+ *
+ * The rotation matrix returned, works in the sense:
+ * r_inertial = M * r_rsw
+ *
+ * @param[in] r_ijk Satellite position in geocentric inertial frame [m]
+ * @param[in] v_ijk Satellite velocity in geocentric inertial frame [m]
+ * @return A 3x3 rotation matrix M, such that r_ijk = M * r_rsw
+ *
+ * See D. A. Vallado, Fundamentals of Astrodynamics and Applications, Fourth
+ * Edition, Space Technology Library,Microcosm Press, 2013; Sec. 3.3.3
+ */
+inline Eigen::Matrix3d cartesian2rsw(const Eigen::Vector3d &r_ijk,
+                                     const Eigen::Vector3d &v_ijk) noexcept {
+  Eigen::Matrix3d M;
+  M.col(0) = r_ijk.normalized(); // R
+  const Eigen::Vector3d rxv = r_ijk.cross(v_ijk);
+  M.col(2) = rxv.normalized();         // W
+  M.col(1) = M.col(2).cross(M.col(0)); // S
+  return M;
+}
+
+/** @brief Geocentric inertial state to Satellite Coordinate System, NTW.
+ *
+ * In this system, the T axis is tangential to the orbit and always points to
+ * the velocity vector. The N axis lies in the orbital plane, normal to the
+ * velocity vector. The W axis is normal to the orbital plane (as in the RSW
+ * system). We define in-track or tangential displacements as deviations along
+ * the T axis. In-track errors are not the same as along-track variations in
+ * the RSW system. NTW is sometimes referred to as the Frenet system.
+ *
+ * The rotation matrix returned, works in the sense:
+ * r_inertial = M * r_ntw
+ *
+ * @param[in] r_ijk Satellite position in geocentric inertial frame [m]
+ * @param[in] v_ijk Satellite velocity in geocentric inertial frame [m]
+ * @return A 3x3 rotation matrix M, such that r_ijk = M * r_ntw
+ *
+ * See D. A. Vallado, Fundamentals of Astrodynamics and Applications, Fourth
+ * Edition, Space Technology Library,Microcosm Press, 2013; Sec. 3.3.3
+ */
+inline Eigen::Matrix3d cartesian2ntw(const Eigen::Vector3d &r_ijk,
+                                     const Eigen::Vector3d &v_ijk) noexcept {
+  const Eigen::Vector3d T = v_ijk.normalized();
+  const Eigen::Vector3d W = r_ijk.cross(v_ijk).normalized();
+  const Eigen::Vector3d N = T.cross(W);
+  Eigen::Matrix3d M;
+  M.col(0) = N;
+  M.col(1) = T;
+  M.col(2) = W;
+  return M;
+}
 } /* namespace dso */
 
 #endif
