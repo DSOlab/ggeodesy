@@ -172,44 +172,139 @@ struct SphericalCrdConstView {
   double lon() const noexcept { return mv(2); }
 };
 
+/** Generic traits for all Coordinate triplets (to be specialized...) */
 template <typename T> struct CoordinateTypeTraits {};
 
 template <> struct CoordinateTypeTraits<CartesianCrd> {
   static constexpr const int isCartesian = true;
   static constexpr const int isConst = false;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    /* We're in C++17 or earlier, no concepts */
+    static constexpr const int isGeodetic  = false;
+    static constexpr const int isSpherical = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<CartesianCrdView> {
   static constexpr const int isCartesian = true;
   static constexpr const int isConst = false;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    static constexpr const int isGeodetic  = false;
+    static constexpr const int isSpherical = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<CartesianCrdConstView> {
   static constexpr const int isCartesian = true;
   static constexpr const int isConst = true;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    static constexpr const int isGeodetic  = false;
+    static constexpr const int isSpherical = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<GeodeticCrd> {
   static constexpr const int isGeodetic = true;
   static constexpr const int isConst = false;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    static constexpr const int isCartesian = false;
+    static constexpr const int isSpherical = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<GeodeticCrdView> {
   static constexpr const int isGeodetic = true;
   static constexpr const int isConst = false;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    static constexpr const int isCartesian = false;
+    static constexpr const int isSpherical = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<GeodeticCrdConstView> {
   static constexpr const int isGeodetic = true;
   static constexpr const int isConst = true;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    static constexpr const int isCartesian = false;
+    static constexpr const int isSpherical = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<SphericalCrd> {
   static constexpr const int isSpherical = true;
   static constexpr const int isConst = false;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    static constexpr const int isCartesian = false;
+    static constexpr const int isGeodetic  = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<SphericalCrdView> {
   static constexpr const int isSpherical = true;
   static constexpr const int isConst = false;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    static constexpr const int isCartesian = false;
+    static constexpr const int isGeodetic  = false;
+#endif
 };
+
 template <> struct CoordinateTypeTraits<SphericalCrdConstView> {
   static constexpr const int isSpherical = true;
   static constexpr const int isConst = true;
+#if !defined(__cplusplus) || __cplusplus < 202002L
+    /* We're in C++17 or earlier, no concepts */
+    static constexpr const int isCartesian = false;
+    static constexpr const int isGeodetic  = false;
+#endif
 };
+
+
+/* Concepts for C++20 upwards */
+#if __cplusplus >= 202002L
+
+/* The following two templates, enabling matching types T that have a member 
+ * function Traits<T>::isCartesian
+ */
+template<typename, typename = void> struct has_is_cartesian : std::false_type {};
+template<typename T>
+struct has_is_cartesian<T, std::void_t<decltype(Traits<T>::isCartesian)>> : std::true_type {};
+
+/* Now we define a concept: Any type T that :
+ * 1. has a Traits<T>::isCartesian, and
+ * 2. the value of Traits<T>::isCartesian is true
+ */
+template<typename T> concept IsCartesian = 
+  has_is_cartesian<T>::value && Traits<T>::isCartesian;
+
+/* The following two templates, enabling matching types T that have a member 
+ * function Traits<T>::isSpherical
+ */
+template<typename, typename = void> struct has_is_spherical : std::false_type {};
+template<typename T>
+struct has_is_spherical<T, std::void_t<decltype(Traits<T>::isSpherical)>> : std::true_type {};
+
+/* Now we define a concept: Any type T that :
+ * 1. has a Traits<T>::isSpherical, and
+ * 2. the value of Traits<T>::isSpherical is true
+ */
+template<typename T> concept IsSpherical = 
+  has_is_cartesian<T>::value && Traits<T>::isSpherical;
+
+/* The following two templates, enabling matching types T that have a member 
+ * function Traits<T>::isGeodetic
+ */
+template<typename, typename = void> struct has_is_geodetic : std::false_type {};
+template<typename T>
+struct has_is_geodetic<T, std::void_t<decltype(Traits<T>::isGeodetic)>> : std::true_type {};
+
+/* Now we define a concept: Any type T that :
+ * 1. has a Traits<T>::isGeodetic, and
+ * 2. the value of Traits<T>::isGeodetic is true
+ */
+template<typename T> concept IsGeodetic = 
+  has_is_cartesian<T>::value && Traits<T>::isGeodetic;
+
+#endif
 
 } /* namespace dso */
 

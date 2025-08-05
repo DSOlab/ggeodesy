@@ -225,6 +225,75 @@ inline Eigen::Matrix3d cartesian2ntw(const Eigen::Vector3d &r_ijk,
   M.col(2) = W;
   return M;
 }
+
+/** Given a point on the ellipsoid/spheroid with, compute the topocentric
+ *  rotation matrix.
+ *
+ * This function computes the unit topocentric vectors (often also called
+ * Local-Vertical Local Tangent) given a reference point on the
+ * ellipsoid or sphere and concatenates them in a rotation matrix R.
+ * If ellipsoidal/geodetic coordinates are used, the vector u is orthogonal 
+ * to the tangent plane oo the ellipsoid, which is defined by (e,n). If 
+ * spherical coordinates are used, the vector u is in the radial direction 
+ * and defines the tangent plane to the sphere.
+ *
+ * The resulting matrix from this function, R, can be used in the sense:
+ * |δX|        |e|
+ * |δY|  = R * |n|
+ * |δZ|        |u|
+ * where (X, Y, Z) are the coordinates in the Cartesian system and (e,n,u) are
+ * coordinates in the East, North and Up directions; the provided point
+ * acts as reference point (i.e. origin of ENU system).
+ *
+ * To perform the inverse operation (i.e. cartesian to topocentric) use the
+ * transpose of the R matrix, i.e. R^(T).
+ *
+ * Short description of use cases:
+ * 1. Get the rotation matrix when having geodetic coordinates of reference 
+ *    point: in this case you only need the template parameter S (all other 
+ *    template parameters will have no effect).
+ * 2. Get the rotation matrix when having spherical coordinates of reference 
+ *    point: as above, you only need template parameter S (all other template 
+ *    parameters will have no effect).
+ * 3. Get the rotation matrix when having cartesian coordinates of reference 
+ *    point: here the situation is a bit more complex. [a] If you want to use 
+ *    geodetic coordinates for the topocentric transformation (i.e. the 
+ *    reference surface shall be an ellipsoid) you should also specify (apart 
+ *    from template parameter S) the template parameter E, i.e. specify a
+ *    reference ellipsoid. [b] If you want to use spherical coordinates for 
+ *    the transformation (i.e. the reference surface shall be a sphere), you 
+ *    should also specify (apart from template parameter S) the template 
+ *    parameter ForceCartesianToSpherical, i.e. set it to True. The template 
+ *    parameter E plays no role here and will be ignored since we are not 
+ *    using a reference ellipsoid.
+ *
+ * @return A 3x3 matrix; its first column is the e (East) unit vector, its
+ *         seconds column is the n (North) unit vector and the third column
+ *         is the u vector (Up). Hence:
+ *         R = [e, n, u] where e, n, u are (3x1) unit vectors.
+ */
+template<typename S, ellipsoid E = ellipsoid::grs80, bool ForceCartesianToSpherical = false>
+inline Eigen::Matrix3d lvlh(const S &v) noexcept {
+/* Concepts for C++20 upwards */
+#if __cplusplus >= 202002L
+  if constexpr (isSpherical<S> || isGeodetic<S>) {
+#else
+  if constexpr (dso::CoordinateTypeTraits<S>::isSpherical || dso::CoordinateTypeTraits<S>::isGeodetic) {
+#endif
+    return geodetic2lvlh(v.lat(), v.lon());
+  } else {
+    static_assert(dso::CoordinateTypeTraits<S>::isCartesian);
+    if constexpr (ForceCartesianToSpherical) {
+      const auto geo = cartesian2spherical<S>(v);
+      return geodetic2lvlh(geo.lat(), geo.lon());
+    } else {
+      const auto geo = cartesian2geodetic<E,S>(v);
+      return geodetic2lvlh(geo.lat(), geo.lon());
+    }
+  }
+}
+
+
 } /* namespace dso */
 
 #endif
