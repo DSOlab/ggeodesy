@@ -29,6 +29,9 @@ struct CartesianCrd {
 
   explicit CartesianCrd(const detail::Vec3d &vec) noexcept : mv(vec) {};
   CartesianCrd(double x, double y, double z) noexcept { mv << x, y, z; }
+
+  const detail::Vec3d &const_ref_vec3d() const noexcept {return mv;}
+  detail::Vec3d copy_vec3d() const noexcept {return mv;}
 };
 
 struct CartesianCrdView {
@@ -44,6 +47,9 @@ struct CartesianCrdView {
   double &x() noexcept { return mv(0); }
   double &y() noexcept { return mv(1); }
   double &z() noexcept { return mv(2); }
+  
+  const detail::Vec3d &const_ref_vec3d() const noexcept {return mv;}
+  detail::Vec3d copy_vec3d() const noexcept {return detail::Vec3d(mv);}
 };
 
 struct CartesianCrdConstView {
@@ -58,6 +64,9 @@ struct CartesianCrdConstView {
   double x() const noexcept { return mv(0); }
   double y() const noexcept { return mv(1); }
   double z() const noexcept { return mv(2); }
+  
+  const detail::Vec3d &const_ref_vec3d() const noexcept {return mv;}
+  detail::Vec3d copy_vec3d() const noexcept {return detail::Vec3d(mv);}
 };
 
 struct GeodeticCrd {
